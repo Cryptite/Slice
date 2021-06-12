@@ -1,10 +1,11 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         gradlePluginPortal()
-        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://wav.jfrog.io/artifactory/repo/")
     }
 }
 
-rootProject.name = "Slice"
+rootProject.name = "ForkTest"
 
-include("Slice-API", "Slice-Server")
+include("ForkTest-API", "ForkTest-Server")

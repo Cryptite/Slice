@@ -1,14 +1,52 @@
-.gradle
-/build/
+.gradle/
+build/
 
-# Ignore Gradle GUI config
-gradle-app.setting
+# Eclipse stuff
+.classpath
+.project
+.settings/
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+# VSCode stuff
+.vscode/
 
-# Cache of project
-.gradletasknamecache
+# netbeans
+nbproject/
+nbactions.xml
 
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
+# we use maven!
+build.xml
+
+# maven
+target/
+dependency-reduced-pom.xml
+
+# vim
+.*.sw[a-p]
+
+# various other potential build files
+build/
+bin/
+dist/
+manifest.mf
+
+# Mac filesystem dust
+.DS_Store/
+.DS_Store
+
+# intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# Linux temp files
+*~
+
+# other stuff
+run/
+
+ForkTest-Server
+ForkTest-API
+
+!gradle/wrapper/gradle-wrapper.jar
