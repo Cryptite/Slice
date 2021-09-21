@@ -55,7 +55,7 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":ForkTest-Server"))
+    serverProject.set(project(":Slice-Server"))
 
     remapRepo.set("https://maven.quiltmc.org/repository/release/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
@@ -63,10 +63,10 @@ paperweight {
     usePaperUpstream(providers.gradleProperty("paperRef")) {
         withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("ForkTest-API"))
+            apiOutputDir.set(layout.projectDirectory.dir("Slice-API"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("ForkTest-Server"))
+            serverOutputDir.set(layout.projectDirectory.dir("Slice-Server"))
         }
     }
 }
@@ -76,7 +76,7 @@ paperweight {
 //
 
 tasks.generateDevelopmentBundle {
-    apiCoordinates.set("com.example.paperfork:forktest-api")
+    apiCoordinates.set("com.lokamc.slice:Slice-api")
     mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
     libraryRepositories.set(
         listOf(
@@ -85,14 +85,14 @@ tasks.generateDevelopmentBundle {
             "https://repo.aikar.co/content/groups/aikar",
             "https://ci.emc.gs/nexus/content/groups/aikar/",
             "https://papermc.io/repo/repository/maven-public/", // for paper-mojangapi
-            // "https://my.repo/" // This should be a repo hosting your API (in this example, 'com.example.paperfork:forktest-api')
+            "http://ysera.dyndns.org:8090/releases/"
         )
     )
 }
 
 allprojects {
     // Publishing API:
-    // ./gradlew :ForkTest-API:publish[ToMavenLocal]
+    // ./gradlew :Slice-API:publish[ToMavenLocal]
     publishing {
         repositories {
             maven {

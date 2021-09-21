@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "ForkTest"
+rootProject.name = "Slice"
 
-include("ForkTest-API", "ForkTest-Server")
+include("Slice-API", "Slice-Server")
