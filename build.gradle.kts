@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    remapper("org.quiltmc:tiny-remapper:0.4.3")
+    remapper("org.quiltmc:tiny-remapper:0.4.3:fat")
     decompiler("net.minecraftforge:forgeflower:1.5.498.12")
     paperclip("io.papermc:paperclip:2.0.1")
 }
@@ -76,7 +76,7 @@ paperweight {
 //
 
 tasks.generateDevelopmentBundle {
-    apiCoordinates.set("com.lokamc.slice:Slice-api")
+    apiCoordinates.set("com.lokamc.slice:slice-api")
     mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
     libraryRepositories.set(
         listOf(
@@ -85,7 +85,7 @@ tasks.generateDevelopmentBundle {
             "https://repo.aikar.co/content/groups/aikar",
             "https://ci.emc.gs/nexus/content/groups/aikar/",
             "https://papermc.io/repo/repository/maven-public/", // for paper-mojangapi
-            "http://ysera.dyndns.org:8090/releases/"
+            "https://ysera.dyndns.org:444/releases/"
         )
     )
 }
@@ -96,8 +96,8 @@ allprojects {
     publishing {
         repositories {
             maven {
-                name = "Slice"
-                url = uri("http://ysera.dyndns.org:8090/releases")
+                name = "Ysera"
+                url = uri("https://ysera.dyndns.org:444/releases")
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
                 credentials(PasswordCredentials::class)
