@@ -3,8 +3,8 @@ import io.papermc.paperweight.util.constants.*
 plugins {
     java
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
-    id("io.papermc.paperweight.patcher") version "1.3.4"
+    id("com.github.johnrengelman.shadow") version "7.0.0" apply false
+    id("io.papermc.paperweight.patcher") version "1.1.11"
 }
 
 repositories {
@@ -15,9 +15,9 @@ repositories {
 }
 
 dependencies {
-    remapper("net.fabricmc:tiny-remapper:0.8.1:fat")
-    decompiler("net.minecraftforge:forgeflower:1.5.498.22")
-    paperclip("io.papermc:paperclip:3.0.2")
+    remapper("org.quiltmc:tiny-remapper:0.4.3:fat")
+    decompiler("net.minecraftforge:forgeflower:1.5.498.12")
+    paperclip("io.papermc:paperclip:2.0.1")
 }
 
 allprojects {
@@ -26,7 +26,7 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
+            languageVersion.set(JavaLanguageVersion.of(16))
         }
     }
 }
@@ -34,7 +34,7 @@ allprojects {
 subprojects {
     tasks.withType<JavaCompile> {
         options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
+        options.release.set(16)
     }
     tasks.withType<Javadoc> {
         options.encoding = Charsets.UTF_8.name()
@@ -45,23 +45,28 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://ci.emc.gs/nexus/content/groups/aikar/")
+        maven("https://repo.aikar.co/content/groups/aikar")
+        maven("https://repo.md-5.net/content/repositories/releases/")
+        maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     }
 }
 
 paperweight {
-    serverProject.set(project(":slice-server"))
+    serverProject.set(project(":Slice-Server"))
 
-    remapRepo.set("https://maven.fabricmc.net/")
+    remapRepo.set("https://maven.quiltmc.org/repository/release/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
 
     usePaperUpstream(providers.gradleProperty("paperRef")) {
         withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("slice-api"))
+            apiOutputDir.set(layout.projectDirectory.dir("Slice-API"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("slice-server"))
+            serverOutputDir.set(layout.projectDirectory.dir("Slice-Server"))
         }
     }
 }
@@ -71,15 +76,16 @@ paperweight {
 //
 
 tasks.generateDevelopmentBundle {
-    apiCoordinates.set("com.example.paperfork:slice-api")
+    apiCoordinates.set("com.lokamc.slice:slice-api")
     mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
     libraryRepositories.set(
         listOf(
-            "https://repo.maven.apache.org/maven2/",
             "https://libraries.minecraft.net/",
-            "https://papermc.io/repo/repository/maven-public/",
             "https://maven.quiltmc.org/repository/release/",
-            "http://ysera.dyndns.org:8090/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api')
+            "https://repo.aikar.co/content/groups/aikar",
+            "https://ci.emc.gs/nexus/content/groups/aikar/",
+            "https://papermc.io/repo/repository/maven-public/", // for paper-mojangapi
+            "https://ysera.dyndns.org:444/releases/"
         )
     )
 }
@@ -90,8 +96,8 @@ allprojects {
     publishing {
         repositories {
             maven {
-                name = "Slice"
-                url = uri("http://ysera.dyndns.org:8090/releases")
+                name = "Ysera"
+                url = uri("https://ysera.dyndns.org:444/releases")
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
                 credentials(PasswordCredentials::class)
