@@ -5,10 +5,10 @@ Subject: [PATCH] Track Player throughout entire block destroy
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 1c83fbc96a074c85a3e349e936ff1f3198596709..5857468333c17cf3056ad71490746afba4154452 100644
+index 12998d0e9ae0e148a155faa4468b0f78b8462cc9..b03eacbef3cf15b70ec012af0870975d3e8e8cba 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-@@ -409,6 +409,7 @@ public class ServerPlayerGameMode {
+@@ -441,6 +441,7 @@ public class ServerPlayerGameMode {
                  org.bukkit.block.BlockState state = bblock.getState();
                  level.captureDrops = new ArrayList<>();
                  // CraftBukkit end
@@ -16,7 +16,7 @@ index 1c83fbc96a074c85a3e349e936ff1f3198596709..5857468333c17cf3056ad71490746afb
                  block.playerWillDestroy((Level) this.level, pos, iblockdata, (Player) this.player);
                  boolean flag = this.level.removeBlock(pos, false);
  
-@@ -433,6 +434,7 @@ public class ServerPlayerGameMode {
+@@ -465,6 +466,7 @@ public class ServerPlayerGameMode {
                  // CraftBukkit start
                  java.util.List<ItemEntity> itemsToDrop = level.captureDrops; // Paper - store current list
                  level.captureDrops = null; // Paper - Remove this earlier so that we can actually drop stuff
@@ -54,10 +54,10 @@ index 65a163d93a293e1e0a12a300d6335a700099cac2..b1b6072ffff0e1cc2e9e1a585ad882bc
                  BlockState iblockdata2 = iblockdata1.hasProperty(BlockStateProperties.WATERLOGGED) && (Boolean) iblockdata1.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index 1179c62695da4dcf02590c97d8da3c6fcdbee9ef..836ecd7c8db42634c5293caafce4624d3a10f465 100644
+index d87f8d106834678364f8720447d671de60c2454e..66b76aa6e97b7244a2abdf4a4591edfad3c2fe6c 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -869,6 +869,18 @@ public abstract class BlockBehaviour {
+@@ -890,6 +890,18 @@ public abstract class BlockBehaviour {
  
                  blockposition_mutableblockposition.setWithOffset((Vec3i) pos, enumdirection);
                  BlockState iblockdata = world.getBlockState(blockposition_mutableblockposition);

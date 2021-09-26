@@ -5,10 +5,10 @@ Subject: [PATCH] Set BlockData without light update
 
 
 diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-index 0f6b534a4c789a2f09f6c4624e5d58b99c7ed0e6..726d63254bb9c81555e5264e6253d453d38c9601 100644
+index 21d1e0c9c471e9e556b5bd70166a769b46105c7a..d46dc12001bd46596c3bb2e24144bbe4d2d3a5e1 100644
 --- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 +++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-@@ -224,7 +224,7 @@ public class WorldGenRegion implements WorldGenLevel {
+@@ -241,7 +241,7 @@ public class WorldGenRegion implements WorldGenLevel {
                  Block.dropResources(iblockdata, this.level, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  
@@ -17,7 +17,7 @@ index 0f6b534a4c789a2f09f6c4624e5d58b99c7ed0e6..726d63254bb9c81555e5264e6253d453
          }
      }
  
-@@ -281,7 +281,7 @@ public class WorldGenRegion implements WorldGenLevel {
+@@ -298,7 +298,7 @@ public class WorldGenRegion implements WorldGenLevel {
      }
  
      @Override
@@ -27,10 +27,10 @@ index 0f6b534a4c789a2f09f6c4624e5d58b99c7ed0e6..726d63254bb9c81555e5264e6253d453
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 474078b68f1bf22037495f42bae59b790fd8cb46..cf1164a86eae26244e5f1655fd1cb308f8eac5db 100644
+index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..a9315b7acec3c2ccaf879e0f1d45c062d8e201b1 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -433,12 +433,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -550,12 +550,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -46,7 +46,7 @@ index 474078b68f1bf22037495f42bae59b790fd8cb46..cf1164a86eae26244e5f1655fd1cb308
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start
-@@ -485,7 +485,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -602,7 +602,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              } else {
                  BlockState iblockdata2 = this.getBlockState(pos);
  
@@ -55,7 +55,7 @@ index 474078b68f1bf22037495f42bae59b790fd8cb46..cf1164a86eae26244e5f1655fd1cb308
                      this.getProfiler().push("queueCheckLight");
                      this.getChunkSource().getLightEngine().checkBlock(pos);
                      this.getProfiler().pop();
-@@ -632,7 +632,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -749,7 +749,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  Block.dropResources(iblockdata, this, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  
@@ -99,10 +99,10 @@ index 8c30e28b97ac7e8b54322c903e0b75ee8135620b..64cc26d146afba7c6ecb0d3052776837
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index f20484b74197353adec0a3cd2c42f88aa9fdd4e6..7e8632f68cdb53f34608ea924071dcd57aa92727 100644
+index a53a9974a2358fa4b6a7216e4b849bd3ad5023ea..68fbf05b07ffe028993184261dbd1a61c3c45aa5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-@@ -175,11 +175,20 @@ public class CraftBlock implements Block {
+@@ -179,11 +179,20 @@ public class CraftBlock implements Block {
  
      @Override
      public void setBlockData(BlockData data, boolean applyPhysics) {
@@ -124,20 +124,20 @@ index f20484b74197353adec0a3cd2c42f88aa9fdd4e6..7e8632f68cdb53f34608ea924071dcd5
          net.minecraft.world.level.block.state.BlockState old = this.getNMS();
          // SPIGOT-611: need to do this to prevent glitchiness. Easier to handle this here (like /setblock) than to fix weirdness in tile entity cleanup
          if (old.hasBlockEntity() && blockData.getBlock() != old.getBlock()) { // SPIGOT-3725 remove old tile entity if block changes
-@@ -194,7 +203,7 @@ public class CraftBlock implements Block {
+@@ -198,7 +207,7 @@ public class CraftBlock implements Block {
          if (applyPhysics) {
              return this.world.setBlock(position, blockData, 3);
          } else {
 -            boolean success = this.world.setBlock(position, blockData, 2 | 16 | 1024); // NOTIFY | NO_OBSERVER | NO_PLACE (custom)
 +            boolean success = this.world.setBlock(position, blockData, 2 | 16 | 1024, checkLight); // NOTIFY | NO_OBSERVER | NO_PLACE (custom)
-             if (success) {
+             if (success && this.world instanceof net.minecraft.world.level.Level) {
                  this.world.getMinecraftWorld().sendBlockUpdated(
                          position,
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java
-index 08634e060b35d653c5677b7c1012cfda266bf002..869a5995e08dda5604fdc457a55a913fe0efe6e9 100644
+index 950d4381459d31d02acf55c4aef4f5e33367748b..0b09b06b3d9fe2cce5c6cbf70a4b84ff8edc2085 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java
-@@ -222,7 +222,7 @@ public class DummyGeneratorAccess implements LevelAccessor {
+@@ -231,7 +231,7 @@ public class DummyGeneratorAccess implements WorldGenLevel {
      }
  
      @Override
