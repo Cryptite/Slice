@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
-Date: Sun, 26 Sep 2021 08:47:23 -0500
+Date: Thu, 23 Sep 2021 08:27:21 -0500
 Subject: [PATCH] Track Player throughout entire block destroy
 
 
@@ -15,7 +15,7 @@ index 12998d0e9ae0e148a155faa4468b0f78b8462cc9..b03eacbef3cf15b70ec012af0870975d
 +                level.pendingPlayerBlockEvents.put(pos, new Level.PendingBlockEvent(pos, this.player)); // Paper
                  block.playerWillDestroy((Level) this.level, pos, iblockdata, (Player) this.player);
                  boolean flag = this.level.removeBlock(pos, false);
- 
+
 @@ -465,6 +466,7 @@ public class ServerPlayerGameMode {
                  // CraftBukkit start
                  java.util.List<ItemEntity> itemsToDrop = level.captureDrops; // Paper - store current list
@@ -36,6 +36,67 @@ index 3e5e358e24bd84a05785a9391526f316475e95ff..9914a92040a63b6102eb6171f058ea1c
              InteractionResult enuminteractionresult = item.useOn(itemactioncontext);
              CompoundTag newData = this.getTagClone();
              int newCount = this.getCount();
+diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
+index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..3fed792374c48026755cca2f5727b2d978ecc292 100644
+--- a/src/main/java/net/minecraft/world/level/Level.java
++++ b/src/main/java/net/minecraft/world/level/Level.java
+@@ -175,6 +175,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
+     public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
+
++    // Paper start - Holder class used to track what Player is responsible the last block event
++    public static class PendingBlockEvent {
++
++        public final BlockPos block;
++        public final Player player;
++        public @Nullable BlockPos sourceBlock;
++
++        public PendingBlockEvent(BlockPos block, Player player) {
++            this(block, player, null);
++        }
++
++        public PendingBlockEvent(BlockPos block, Player player, @Nullable BlockPos sourceBlock) {
++            this.block = block;
++            this.player = player;
++            this.sourceBlock = sourceBlock;
++        }
++
++    }
++    public final Map<BlockPos, PendingBlockEvent> pendingPlayerBlockEvents = new HashMap<>();
++    // Paper end
++
+     // Paper start - fix and optimise world upgrading
+     // copied from below
+     public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
+@@ -704,6 +725,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+             if (!this.preventPoiUpdated) {
+                 this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
+             }
++            pendingPlayerBlockEvents.remove(blockposition); // Paper
+             // CraftBukkit end
+         }
+     }
+@@ -809,8 +831,20 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     public void neighborChanged(BlockPos pos, Block sourceBlock, BlockPos neighborPos) {
+         if (!this.isClientSide) {
+             BlockState iblockdata = this.getBlockState(pos);
++            org.bukkit.block.Block blockAt = world.getBlockAt(pos.getX(), pos.getY(), pos.getZ()); // Paper
+
+             try {
++                // Paper start - If this is a non-air block being set to an air block, get (remove, if exists)
++                // our PendingBlockEvent
++                if (blockAt.getType() != org.bukkit.Material.AIR && iblockdata.getMaterial() == net.minecraft.world.level.material.Material.AIR) {
++                    PendingBlockEvent blockEvent = pendingPlayerBlockEvents.remove(pos);
++                    if (blockEvent != null) {
++                        //Would fire a future BlockDestroyedByNeighborEvent here, but must have this conditional block
++                        //because it's important to remove from pendingPlayerBlockEvents
++                    }
++                }
++                // Paper end
++
+                 // CraftBukkit start
+                 CraftWorld world = ((ServerLevel) this).getWorld();
+                 if (world != null && ((ServerLevel)this).hasPhysicsEvent) { // Paper
 diff --git a/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java b/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java
 index 65a163d93a293e1e0a12a300d6335a700099cac2..b1b6072ffff0e1cc2e9e1a585ad882bc70697d92 100644
 --- a/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java
