@@ -15,7 +15,7 @@ index 12998d0e9ae0e148a155faa4468b0f78b8462cc9..b03eacbef3cf15b70ec012af0870975d
 +                level.pendingPlayerBlockEvents.put(pos, new Level.PendingBlockEvent(pos, this.player)); // Paper
                  block.playerWillDestroy((Level) this.level, pos, iblockdata, (Player) this.player);
                  boolean flag = this.level.removeBlock(pos, false);
-
+ 
 @@ -465,6 +466,7 @@ public class ServerPlayerGameMode {
                  // CraftBukkit start
                  java.util.List<ItemEntity> itemsToDrop = level.captureDrops; // Paper - store current list
@@ -37,13 +37,13 @@ index 3e5e358e24bd84a05785a9391526f316475e95ff..9914a92040a63b6102eb6171f058ea1c
              CompoundTag newData = this.getTagClone();
              int newCount = this.getCount();
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..3fed792374c48026755cca2f5727b2d978ecc292 100644
+index a9315b7acec3c2ccaf879e0f1d45c062d8e201b1..7dec61b831860e372f1785c2ae838cb3ad2fc623 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -175,6 +175,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
      public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
-
+ 
 +    // Paper start - Holder class used to track what Player is responsible the last block event
 +    public static class PendingBlockEvent {
 +
@@ -81,7 +81,7 @@ index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..3fed792374c48026755cca2f5727b2d9
          if (!this.isClientSide) {
              BlockState iblockdata = this.getBlockState(pos);
 +            org.bukkit.block.Block blockAt = world.getBlockAt(pos.getX(), pos.getY(), pos.getZ()); // Paper
-
+ 
              try {
 +                // Paper start - If this is a non-air block being set to an air block, get (remove, if exists)
 +                // our PendingBlockEvent

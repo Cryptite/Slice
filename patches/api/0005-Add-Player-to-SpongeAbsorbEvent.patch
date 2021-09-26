@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Tom <cryptite@gmail.com>
+Date: Sun, 26 Sep 2021 16:36:29 -0500
+Subject: [PATCH] Add Player to SpongeAbsorbEvent
+
+
+diff --git a/src/main/java/org/bukkit/event/block/SpongeAbsorbEvent.java b/src/main/java/org/bukkit/event/block/SpongeAbsorbEvent.java
+index 7029cfcd00ed5d9c7f06898ec2b81238ec775a70..0e2f21e0f1983d2e8b67deebf4d12d25107d1582 100644
+--- a/src/main/java/org/bukkit/event/block/SpongeAbsorbEvent.java
++++ b/src/main/java/org/bukkit/event/block/SpongeAbsorbEvent.java
+@@ -7,6 +7,7 @@ import org.bukkit.block.BlockState;
+ import org.bukkit.event.Cancellable;
+ import org.bukkit.event.HandlerList;
+ import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable; // Paper
+ 
+ /**
+  * Called when a sponge absorbs water from the world.
+@@ -21,11 +22,13 @@ public class SpongeAbsorbEvent extends BlockEvent implements Cancellable {
+ 
+     private static final HandlerList handlers = new HandlerList();
+     private boolean cancelled;
++    private final org.bukkit.entity.Player player; // Paper
+     private final List<BlockState> blocks;
+ 
+-    public SpongeAbsorbEvent(@NotNull Block block, @NotNull List<BlockState> waterblocks) {
++    public SpongeAbsorbEvent(@NotNull Block block, @Nullable org.bukkit.entity.Player player, @NotNull List<BlockState> waterblocks) { // Paper
+         super(block);
+         this.blocks = waterblocks;
++        this.player = player; // Paper
+     }
+ 
+     /**
+@@ -41,6 +44,18 @@ public class SpongeAbsorbEvent extends BlockEvent implements Cancellable {
+         return blocks;
+     }
+ 
++    // Paper start
++    /**
++     * Gets the Player that placed the Sponge Block
++     *
++     * @return The Player that placed the sponge block causing the absorb event, or null if no Player was involved
++     */
++    @Nullable
++    public org.bukkit.entity.Player getPlayer() {
++        return player;
++    }
++    // Paper end
++
+     @Override
+     public boolean isCancelled() {
+         return cancelled;
