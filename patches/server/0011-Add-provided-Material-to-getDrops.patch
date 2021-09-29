@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 29 Sep 2021 08:40:37 -0500
+Subject: [PATCH] Add provided Material to getDrops
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
+index 68fbf05b07ffe028993184261dbd1a61c3c45aa5..3aa0f3e1ab17e5fcb89fde9f3a1802c605a3f7e4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
++++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
+@@ -705,7 +705,18 @@ public class CraftBlock implements Block {
+ 
+     @Override
+     public Collection<ItemStack> getDrops(ItemStack item, Entity entity) {
+-        net.minecraft.world.level.block.state.BlockState iblockdata = this.getNMS();
++        return getDrops(null, item, entity); // Slice start
++    }
++
++    @Override
++    public Collection<ItemStack> getDrops(Material blockType, ItemStack item, Entity entity) {
++        net.minecraft.world.level.block.state.BlockState iblockdata;
++        if (blockType == null) {
++            iblockdata = this.getNMS();
++        } else {
++            iblockdata = ((CraftBlockData) blockType.createBlockData()).getState();
++        }
++
+         net.minecraft.world.item.ItemStack nms = CraftItemStack.asNMSCopy(item);
+ 
+         // Modelled off EntityHuman#hasBlock
+@@ -716,6 +727,7 @@ public class CraftBlock implements Block {
+             return Collections.emptyList();
+         }
+     }
++    // Slice end
+ 
+     @Override
+     public boolean isPreferredTool(ItemStack item) {
