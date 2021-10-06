@@ -13,14 +13,14 @@ In summary, this patch creates the concept of a "foreignValue" of a packet's dat
 This patch adds the ability to set a "foreignValue" for an entity value so as to obfuscate data received by other players.
 The current packets modified/obfuscated are the following:
 
-- Health - Foreign Players will only receive packets that say the player is "alive or dead (max health or 0 health).
-    -- This reduces the amount of health packet updates as well which is great for players in combat.
+# Health - Foreign Players will only receive packets that say the player is "alive or dead (max health or 0 health).
+    ## This reduces the amount of health packet updates as well which is great for players in combat.
 
-- Air Level - Foreign players will only ever see a player as having full oxygen
-    -- Air level packets are sent PER-TICK, and as such a player with any change in air level will only spam themselves
+# Air Level - Foreign players will only ever see a player as having full oxygen
+    ## Air level packets are sent PER-TICK, and as such a player with any change in air level will only spam themselves
     with packets instead of every single player within tracking distance
 
-- Score - Foreign players will only see a player's score as 0 and will not update due to gathering xp orbs, etc.
+# Score - Foreign players will only see a player's score as 0 and will not update due to gathering xp orbs, etc.
 
 
 
