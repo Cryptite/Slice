@@ -37,10 +37,10 @@ index 3e5e358e24bd84a05785a9391526f316475e95ff..9914a92040a63b6102eb6171f058ea1c
              CompoundTag newData = this.getTagClone();
              int newCount = this.getCount();
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index a9315b7acec3c2ccaf879e0f1d45c062d8e201b1..7dec61b831860e372f1785c2ae838cb3ad2fc623 100644
+index 465a1e179f6ae43d253d692255c8fe144179efe3..46a1b0519aaccc2b5625104d42168254bfb27cd9 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -175,6 +175,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -176,6 +176,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
      public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
  
@@ -68,7 +68,7 @@ index a9315b7acec3c2ccaf879e0f1d45c062d8e201b1..7dec61b831860e372f1785c2ae838cb3
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -704,6 +725,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -706,6 +727,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index a9315b7acec3c2ccaf879e0f1d45c062d8e201b1..7dec61b831860e372f1785c2ae838cb3
              // CraftBukkit end
          }
      }
-@@ -809,8 +831,20 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -811,8 +833,20 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public void neighborChanged(BlockPos pos, Block sourceBlock, BlockPos neighborPos) {
          if (!this.isClientSide) {
              BlockState iblockdata = this.getBlockState(pos);

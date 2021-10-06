@@ -27,10 +27,10 @@ index 21d1e0c9c471e9e556b5bd70166a769b46105c7a..d46dc12001bd46596c3bb2e24144bbe4
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..a9315b7acec3c2ccaf879e0f1d45c062d8e201b1 100644
+index f936e9f9a9fa655fa997d6862b5ed54c04169d35..465a1e179f6ae43d253d692255c8fe144179efe3 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -550,12 +550,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -552,12 +552,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -46,7 +46,7 @@ index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..a9315b7acec3c2ccaf879e0f1d45c062
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start
-@@ -602,7 +602,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -604,7 +604,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              } else {
                  BlockState iblockdata2 = this.getBlockState(pos);
  
@@ -55,7 +55,7 @@ index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..a9315b7acec3c2ccaf879e0f1d45c062
                      this.getProfiler().push("queueCheckLight");
                      this.getChunkSource().getLightEngine().checkBlock(pos);
                      this.getProfiler().pop();
-@@ -749,7 +749,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -751,7 +751,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  Block.dropResources(iblockdata, this, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  

@@ -5,10 +5,10 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 7dec61b831860e372f1785c2ae838cb3ad2fc623..9b704693ea8d8677d3c25d5a3c08d4ef26aa1fc3 100644
+index 46a1b0519aaccc2b5625104d42168254bfb27cd9..5e87676aa9dfa26ac052aa0c1fce35b8822e7a50 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -747,6 +747,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -749,6 +749,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          if (iblockdata.isAir()) {
              return false;
          } else {
