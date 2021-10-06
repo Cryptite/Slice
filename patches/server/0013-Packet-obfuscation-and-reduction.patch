@@ -14,11 +14,11 @@ This patch adds the ability to set a "foreignValue" for an entity value so as to
 The current packets modified/obfuscated are the following:
 
 # Health - Foreign Players will only receive packets that say the player is "alive or dead (max health or 0 health).
-    ## This reduces the amount of health packet updates as well which is great for players in combat.
+    # This reduces the amount of health packet updates as well which is great for players in combat.
 
 # Air Level - Foreign players will only ever see a player as having full oxygen
-    ## Air level packets are sent PER-TICK, and as such a player with any change in air level will only spam themselves
-    with packets instead of every single player within tracking distance
+    # Air level packets are sent PER-TICK, and as such a player with any change in air level will only spam themselves
+    # with packets instead of every single player within tracking distance
 
 # Score - Foreign players will only see a player's score as 0 and will not update due to gathering xp orbs, etc.
 
@@ -150,10 +150,10 @@ index 4df12454001f0de5f358c88d876e34c35a736c42..72c74d2369a36b14f1103aa74b096f50
      }
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index b7c9294fdd3d799d410afba4a1118aa371c98533..b5205bfc6f9834dc811df71bfb96494448c8dfed 100644
+index b7c9294fdd3d799d410afba4a1118aa371c98533..a6dcec3660b17feae7c3c1eeb7717097c71241bf 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -368,7 +368,21 @@ public class ServerEntity {
+@@ -368,7 +368,19 @@ public class ServerEntity {
          SynchedEntityData datawatcher = this.entity.getEntityData();
  
          if (datawatcher.isDirty()) {
@@ -162,15 +162,13 @@ index b7c9294fdd3d799d410afba4a1118aa371c98533..b5205bfc6f9834dc811df71bfb964944
 +            ClientboundSetEntityDataPacket dataPacket = new ClientboundSetEntityDataPacket(this.entity.getId(), datawatcher, false);
 +            if (this.entity instanceof ServerPlayer serverPlayer) {
 +                serverPlayer.connection.send(dataPacket);
++            }
 +
-+                //Get the packedData that the original packet has, and then determine if any of those are changed in
-+                //the foreign version. If null, nothing to notify foreign trackers about.
-+                List<SynchedEntityData.DataItem<?>> dirtyItems = datawatcher.packForeignDirty(dataPacket.getUnpackedData());
-+                if (dirtyItems != null) {
-+                    this.broadcast(new ClientboundSetEntityDataPacket(this.entity.getId(), dirtyItems));
-+                }
-+            } else {
-+                this.broadcastAndSend(dataPacket);
++            //Get the packedData that the original packet has, and then determine if any of those are changed in
++            //the foreign version. If null, nothing to notify foreign trackers about.
++            List<SynchedEntityData.DataItem<?>> dirtyItems = datawatcher.packForeignDirty(dataPacket.getUnpackedData());
++            if (dirtyItems != null) {
++                this.broadcast(new ClientboundSetEntityDataPacket(this.entity.getId(), dirtyItems));
 +            }
 +            // Slice end
          }
