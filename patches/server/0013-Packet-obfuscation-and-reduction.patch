@@ -22,8 +22,6 @@ The current packets modified/obfuscated are the following:
 
 # Score - Foreign players will only see a player's score as 0 and will not update due to gathering xp orbs, etc.
 
-
-
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
 index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725fcb902848 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
@@ -175,7 +173,7 @@ index b7c9294fdd3d799d410afba4a1118aa371c98533..a6dcec3660b17feae7c3c1eeb7717097
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 049a9ba9cc96880513e681f7d29bd5f9681fbb0e..37836b6f9b39ab1dcbfa1e4dea90e4d12fc9e5b9 100644
+index c2f38dd9f30f803aaab71465352caa55802acdc1..01ea2e9a9aa4486d3960c3fc2f88256aea3e8f62 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2944,7 +2944,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
