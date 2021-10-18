@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 18 Oct 2021 08:52:40 -0500
+Subject: [PATCH] World Instance Flag
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index a62abcb2e05198001516cf2402dc7ead09761905..3bb1732b9bdb098b6f543c778c299e44e32c5ce2 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -200,6 +200,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     public final UUID uuid;
+     public boolean hasPhysicsEvent = true; // Paper
+     public boolean hasEntityMoveEvent = false; // Paper
++    public boolean instance; // Slice
+     public static Throwable getAddToWorldStackTrace(Entity entity) {
+         return new Throwable(entity + " Added to world at " + new java.util.Date());
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 00d8b61c04ac91770b0ff3b846d3ff70bef2e8e7..d7a755092370b7478fb8aa8b8e211c01f430ff5e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -1196,6 +1196,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+         world.noSave = !value;
+     }
+ 
++    // Slice start
++    @Override
++    public boolean isInstance() {
++        return world.instance;
++    }
++
++    @Override
++    public void setInstance(boolean value) {
++        world.instance = value;
++    }
++    // Slice end
++
+     @Override
+     public void setDifficulty(Difficulty difficulty) {
+         this.getHandle().serverLevelData.setDifficulty(net.minecraft.world.Difficulty.byId(difficulty.getValue()));
