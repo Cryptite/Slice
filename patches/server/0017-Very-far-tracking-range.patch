@@ -1,0 +1,58 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 29 Oct 2021 17:06:43 -0500
+Subject: [PATCH] Very far tracking range
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
+index 9f32296ca4afaa7f2c0dd920a4c994af7a815ec3..2b2fb92cbfeed75276f054e6f04e21b37d28b49b 100644
+--- a/src/main/java/net/minecraft/server/level/ChunkMap.java
++++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
+@@ -1994,8 +1994,15 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+         // Paper end
+         if (!(entity instanceof EnderDragonPart)) {
+             EntityType<?> entitytypes = entity.getType();
+-            int i = entitytypes.clientTrackingRange() * 16;
+-            i = org.spigotmc.TrackingRange.getEntityTrackingRange(entity, i); // Spigot
++            // Slice
++            int i;
++            if (entity.visibleFromVeryFar) {
++                i = 128;
++            } else {
++                i = entitytypes.clientTrackingRange() * 16;
++                i = org.spigotmc.TrackingRange.getEntityTrackingRange(entity, i); // Spigot
++            }
++            // Slice end
+ 
+             if (i != 0) {
+                 int j = entitytypes.updateInterval();
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 7c3cd4d613489e5ad68a15f59b076668cbc82c5e..b9f85c52ee8af7349b3600a7a45f37c593ed761d 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -339,6 +339,8 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+     public void inactiveTick() { }
+     // Spigot end
+ 
++    public boolean visibleFromVeryFar; // Slice
++
+     public float getBukkitYaw() {
+         return this.yRot;
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index 986f045a2e6a040c6e2aab7420c8cb2d4ac3a726..eb18db47313ebefb4e66a92f072931186245e968 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -1067,6 +1067,12 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         this.getHandle().setSilent(flag);
+     }
+ 
++    // Slice start
++    public void setVisibleFromVeryFar(boolean flag) {
++        this.getHandle().visibleFromVeryFar = flag;
++    }
++    // Slice end
++
+     @Override
+     public boolean hasGravity() {
+         return !this.getHandle().isNoGravity();
