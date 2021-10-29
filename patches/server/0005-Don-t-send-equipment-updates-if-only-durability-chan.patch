@@ -5,10 +5,10 @@ Subject: [PATCH] Don't send equipment updates if only durability changed
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 1018f4640bab5876c5e0afb5b88f71437fb79662..5c9630008533276f393a276f1247e1f5fae75326 100644
+index cbdff14b26f67b5040c13659f9d64d9ec4c7eaed..bd054a883ecb15260aec27c81ad79e774fca69a5 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2995,7 +2995,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3007,7 +3007,7 @@ public abstract class LivingEntity extends Entity {
  
              ItemStack itemstack1 = this.getItemBySlot(enumitemslot);
  

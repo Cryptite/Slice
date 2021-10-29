@@ -5,10 +5,10 @@ Subject: [PATCH] Allow opening covered chests
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/ChestBlock.java b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
-index eecb8c089b5f426b1395b47f714af32c210555ef..8a9bdc75396b9d3561dbb64010842945533bbdaa 100644
+index 1891cfb8f7ebae5a95a55f706bb04f8206121d32..d24c22e0dd84344021a77d24926c2934e71d40ff 100644
 --- a/src/main/java/net/minecraft/world/level/block/ChestBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
-@@ -349,9 +349,10 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
+@@ -356,9 +356,10 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
      }
  
      private static boolean isBlockedChestByBlock(BlockGetter world, BlockPos pos) {

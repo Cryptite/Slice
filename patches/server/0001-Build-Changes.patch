@@ -38,10 +38,10 @@ index 13f89bdaf1ada33060b1ee4d6f2860ec194b68a4..2de428cb94a8637242ef93f007f77e03
      workingDir = rootProject.layout.projectDirectory.dir(
          providers.gradleProperty("runWorkDir").forUseAtConfigurationTime().orElse("run")
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c8876b000a03f18e7a140167ed4505a9843a8d14..9f72d4d8f1b00f9ab1e93406fcb9921c5d4769a6 100644
+index 7636b0ae9031e06fd8b4a0c359a45a17e6e075de..6ae168b82f83b7bb1f357e132e24c35f813b1acf 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1726,7 +1726,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {

@@ -17,10 +17,10 @@ index 11f46c1b8f4c8414e0667d1873542c17d6e01f2a..fda2fedb0a24800e2690bba13d44c1cb
      public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
          super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index ea1f7c8bf220982a086d4ae1663ae445b8c6cebd..56f38c24d6d7699eff364755bc064a940fcceadf 100644
+index eaa005c1c9b4386bcdbe1d6eb28c3eca7635066c..86d00fdee17bce31a5caf370ede8a2dbc42e440b 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -939,11 +939,11 @@ public abstract class PlayerList {
+@@ -940,11 +940,11 @@ public abstract class PlayerList {
          }
          // CraftBukkit start
          LevelData worlddata = worldserver1.getLevelData();
