@@ -26,7 +26,7 @@ index 0277627e97b51e20470ccf578cee48470e06a34b..c73bbfdd44f674b221574782cb8d6c3c
 +    // Slice end
  }
 diff --git a/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java b/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java
-index 86528ff031014e788d72a8bf7c1c9443512096bb..ff5c6d262b0e5d4fad85edd060460f087bd6e5e8 100644
+index 86528ff031014e788d72a8bf7c1c9443512096bb..f66e6f750136fc3903acbcb7502e98e21e75fe5a 100644
 --- a/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java
 +++ b/src/main/java/net/minecraft/world/level/biome/MobSpawnSettings.java
 @@ -41,9 +41,10 @@ public class MobSpawnSettings {
@@ -42,7 +42,7 @@ index 86528ff031014e788d72a8bf7c1c9443512096bb..ff5c6d262b0e5d4fad85edd060460f08
  
      MobSpawnSettings(float creatureSpawnProbability, Map<MobCategory, WeightedRandomList<MobSpawnSettings.SpawnerData>> spawners, Map<EntityType<?>, MobSpawnSettings.MobSpawnCost> spawnCosts, boolean playerSpawnFriendly) {
          this.creatureGenerationProbability = creatureSpawnProbability;
-@@ -52,7 +53,43 @@ public class MobSpawnSettings {
+@@ -52,12 +53,49 @@ public class MobSpawnSettings {
          this.playerSpawnFriendly = playerSpawnFriendly;
      }
  
@@ -84,5 +84,11 @@ index 86528ff031014e788d72a8bf7c1c9443512096bb..ff5c6d262b0e5d4fad85edd060460f08
      public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobs(MobCategory spawnGroup) {
 +        if (!stripped) stripSpawnData(); // Slice
          return this.spawners.getOrDefault(spawnGroup, EMPTY_MOB_LIST);
+     }
+ 
+     @Nullable
+     public MobSpawnSettings.MobSpawnCost getMobSpawnCost(EntityType<?> entityType) {
++        if (!stripped) stripSpawnData(); // Slice
+         return this.mobSpawnCosts.get(entityType);
      }
  
