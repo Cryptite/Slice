@@ -27,10 +27,10 @@ index 21d1e0c9c471e9e556b5bd70166a769b46105c7a..d46dc12001bd46596c3bb2e24144bbe4
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index f936e9f9a9fa655fa997d6862b5ed54c04169d35..465a1e179f6ae43d253d692255c8fe144179efe3 100644
+index 9cafd000b3533ed9fd35df2ec880f55e262084fb..8420d615867faa717266d1edfa5a469df1b1e43f 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -552,12 +552,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -541,12 +541,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -46,7 +46,7 @@ index f936e9f9a9fa655fa997d6862b5ed54c04169d35..465a1e179f6ae43d253d692255c8fe14
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start
-@@ -604,7 +604,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -593,7 +593,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              } else {
                  BlockState iblockdata2 = this.getBlockState(pos);
  
@@ -55,7 +55,7 @@ index f936e9f9a9fa655fa997d6862b5ed54c04169d35..465a1e179f6ae43d253d692255c8fe14
                      this.getProfiler().push("queueCheckLight");
                      this.getChunkSource().getLightEngine().checkBlock(pos);
                      this.getProfiler().pop();
-@@ -751,7 +751,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -740,7 +740,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  Block.dropResources(iblockdata, this, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  
@@ -99,7 +99,7 @@ index 8c30e28b97ac7e8b54322c903e0b75ee8135620b..64cc26d146afba7c6ecb0d3052776837
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index e3944d0f4fd18ef6c545dc4a131c0b120dff753a..652c72df86dc60c0af099b24a1017472da309f8b 100644
+index 6f01af8cc3f9ed4d2eaa3304990ca33f8692a453..f374d5d6fc3ac9187236d141931c3c57ddd57865 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 @@ -178,11 +178,20 @@ public class CraftBlock implements Block {

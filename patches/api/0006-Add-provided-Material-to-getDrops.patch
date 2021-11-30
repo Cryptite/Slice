@@ -5,10 +5,10 @@ Subject: [PATCH] Add provided Material to getDrops
 
 
 diff --git a/src/main/java/org/bukkit/block/Block.java b/src/main/java/org/bukkit/block/Block.java
-index 798b46e9a394c124327537b90afe41f4a2ebc2f0..b99b70d3b70fef71706fce5e61054fa30d9e628f 100644
+index cd63406809aadbcc53857aaef31053915278dfc0..ab4982d52185bbc80d506da2a961345d46710efa 100644
 --- a/src/main/java/org/bukkit/block/Block.java
 +++ b/src/main/java/org/bukkit/block/Block.java
-@@ -595,6 +595,20 @@ public interface Block extends Metadatable, net.kyori.adventure.translation.Tran
+@@ -602,6 +602,20 @@ public interface Block extends Metadatable, net.kyori.adventure.translation.Tran
      @NotNull
      Collection<ItemStack> getDrops(@NotNull ItemStack tool, @Nullable Entity entity);
  

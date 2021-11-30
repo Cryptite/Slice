@@ -148,7 +148,7 @@ index 4df12454001f0de5f358c88d876e34c35a736c42..72c74d2369a36b14f1103aa74b096f50
      }
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index b7c9294fdd3d799d410afba4a1118aa371c98533..a6dcec3660b17feae7c3c1eeb7717097c71241bf 100644
+index 1c6bf5a3014beaf5f9c1c38aed4cf3225e50b8bb..6e9c5e210270647205499801b235849d20776156 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -368,7 +368,19 @@ public class ServerEntity {
@@ -173,10 +173,10 @@ index b7c9294fdd3d799d410afba4a1118aa371c98533..a6dcec3660b17feae7c3c1eeb7717097
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index c2f38dd9f30f803aaab71465352caa55802acdc1..01ea2e9a9aa4486d3960c3fc2f88256aea3e8f62 100644
+index 78cb0786e741f8ef8611460dab64d0e2448fb6cf..587411322e75b08b7f6c2f18a22256ff9bf526ad 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2944,7 +2944,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -2953,7 +2953,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          if (event.isCancelled()) {
              return;
          }
@@ -186,7 +186,7 @@ index c2f38dd9f30f803aaab71465352caa55802acdc1..01ea2e9a9aa4486d3960c3fc2f88256a
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 4a35056b01b947c57f7ca06c974463008fc4bbef..80a8ea35b47cc649f435856cad19a80d69da8425 100644
+index 51fd9bca61888861b58966a69cd1b63c742c44ca..3ed6e5d0c50c259c3df2b0cf84e2fb7ccf64def3 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -633,7 +633,7 @@ public abstract class Player extends LivingEntity {
@@ -199,10 +199,10 @@ index 4a35056b01b947c57f7ca06c974463008fc4bbef..80a8ea35b47cc649f435856cad19a80d
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index c64911651f3d736c83cc83996de04920b091cc57..cf8d4edba400d5f21737c0af52a1193f69386fa9 100644
+index 4ff4143f3a7cd89ef92f4b8882fa3e5addfe0f06..83495f9a7d92cd42c2f367891a0a04870a4a1577 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1997,7 +1997,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2004,7 +2004,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

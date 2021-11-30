@@ -5,10 +5,10 @@ Subject: [PATCH] Block Mob Spawns globally by EntityType
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 0277627e97b51e20470ccf578cee48470e06a34b..c73bbfdd44f674b221574782cb8d6c3c02283f91 100644
+index 2509a170b8ddd812ad5be49e5345ec5a3c0cf2b8..6a0726ec0882a67d2cc6b652010e2b02a75b3833 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-@@ -662,4 +662,16 @@ public class PaperConfig {
+@@ -665,4 +665,16 @@ public class PaperConfig {
      private static void sendFullPosForHardCollidingEntities() {
          sendFullPosForHardCollidingEntities = getBoolean("settings.send-full-pos-for-hard-colliding-entities", true);
      }
