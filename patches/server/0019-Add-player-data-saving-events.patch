@@ -1,0 +1,108 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Tom <cryptite@gmail.com>
+Date: Tue, 7 Dec 2021 07:59:41 -0600
+Subject: [PATCH] Add player data saving events
+
+
+diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+index 9f3355dbbbab1ab88cf2b7034130c2888e38d7a7..ec43aa3661bc891a17670aec54d3f009c29b463b 100644
+--- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
++++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+@@ -201,7 +201,12 @@ public class ServerStatsCounter extends StatsCounter {
+         return nbttagcompound;
+     }
+ 
+-    protected String toJson() {
++    // Slice start - OBFHELPER
++    public String toJson() {
++        return serialize().toString();
++    }
++
++    public JsonObject serialize() { // Slice end
+         Map<StatType<?>, JsonObject> map = Maps.newHashMap();
+         ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
+ 
+@@ -227,7 +232,7 @@ public class ServerStatsCounter extends StatsCounter {
+ 
+         jsonobject1.add("stats", jsonobject);
+         jsonobject1.addProperty("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());
+-        return jsonobject1.toString();
++        return jsonobject1; // Slice
+     }
+ 
+     private static <T> ResourceLocation getKey(Stat<T> stat) {
+diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+index 35c39aed9583275ef25d32c783715798b52bdb63..258813e65b521dccb19f4f3248588a7106a1e24b 100644
+--- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+@@ -33,6 +33,7 @@ public class PlayerDataStorage {
+ 
+     public void save(Player player) {
+         if (org.spigotmc.SpigotConfig.disablePlayerDataSaving) return; // Spigot
++        if (!new com.destroystokyo.paper.event.player.PlayerSaveDataEvent((org.bukkit.entity.Player) player.getBukkitEntity()).callEvent()) return; // Slice
+         try {
+             CompoundTag nbttagcompound = player.saveWithoutId(new CompoundTag());
+             File file = File.createTempFile(player.getStringUUID() + "-", ".dat", this.playerDir);
+@@ -52,32 +53,40 @@ public class PlayerDataStorage {
+     public CompoundTag load(Player player) {
+         CompoundTag nbttagcompound = null;
+ 
+-        try {
+-            File file = new File(this.playerDir, player.getStringUUID() + ".dat");
+-            // Spigot Start
+-            boolean usingWrongFile = false;
+-            if ( org.bukkit.Bukkit.getOnlineMode() && !file.exists() ) // Paper - Check online mode first
+-            {
+-                file = new File( this.playerDir, java.util.UUID.nameUUIDFromBytes( ( "OfflinePlayer:" + player.getScoreboardName() ).getBytes( "UTF-8" ) ).toString() + ".dat");
+-                if ( file.exists() )
++        // Slice start - If event supplies playerdata, use it. Otherwise just load from disk as usual
++        com.destroystokyo.paper.event.player.PlayerLoadDataEvent event = new com.destroystokyo.paper.event.player.PlayerLoadDataEvent(player.getUUID());
++        org.bukkit.Bukkit.getPluginManager().callEvent(event);
++
++        Object playerData = event.getPlayerData();
++        if (playerData != null) {
++            nbttagcompound = (CompoundTag) playerData;
++        } else {
++            try {
++                File file = new File(this.playerDir, player.getStringUUID() + ".dat");
++                // Spigot Start
++                boolean usingWrongFile = false;
++                if (org.bukkit.Bukkit.getOnlineMode() && !file.exists()) // Paper - Check online mode first
+                 {
+-                    usingWrongFile = true;
+-                    org.bukkit.Bukkit.getServer().getLogger().warning( "Using offline mode UUID file for player " + player.getScoreboardName() + " as it is the only copy we can find." );
++                    file = new File(this.playerDir, java.util.UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getScoreboardName()).getBytes("UTF-8")).toString() + ".dat");
++                    if (file.exists()) {
++                        usingWrongFile = true;
++                        org.bukkit.Bukkit.getServer().getLogger().warning("Using offline mode UUID file for player " + player.getScoreboardName() + " as it is the only copy we can find.");
++                    }
+                 }
+-            }
+-            // Spigot End
++                // Spigot End
+ 
+-            if (file.exists() && file.isFile()) {
+-                nbttagcompound = NbtIo.readCompressed(file);
+-            }
+-            // Spigot Start
+-            if ( usingWrongFile )
+-            {
+-                file.renameTo( new File( file.getPath() + ".offline-read" ) );
++                if (file.exists() && file.isFile()) {
++                    nbttagcompound = NbtIo.readCompressed(file);
++                }
++                // Spigot Start
++                if (usingWrongFile) {
++                    file.renameTo(new File(file.getPath() + ".offline-read"));
++                }
++                // Spigot End
++            } catch (Exception exception) {
++                PlayerDataStorage.LOGGER.warn("Failed to load player data for {}", player.getName().getString());
+             }
+-            // Spigot End
+-        } catch (Exception exception) {
+-            PlayerDataStorage.LOGGER.warn("Failed to load player data for {}", player.getName().getString());
++            // Slice end
+         }
+ 
+         if (nbttagcompound != null) {
