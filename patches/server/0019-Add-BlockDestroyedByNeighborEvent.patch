@@ -1,9 +1,22 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Tom <cryptite@gmail.com>
 Date: Tue, 7 Dec 2021 07:59:41 -0600
-Subject: [PATCH] Add player data saving events
+Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
+index b03eacbef3cf15b70ec012af0870975d3e8e8cba..d792f9ad494f01d6ca78704a9fadf445e0d4e65e 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
+@@ -606,6 +606,8 @@ public class ServerPlayerGameMode {
+                     enuminteractionresult1 = stack.placeItem(itemactioncontext, hand);
+                 }
+ 
++                world.pendingPlayerBlockEvents.remove(blockposition); // Paper
++
+                 if (enuminteractionresult1.consumesAction()) {
+                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, blockposition, itemstack1);
+                 }
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 index 9f3355dbbbab1ab88cf2b7034130c2888e38d7a7..ec43aa3661bc891a17670aec54d3f009c29b463b 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
