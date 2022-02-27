@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Slice"
+rootProject.name = "slice"
 
-include("Slice-api", "Slice-server")
+include("slice-api", "slice-server")

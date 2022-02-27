@@ -1,4 +1,4 @@
-# ForkTest - A Paper fork, using paperweight
+# Slice - A Paper fork, using paperweight
 
 This is an example project, showcasing how to setup a fork of Paper (or any other fork using paperweight), using paperweight.
 
