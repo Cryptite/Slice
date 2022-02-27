@@ -79,7 +79,7 @@ tasks.generateDevelopmentBundle {
             "https://libraries.minecraft.net/",
             "https://papermc.io/repo/repository/maven-public/",
             "https://maven.quiltmc.org/repository/release/",
-            "http://ysera.dyndns.org:8090/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api')
+            "https://ysera.dyndns.org:8090/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api')
         )
     )
 }
@@ -91,7 +91,7 @@ allprojects {
         repositories {
             maven {
                 name = "Slice"
-                url = uri("http://ysera.dyndns.org:8090/releases")
+                url = uri("https://ysera.dyndns.org:8090/releases")
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
                 credentials(PasswordCredentials::class)
