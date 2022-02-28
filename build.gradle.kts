@@ -71,7 +71,7 @@ paperweight {
 //
 
 tasks.generateDevelopmentBundle {
-    apiCoordinates.set("com.example.paperfork:slice-api")
+    apiCoordinates.set("com.lokamc.slice:slice-api")
     mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
     libraryRepositories.set(
         listOf(
@@ -79,7 +79,7 @@ tasks.generateDevelopmentBundle {
             "https://libraries.minecraft.net/",
             "https://papermc.io/repo/repository/maven-public/",
             "https://maven.quiltmc.org/repository/release/",
-            "https://ysera.dyndns.org:8090/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api')
+            "https://ysera.dyndns.org:444/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api')
         )
     )
 }
@@ -90,8 +90,8 @@ allprojects {
     publishing {
         repositories {
             maven {
-                name = "Slice"
-                url = uri("https://ysera.dyndns.org:8090/releases")
+                name = "Ysera"
+                url = uri("https://ysera.dyndns.org:444/releases")
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
                 credentials(PasswordCredentials::class)

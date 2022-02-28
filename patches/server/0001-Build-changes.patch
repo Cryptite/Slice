@@ -76,7 +76,7 @@ index 774556a62eb240da42e84db4502e2ed43495be17..c232c54606b465b65305a8bcd112fbb5
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.example.paperfork/slice-api/pom.properties"); // Slice
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.lokamc.slice/slice-api/pom.properties"); // Slice
          Properties properties = new Properties();
  
          if (stream != null) {
