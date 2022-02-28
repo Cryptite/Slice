@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 28 Feb 2022 09:17:28 -0600
+Subject: [PATCH] World Instance flag
+
+
+diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
+index 8a688583e65cd22e0417f9fd24e51803486d095e..4be062a2404b509594d723eea59d9656eaa228f1 100644
+--- a/src/main/java/org/bukkit/World.java
++++ b/src/main/java/org/bukkit/World.java
+@@ -2608,6 +2608,11 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+      */
+     public void setAutoSave(boolean value);
+ 
++    // Slice start
++    public boolean isInstance();
++    public void setInstance(boolean value);
++    // Slice end
++
+     /**
+      * Sets the Difficulty of the world.
+      *
