@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 28 Feb 2022 09:33:53 -0600
+Subject: [PATCH] Add PlayerTrackEntityEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index e4ba278cf42c4a946ddd3e1fefd07ae3b696cdc0..a0e84c988021c99309495d27f455e9c74c8b1053 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -365,6 +365,7 @@ public class ServerEntity {
+             }
+         }
+ 
++        this.entity.level.getCraftServer().getPluginManager().callEvent(new org.bukkit.event.player.PlayerTrackEntityEvent(entityplayer.getBukkitEntity().getPlayer(), this.entity.getBukkitEntity())); // Slice
+     }
+ 
+     private void sendDirtyEntityData() {
