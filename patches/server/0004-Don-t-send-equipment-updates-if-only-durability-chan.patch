@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 28 Feb 2022 08:43:22 -0600
+Subject: [PATCH] Don't send equipment updates if only durability changed
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index 9822d163a9e4d6ac8240c18a7082e911788d0948..1d17ba9aa5f6de7e6f14f0a2aeb7f322f74ce90f 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -3028,7 +3028,7 @@ public abstract class LivingEntity extends Entity {
+ 
+             ItemStack itemstack1 = this.getItemBySlot(enumitemslot);
+ 
+-            if (!ItemStack.matches(itemstack1, itemstack)) {
++            if (!ItemStack.isSameIgnoreDurability(itemstack1, itemstack)) {
+                 // Paper start - PlayerArmorChangeEvent
+                 if (this instanceof ServerPlayer && enumitemslot.getType() == EquipmentSlot.Type.ARMOR) {
+                     final org.bukkit.inventory.ItemStack oldItem = CraftItemStack.asBukkitCopy(itemstack);
