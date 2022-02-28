@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 28 Feb 2022 11:21:07 -0600
+Subject: [PATCH] Disable geode generation
+
+
+diff --git a/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java b/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java
+index 7cf6d6a055f40fd9e05aadc680ce6f703b808653..9dc539688a84ae716cb91e362692c651918391d1 100644
+--- a/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java
++++ b/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java
+@@ -41,7 +41,7 @@ public class OverworldBiomes {
+ 
+     private static void globalOverworldGeneration(BiomeGenerationSettings.Builder generationSettings) {
+         BiomeDefaultFeatures.addDefaultCarversAndLakes(generationSettings);
+-        BiomeDefaultFeatures.addDefaultCrystalFormations(generationSettings);
++//        BiomeDefaultFeatures.addDefaultCrystalFormations(generationSettings); // Slice - Don't generate Geodes in our chunk generation
+         BiomeDefaultFeatures.addDefaultMonsterRoom(generationSettings);
+         BiomeDefaultFeatures.addDefaultUndergroundVariety(generationSettings);
+         BiomeDefaultFeatures.addDefaultSprings(generationSettings);
