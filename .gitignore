@@ -2,6 +2,8 @@
 /build/
 .idea
 run
+slice-api
+slice-server
 
 # Ignore Gradle GUI config
 gradle-app.setting
