@@ -5,10 +5,10 @@ Subject: [PATCH] Add player data saving events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 170f58e56c6a6cae26f7c9e55c74c3c3074500da..754ac18682a9d693c2b282e7f015926a94c4ca15 100644
+index aa9c5c26b69db883ff933d35d0c99425e95ad455..b8a453b6abfa6f10c36757a2759e8f0d99473483 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-@@ -606,6 +606,8 @@ public class ServerPlayerGameMode {
+@@ -616,6 +616,8 @@ public class ServerPlayerGameMode {
                      enuminteractionresult1 = stack.useOn(itemactioncontext, hand);
                  }
  
@@ -18,7 +18,7 @@ index 170f58e56c6a6cae26f7c9e55c74c3c3074500da..754ac18682a9d693c2b282e7f015926a
                      CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, blockposition, itemstack1);
                  }
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index ee5bb1a8edb812d48d5af45ea8485f574dcb2ad5..94317f2dcf997fbe4707fc3e2d231176d55992ec 100644
+index c59f98ca3adfdd90cdc5999aeadbb0834efedc0f..6e819bd376eb9edee6bf8bd8c08a755599f1514a 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 @@ -201,7 +201,12 @@ public class ServerStatsCounter extends StatsCounter {
@@ -45,7 +45,7 @@ index ee5bb1a8edb812d48d5af45ea8485f574dcb2ad5..94317f2dcf997fbe4707fc3e2d231176
  
      private static <T> ResourceLocation getKey(Stat<T> stat) {
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index 35c39aed9583275ef25d32c783715798b52bdb63..258813e65b521dccb19f4f3248588a7106a1e24b 100644
+index 601f8099f74e81c17600566b3c9b7a6dd39c9bcb..cde84f45b67b88ecc410cdff924170b5b5366823 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -33,6 +33,7 @@ public class PlayerDataStorage {

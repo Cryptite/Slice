@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 4662952bd0a389fe77e00ede9ab4a57f33522794..3e647d6015313a4545e9ccd03334f8d3a9b4e088 100644
+index 4beb35d1e5b013395f5df101e843f41c2ce174ad..cc2e1f98da222117d378a109124644412d25810f 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -18,8 +18,12 @@ repositories {
@@ -42,10 +42,10 @@ index 4662952bd0a389fe77e00ede9ab4a57f33522794..3e647d6015313a4545e9ccd03334f8d3
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c847a2b935130a293d9ac4c196c9cff27470649b..4ec29c98c951c1665dcef02f1da38fab752505b4 100644
+index 07c382f30ed3736ed15b5b71f48dc4a1de958242..2e8ec4dce4962420840d04600ec0ce2ae40f585c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1719,7 +1719,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1683,7 +1683,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -55,10 +55,10 @@ index c847a2b935130a293d9ac4c196c9cff27470649b..4ec29c98c951c1665dcef02f1da38fab
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 51f67a2944034552d57b939ef29e0249e74383b9..379f5597430e43178fc1d1baa3b5097a4455d97b 100644
+index 7343bd96a4a15f4abc081e565175db8df930a470..def3cbb36c3ae5efb1fad8c32cc501840c60dc87 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
+@@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -68,7 +68,7 @@ index 51f67a2944034552d57b939ef29e0249e74383b9..379f5597430e43178fc1d1baa3b5097a
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 774556a62eb240da42e84db4502e2ed43495be17..c232c54606b465b65305a8bcd112fbb52d921b8a 100644
+index 774556a62eb240da42e84db4502e2ed43495be17..fdd8fa9ec021b4846b59e1693e32d4d02a712efe 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {

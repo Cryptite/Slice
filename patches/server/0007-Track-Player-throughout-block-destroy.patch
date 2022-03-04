@@ -5,10 +5,10 @@ Subject: [PATCH] Track Player throughout block destroy
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index cc5dbc86c8265540948e6b1445d84ecf0b7762aa..170f58e56c6a6cae26f7c9e55c74c3c3074500da 100644
+index 891199d02539fa46454cd0aa7c133637e5dc8235..aa9c5c26b69db883ff933d35d0c99425e95ad455 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-@@ -441,6 +441,7 @@ public class ServerPlayerGameMode {
+@@ -451,6 +451,7 @@ public class ServerPlayerGameMode {
                  org.bukkit.block.BlockState state = bblock.getState();
                  level.captureDrops = new ArrayList<>();
                  // CraftBukkit end
@@ -16,7 +16,7 @@ index cc5dbc86c8265540948e6b1445d84ecf0b7762aa..170f58e56c6a6cae26f7c9e55c74c3c3
                  block.playerWillDestroy(this.level, pos, iblockdata, this.player);
                  boolean flag = this.level.removeBlock(pos, false);
  
-@@ -465,6 +466,7 @@ public class ServerPlayerGameMode {
+@@ -475,6 +476,7 @@ public class ServerPlayerGameMode {
                  // CraftBukkit start
                  java.util.List<net.minecraft.world.entity.item.ItemEntity> itemsToDrop = level.captureDrops; // Paper - store current list
                  level.captureDrops = null; // Paper - Remove this earlier so that we can actually drop stuff
@@ -25,10 +25,10 @@ index cc5dbc86c8265540948e6b1445d84ecf0b7762aa..170f58e56c6a6cae26f7c9e55c74c3c3
                      org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - use stored ref
                  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 8bd12326e591213f0a093b96a5af3f04e19dc980..aeff3a9cc6b3531cb0d690bf574094cb525f57eb 100644
+index dc4639f905fb71435daf29c61f64621a3e2cc533..32e210e52ce86791965869cb75869a4b506e4a5f 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -323,6 +323,7 @@ public final class ItemStack {
+@@ -333,6 +333,7 @@ public final class ItemStack {
                  }
              }
              Item item = this.getItem();
@@ -37,10 +37,10 @@ index 8bd12326e591213f0a093b96a5af3f04e19dc980..aeff3a9cc6b3531cb0d690bf574094cb
              CompoundTag newData = this.getTagClone();
              int newCount = this.getCount();
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index fb283572b11ed6e482ada401c44d40c9c5e37367..d8ef17bc72388046e3f428c108aaaecd02d4eed3 100644
+index 8b6ea24dc8d0286c0814c86dcf4c51cacc572854..6764f174d0685c02d5e81aa38228d02a77bf9632 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -174,6 +174,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -172,6 +172,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
      public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
  
@@ -68,7 +68,7 @@ index fb283572b11ed6e482ada401c44d40c9c5e37367..d8ef17bc72388046e3f428c108aaaecd
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -692,6 +713,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -649,6 +670,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index fb283572b11ed6e482ada401c44d40c9c5e37367..d8ef17bc72388046e3f428c108aaaecd
              // CraftBukkit end
          }
      }
-@@ -797,8 +819,20 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -754,8 +776,20 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public void neighborChanged(BlockPos pos, Block sourceBlock, BlockPos neighborPos) {
          if (!this.isClientSide) {
              BlockState iblockdata = this.getBlockState(pos);
@@ -115,10 +115,10 @@ index e12b76238cb52a1007f2102473b7f892f8521b62..301dfb74fec49b7f6f0452e4c49c8f1d
                  BlockState iblockdata2 = iblockdata1.hasProperty(BlockStateProperties.WATERLOGGED) && (Boolean) iblockdata1.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index eac017fc521bfd1391e75db8628f42b28329d681..b19164ca156f76e61cac17c4d924f14845d49148 100644
+index 61590f2f04a797235299f1bd6b78a08f5bfe4a33..9f757e1f0287f9146298ce6c09bb7aa207edbbc2 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -966,6 +966,18 @@ public abstract class BlockBehaviour {
+@@ -968,6 +968,18 @@ public abstract class BlockBehaviour {
  
                  blockposition_mutableblockposition.setWithOffset(pos, enumdirection);
                  BlockState iblockdata = world.getBlockState(blockposition_mutableblockposition);

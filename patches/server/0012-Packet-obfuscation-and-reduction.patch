@@ -23,7 +23,7 @@ index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725f
          this.id = buf.readVarInt();
          this.packedItems = SynchedEntityData.unpack(buf);
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index 2e2bfccfc6cec6582a5b595e0343c27be5267b7a..77e5b55b6c1ea505c7fd11d5f9ee783c9ffa72f7 100644
+index 1d88edfd09a909044f6e3175af652914b4d06311..e4f8403c6544e1a00571f28954458a1412a6de58 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 @@ -136,6 +136,11 @@ public class SynchedEntityData {
@@ -130,7 +130,7 @@ index 2e2bfccfc6cec6582a5b595e0343c27be5267b7a..77e5b55b6c1ea505c7fd11d5f9ee783c
      }
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index b0a79e335ac9dc24fc6f18010bf40716ecc724bf..e4ba278cf42c4a946ddd3e1fefd07ae3b696cdc0 100644
+index 1092ba200a945d8d70e48f956535f56e2743302d..a7f2cc53a0b66d7cd3705f419337bd7ee8c78ec3 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -371,7 +371,19 @@ public class ServerEntity {
@@ -155,11 +155,11 @@ index b0a79e335ac9dc24fc6f18010bf40716ecc724bf..e4ba278cf42c4a946ddd3e1fefd07ae3
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d0daee81837fe64ac766e615d0a0bbb891de3306..dbee85771fa020295bc967b99ef8dd3fb67f4d3c 100644
+index a57d8aa70fe3df462279c494686056459dc70271..172d8008c2f5558962e889dd49f205b9a3800aa2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2971,7 +2971,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
-         if (event.isCancelled()) {
+@@ -3006,7 +3006,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, i
+             this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }
 -        this.entityData.set(Entity.DATA_AIR_SUPPLY_ID, event.getAmount());
@@ -168,10 +168,10 @@ index d0daee81837fe64ac766e615d0a0bbb891de3306..dbee85771fa020295bc967b99ef8dd3f
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 2c0c9019245e94a4c89c948eafa837a7d6279b7e..0d720d6d50de919a4a65278a73db7e4b639b6bc9 100644
+index 09d649f1b3236805cad461f2d826758daf41d14e..8cba5b6479792e46de5dfa566936bf28a482db3c 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -631,7 +631,7 @@ public abstract class Player extends LivingEntity {
+@@ -632,7 +632,7 @@ public abstract class Player extends LivingEntity {
      public void increaseScore(int score) {
          int j = this.getScore();
  
@@ -179,9 +179,9 @@ index 2c0c9019245e94a4c89c948eafa837a7d6279b7e..0d720d6d50de919a4a65278a73db7e4b
 +        this.entityData.set(Player.DATA_SCORE_ID, j + score, 0); // Slice
      }
  
-     @Override
+     public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index ef841a5ea1f634e87e5437faf83dc00efd590106..f7d25a63d80fed46f81f46e98e6a36bc8cfa5f88 100644
+index 603e9234294c01f1cde4bfc0b0053e69b99861d9..cc32c47e90b412950c810fef29ac097366a8f07f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -2113,7 +2113,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

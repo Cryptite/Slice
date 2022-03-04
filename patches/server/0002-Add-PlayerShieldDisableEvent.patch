@@ -5,7 +5,7 @@ Subject: [PATCH] Add PlayerShieldDisableEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 850a4f8a9bd1dc30b13205e158fcbfaa872d6157..aa9d0ec59d0bbba073d416cc40f273e7d7c4cd50 100644
+index b1ae9b0d8b229e2a6797a173cb11ecc0f43e2592..48e933f5d3f35e845bf7b0eed86ce5d9c2114bcf 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -1609,6 +1609,7 @@ public abstract class Mob extends LivingEntity {
@@ -17,10 +17,10 @@ index 850a4f8a9bd1dc30b13205e158fcbfaa872d6157..aa9d0ec59d0bbba073d416cc40f273e7
                  this.level.broadcastEntityEvent(player, (byte) 30);
              }
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index d85da02be7f1d494af8f2cc840c49073774f5f9c..2c0c9019245e94a4c89c948eafa837a7d6279b7e 100644
+index 9c767096ca950d55d6002282c7a3fe2884bcd630..09d649f1b3236805cad461f2d826758daf41d14e 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -933,7 +933,7 @@ public abstract class Player extends LivingEntity {
+@@ -946,7 +946,7 @@ public abstract class Player extends LivingEntity {
      protected void blockUsingShield(LivingEntity attacker) {
          super.blockUsingShield(attacker);
          if (attacker.getMainHandItem().getItem() instanceof AxeItem) {
@@ -29,7 +29,7 @@ index d85da02be7f1d494af8f2cc840c49073774f5f9c..2c0c9019245e94a4c89c948eafa837a7
          }
  
      }
-@@ -1404,6 +1404,12 @@ public abstract class Player extends LivingEntity {
+@@ -1417,6 +1417,12 @@ public abstract class Player extends LivingEntity {
      }
  
      public void disableShield(boolean sprinting) {
@@ -42,7 +42,7 @@ index d85da02be7f1d494af8f2cc840c49073774f5f9c..2c0c9019245e94a4c89c948eafa837a7
          float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
  
          if (sprinting) {
-@@ -1411,6 +1417,8 @@ public abstract class Player extends LivingEntity {
+@@ -1424,6 +1430,8 @@ public abstract class Player extends LivingEntity {
          }
  
          if (this.random.nextFloat() < f) {
