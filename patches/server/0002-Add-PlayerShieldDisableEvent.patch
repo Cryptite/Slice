@@ -17,10 +17,10 @@ index b1ae9b0d8b229e2a6797a173cb11ecc0f43e2592..48e933f5d3f35e845bf7b0eed86ce5d9
                  this.level.broadcastEntityEvent(player, (byte) 30);
              }
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 9c767096ca950d55d6002282c7a3fe2884bcd630..09d649f1b3236805cad461f2d826758daf41d14e 100644
+index 2483d7df7f1bf94344afd38b37602c645a4a2dff..e909d2cc08a5cea3a8b98ad6faf8eb65c33a35ef 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -946,7 +946,7 @@ public abstract class Player extends LivingEntity {
+@@ -949,7 +949,7 @@ public abstract class Player extends LivingEntity {
      protected void blockUsingShield(LivingEntity attacker) {
          super.blockUsingShield(attacker);
          if (attacker.getMainHandItem().getItem() instanceof AxeItem) {
@@ -29,7 +29,7 @@ index 9c767096ca950d55d6002282c7a3fe2884bcd630..09d649f1b3236805cad461f2d826758d
          }
  
      }
-@@ -1417,6 +1417,12 @@ public abstract class Player extends LivingEntity {
+@@ -1420,6 +1420,12 @@ public abstract class Player extends LivingEntity {
      }
  
      public void disableShield(boolean sprinting) {
@@ -42,7 +42,7 @@ index 9c767096ca950d55d6002282c7a3fe2884bcd630..09d649f1b3236805cad461f2d826758d
          float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
  
          if (sprinting) {
-@@ -1424,6 +1430,8 @@ public abstract class Player extends LivingEntity {
+@@ -1427,6 +1433,8 @@ public abstract class Player extends LivingEntity {
          }
  
          if (this.random.nextFloat() < f) {
