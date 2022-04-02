@@ -5,9 +5,18 @@ Subject: [PATCH] Debug sync chunk loads
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
-index d0c55497040158d959693ef2ddf3ff03bd6df05f..98c1f06b0f37d68d17d31f9a69a7bfc8bb7e0c8b 100644
+index d0c55497040158d959693ef2ddf3ff03bd6df05f..5925feafad214333529bace2178f233f589e1a6e 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
+@@ -70,7 +70,7 @@ import java.util.stream.Collectors;
+ 
+ public class PaperCommand extends Command {
+     private static final String BASE_PERM = "bukkit.command.paper.";
+-    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "fixlight", "syncloadinfo", "dumpitem", "mobcaps", "playermobcaps").build();
++    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "fixlight", "syncloadinfo", "dumpitem", "mobcaps", "playermobcaps", "debugsyncload").build(); // Slice
+ 
+     public PaperCommand(String name) {
+         super(name);
 @@ -203,6 +203,12 @@ public class PaperCommand extends Command {
              case "syncloadinfo":
                  this.doSyncLoadInfo(sender, args);
