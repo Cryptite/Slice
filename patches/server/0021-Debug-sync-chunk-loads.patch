@@ -31,22 +31,22 @@ index d0c55497040158d959693ef2ddf3ff03bd6df05f..5925feafad214333529bace2178f233f
                  this.printMobcaps(sender, args);
                  break;
 diff --git a/src/main/java/com/destroystokyo/paper/io/SyncLoadFinder.java b/src/main/java/com/destroystokyo/paper/io/SyncLoadFinder.java
-index d3e619655382e50e9ac9323ed942502d85c9599c..ff222a54a320eee467383a612f2ce17614b0fe2a 100644
+index d3e619655382e50e9ac9323ed942502d85c9599c..a0c4db2a78895a3e76dea755c157eccabdbf04f8 100644
 --- a/src/main/java/com/destroystokyo/paper/io/SyncLoadFinder.java
 +++ b/src/main/java/com/destroystokyo/paper/io/SyncLoadFinder.java
 @@ -17,6 +17,8 @@ public class SyncLoadFinder {
  
      public static final boolean ENABLED = Boolean.getBoolean("paper.debug-sync-loads");
  
-+    public static boolean DEBUG; // Slice
++    public static boolean DEBUG = ENABLED; // Slice
 +
      private static final WeakHashMap<Level, Object2ObjectOpenHashMap<ThrowableWithEquals, SyncLoadInformation>> SYNC_LOADS = new WeakHashMap<>();
  
      private static final class SyncLoadInformation {
-@@ -37,6 +39,13 @@ public class SyncLoadFinder {
+@@ -31,6 +33,13 @@ public class SyncLoadFinder {
+     }
  
-         final ThrowableWithEquals stacktrace = new ThrowableWithEquals(Thread.currentThread().getStackTrace());
- 
+     public static void logSyncLoad(final Level world, final int chunkX, final int chunkZ) {
 +        // Slice start
 +        if (DEBUG) {
 +            org.bukkit.Bukkit.getServer().getLogger().log(java.util.logging.Level.WARNING, "Sync chunk load at " + world.getWorld().getName() + " (" + chunkX + "," + chunkZ + ")");
@@ -54,6 +54,6 @@ index d3e619655382e50e9ac9323ed942502d85c9599c..ff222a54a320eee467383a612f2ce176
 +        }
 +        // Slice end
 +
-         SYNC_LOADS.compute(world, (final Level keyInMap, Object2ObjectOpenHashMap<ThrowableWithEquals, SyncLoadInformation> map) -> {
-             if (map == null) {
-                 map = new Object2ObjectOpenHashMap<>();
+         if (!ENABLED) {
+             return;
+         }
