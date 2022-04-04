@@ -5,10 +5,10 @@ Subject: [PATCH] Add provided Material to getDrops
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index 1ed2dcb6f28a391689b5dd10073422bae1dcd8bb..f9dbef5ac6ff4cc3b6991b226253e895690a13f5 100644
+index 21131dd9b2858c912712d5ded9e2fff274d439d2..982e879bc0478a2faf41b28a56a48ea5fc69c5ab 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-@@ -591,7 +591,18 @@ public class CraftBlock implements Block {
+@@ -592,7 +592,18 @@ public class CraftBlock implements Block {
  
      @Override
      public Collection<ItemStack> getDrops(ItemStack item, Entity entity) {
@@ -28,7 +28,7 @@ index 1ed2dcb6f28a391689b5dd10073422bae1dcd8bb..f9dbef5ac6ff4cc3b6991b226253e895
          net.minecraft.world.item.ItemStack nms = CraftItemStack.asNMSCopy(item);
  
          // Modelled off EntityHuman#hasBlock
-@@ -602,6 +613,7 @@ public class CraftBlock implements Block {
+@@ -603,6 +614,7 @@ public class CraftBlock implements Block {
              return Collections.emptyList();
          }
      }
