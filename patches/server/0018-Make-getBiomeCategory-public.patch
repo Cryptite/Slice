@@ -5,47 +5,10 @@ Subject: [PATCH] Make getBiomeCategory public
 
 
 diff --git a/src/main/java/net/minecraft/world/level/biome/Biome.java b/src/main/java/net/minecraft/world/level/biome/Biome.java
-index 0422d787593cc65aadcae9f7517ec67a52f1f72b..5333fc5a5400b49a247bf86bf402a016d76b7300 100644
+index 32fc9f9162aafe312ed757be2d03577b5f95841d..19c36424dae6d6683b5b547025bbeb637e92e73d 100644
 --- a/src/main/java/net/minecraft/world/level/biome/Biome.java
 +++ b/src/main/java/net/minecraft/world/level/biome/Biome.java
-@@ -37,6 +37,36 @@ import net.minecraft.world.level.material.Fluids;
- public final class Biome {
-     public static final Codec<Biome> DIRECT_CODEC;
-     public static final Codec<Biome> NETWORK_CODEC;
-+
-+    // Slice start - Decompile fix
-+    static {
-+        DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
-+            return instance.group(Biome.ClimateSettings.CODEC.forGetter((biome) -> {
-+                return biome.climateSettings;
-+            }), Biome.BiomeCategory.CODEC.fieldOf("category").forGetter((biome) -> {
-+                return biome.biomeCategory;
-+            }), BiomeSpecialEffects.CODEC.fieldOf("effects").forGetter((biome) -> {
-+                return biome.specialEffects;
-+            }), BiomeGenerationSettings.CODEC.forGetter((biome) -> {
-+                return biome.generationSettings;
-+            }), MobSpawnSettings.CODEC.forGetter((biome) -> {
-+                return biome.mobSettings;
-+            })).apply(instance, Biome::new);
-+        });
-+        NETWORK_CODEC = RecordCodecBuilder.create((instance) -> {
-+            return instance.group(Biome.ClimateSettings.CODEC.forGetter((biome) -> {
-+                return biome.climateSettings;
-+            }), Biome.BiomeCategory.CODEC.fieldOf("category").forGetter((biome) -> {
-+                return biome.biomeCategory;
-+            }), BiomeSpecialEffects.CODEC.fieldOf("effects").forGetter((biome) -> {
-+                return biome.specialEffects;
-+            })).apply(instance, (weather, category, effects) -> {
-+                return new Biome(weather, category, effects, BiomeGenerationSettings.EMPTY, MobSpawnSettings.EMPTY);
-+            });
-+        });
-+    }
-+    // Slice end
-+
-     public static final Codec<Holder<Biome>> CODEC = RegistryFileCodec.create(Registry.BIOME_REGISTRY, DIRECT_CODEC);
-     public static final Codec<HolderSet<Biome>> LIST_CODEC = RegistryCodecs.homogeneousList(Registry.BIOME_REGISTRY, DIRECT_CODEC);
-     private static final PerlinSimplexNoise TEMPERATURE_NOISE = new PerlinSimplexNoise(new WorldgenRandom(new LegacyRandomSource(1234L)), ImmutableList.of(0));
-@@ -243,7 +273,7 @@ public final class Biome {
+@@ -265,7 +265,7 @@ public final class Biome {
          return this.specialEffects.getBackgroundMusic();
      }
  
@@ -54,37 +17,3 @@ index 0422d787593cc65aadcae9f7517ec67a52f1f72b..5333fc5a5400b49a247bf86bf402a016
          return this.biomeCategory;
      }
  
-@@ -253,33 +283,6 @@ public final class Biome {
-         return biomeEntry.value().getBiomeCategory();
-     }
- 
--    static {
--        DIRECT_CODEC = RecordCodecBuilder.create((instance) -> {
--            return instance.group(Biome.ClimateSettings.CODEC.forGetter((biome) -> {
--                return biome.climateSettings;
--            }), Biome.BiomeCategory.CODEC.fieldOf("category").forGetter((biome) -> {
--                return biome.biomeCategory;
--            }), BiomeSpecialEffects.CODEC.fieldOf("effects").forGetter((biome) -> {
--                return biome.specialEffects;
--            }), BiomeGenerationSettings.CODEC.forGetter((biome) -> {
--                return biome.generationSettings;
--            }), MobSpawnSettings.CODEC.forGetter((biome) -> {
--                return biome.mobSettings;
--            })).apply(instance, Biome::new);
--        });
--        NETWORK_CODEC = RecordCodecBuilder.create((instance) -> {
--            return instance.group(Biome.ClimateSettings.CODEC.forGetter((biome) -> {
--                return biome.climateSettings;
--            }), Biome.BiomeCategory.CODEC.fieldOf("category").forGetter((biome) -> {
--                return biome.biomeCategory;
--            }), BiomeSpecialEffects.CODEC.fieldOf("effects").forGetter((biome) -> {
--                return biome.specialEffects;
--            })).apply(instance, (weather, category, effects) -> {
--                return new Biome(weather, category, effects, BiomeGenerationSettings.EMPTY, MobSpawnSettings.EMPTY);
--            });
--        });
--    }
--
-     public static class BiomeBuilder {
-         @Nullable
-         private Biome.Precipitation precipitation;
