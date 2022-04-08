@@ -7,16 +7,24 @@ plugins {
     id("io.papermc.paperweight.patcher") version "1.3.5"
 }
 
+val spigotDecompiler: Configuration by configurations.creating
+
 repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/") {
-        content { onlyForConfigurations(PAPERCLIP_CONFIG) }
+        content {
+            onlyForConfigurations(
+                configurations.paperclip.name,
+                spigotDecompiler.name,
+            )
+        }
     }
 }
 
 dependencies {
     remapper("net.fabricmc:tiny-remapper:0.8.1:fat")
-    decompiler("net.minecraftforge:forgeflower:1.5.498.22")
+    decompiler("net.minecraftforge:forgeflower:1.5.498.29")
+    spigotDecompiler("io.papermc:patched-spigot-fernflower:0.1+build.4")
     paperclip("io.papermc:paperclip:3.0.2")
 }
 
