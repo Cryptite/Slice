@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 15 Apr 2022 09:36:18 -0500
+Subject: [PATCH] Debug chunkloading
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/PaperCommand.java b/src/main/java/com/destroystokyo/paper/PaperCommand.java
+index 5925feafad214333529bace2178f233f589e1a6e..a5db4e37aeb04f8fec2f9536bf2cd018af7ceef7 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperCommand.java
++++ b/src/main/java/com/destroystokyo/paper/PaperCommand.java
+@@ -70,7 +70,7 @@ import java.util.stream.Collectors;
+ 
+ public class PaperCommand extends Command {
+     private static final String BASE_PERM = "bukkit.command.paper.";
+-    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "fixlight", "syncloadinfo", "dumpitem", "mobcaps", "playermobcaps", "debugsyncload").build(); // Slice
++    private static final ImmutableSet<String> SUBCOMMANDS = ImmutableSet.<String>builder().add("heap", "entity", "reload", "version", "debug", "chunkinfo", "fixlight", "syncloadinfo", "dumpitem", "mobcaps", "playermobcaps", "debugsyncload", "debugchunks").build(); // Slice
+ 
+     public PaperCommand(String name) {
+         super(name);
+@@ -208,6 +208,10 @@ public class PaperCommand extends Command {
+                 SyncLoadFinder.DEBUG = !SyncLoadFinder.DEBUG;
+                 MinecraftServer.LOGGER.info("Debugging sync chunk loads now " + (SyncLoadFinder.DEBUG ? "ON" : "OFF"));
+                 break;
++            case "debugchunks":
++                MinecraftServer.DEBUG_CHUNKS = !MinecraftServer.DEBUG_CHUNKS;
++                MinecraftServer.LOGGER.info("Debugging chunk loading/sending now " + (MinecraftServer.DEBUG_CHUNKS ? "ON" : "OFF"));
++                break;
+             // Slice end
+             case "mobcaps":
+                 this.printMobcaps(sender, args);
+diff --git a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+index 0f62a766a3249d8651a11dce6e9051b162693716..bae605ba25bb375273d506467ff5b38958e77aa5 100644
+--- a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
++++ b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+@@ -548,6 +548,7 @@ public final class PlayerChunkLoader {
+             }
+             final int currSends = concurrentChunkSends.get();
+             if (currSends >= maxSends) {
++                if (MinecraftServer.DEBUG_CHUNKS) org.bukkit.Bukkit.getServer().getLogger().log(java.util.logging.Level.WARNING, "currSends >= maxSends (" + currSends + " >= " + maxSends + ")"); // Slice
+                 break;
+             }
+ 
+@@ -675,6 +676,7 @@ public final class PlayerChunkLoader {
+                 if (currentChunkLoads >= maxLoads || (PaperConfig.globalMaxChunkLoadRate > 0 && (TICKET_ADDITION_COUNTER_SHORT.getRate() >= PaperConfig.globalMaxChunkLoadRate || TICKET_ADDITION_COUNTER_LONG.getRate() >= PaperConfig.globalMaxChunkLoadRate))
+                     || (PaperConfig.playerMaxChunkLoadRate > 0.0 && (data.ticketAdditionCounterShort.getRate() >= PaperConfig.playerMaxChunkLoadRate || data.ticketAdditionCounterLong.getRate() >= PaperConfig.playerMaxChunkLoadRate))) {
+                     // don't poll, we didn't load it
++                    if (MinecraftServer.DEBUG_CHUNKS) org.bukkit.Bukkit.getServer().getLogger().log(java.util.logging.Level.WARNING, "currentChunkLoads >= maxLoads (" + currentChunkLoads + " >= " + maxLoads + ")"); // Slice
+                     this.chunkLoadQueue.add(data);
+                     break;
+                 }
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index ce51ebeb5df07abc4a8bb31bc737ab3e4214ce83..8373298d673687f57b8f1a1509b79e94ad43de8d 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -308,6 +308,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+     public volatile Thread shutdownThread; // Paper
+     public volatile boolean abnormalExit = false; // Paper
++    public static boolean DEBUG_CHUNKS = false; // Slice
+ 
+     public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
+         AtomicReference<S> atomicreference = new AtomicReference();
