@@ -5,10 +5,10 @@ Subject: [PATCH] Set multiple Team settings with a single packet
 
 
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index 04c8cc55a2fe19c888aba842775cc66648dddb0c..50ab68f3d3f0b1ac16ca75a962bdd68cab7e2e50 100644
+index 0f5c49d41c9460da0ba913b4ca8bef375f2c23df..30d2c56d71244e595afccdd47899548f6fb13886 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
-@@ -525,6 +525,24 @@ public interface Team {
+@@ -534,6 +534,24 @@ public interface Team {
      boolean hasEntity(@NotNull org.bukkit.entity.Entity entity) throws IllegalStateException, IllegalArgumentException;
      // Paper end
  
@@ -26,7 +26,7 @@ index 04c8cc55a2fe19c888aba842775cc66648dddb0c..50ab68f3d3f0b1ac16ca75a962bdd68c
 +    void teamOptions(net.kyori.adventure.text.Component displayName,
 +                     net.kyori.adventure.text.Component prefix,
 +                     net.kyori.adventure.text.Component suffix,
-+                     net.kyori.adventure.text.format.TextColor color,
++                     net.kyori.adventure.text.format.NamedTextColor color,
 +                     java.util.List<org.apache.commons.lang3.tuple.Pair<Option, OptionStatus>> options) throws IllegalStateException;
 +    //Slice end
 +

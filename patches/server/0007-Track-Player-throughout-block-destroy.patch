@@ -5,7 +5,7 @@ Subject: [PATCH] Track Player throughout block destroy
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 891199d02539fa46454cd0aa7c133637e5dc8235..aa9c5c26b69db883ff933d35d0c99425e95ad455 100644
+index 415b6c2bbf11c5a2ac75d18f52b93f80b9e14fe4..a33431984b6051efd39f0077c55186da789d1d60 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -451,6 +451,7 @@ public class ServerPlayerGameMode {
@@ -16,7 +16,7 @@ index 891199d02539fa46454cd0aa7c133637e5dc8235..aa9c5c26b69db883ff933d35d0c99425
                  block.playerWillDestroy(this.level, pos, iblockdata, this.player);
                  boolean flag = this.level.removeBlock(pos, false);
  
-@@ -475,6 +476,7 @@ public class ServerPlayerGameMode {
+@@ -479,6 +480,7 @@ public class ServerPlayerGameMode {
                  // CraftBukkit start
                  java.util.List<net.minecraft.world.entity.item.ItemEntity> itemsToDrop = level.captureDrops; // Paper - store current list
                  level.captureDrops = null; // Paper - Remove this earlier so that we can actually drop stuff
@@ -25,7 +25,7 @@ index 891199d02539fa46454cd0aa7c133637e5dc8235..aa9c5c26b69db883ff933d35d0c99425
                      org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - use stored ref
                  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index dc4639f905fb71435daf29c61f64621a3e2cc533..32e210e52ce86791965869cb75869a4b506e4a5f 100644
+index 6837c965592d4584cfc958a1008b98791a0fc780..070dab06db870f3c67dffe7637fe1a92c7eaa6a8 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -333,6 +333,7 @@ public final class ItemStack {

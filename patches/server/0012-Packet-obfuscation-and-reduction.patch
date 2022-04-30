@@ -181,10 +181,10 @@ index e909d2cc08a5cea3a8b98ad6faf8eb65c33a35ef..e3725c380839257fa5b08c34b339ce30
  
      public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 6feeadad9aecb7d63e24d5daae115a93e39aeb3d..75faffa82241e5ed97f0a66dbb86f42a7f8c8c27 100644
+index f12efe51b14ed3637a8ba45def9c94634a6f5e8f..b3a7ec12abe8228e6394fc085059eaa3dd488a19 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2102,7 +2102,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2190,7 +2190,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

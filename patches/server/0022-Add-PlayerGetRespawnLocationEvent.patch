@@ -5,7 +5,7 @@ Subject: [PATCH] Add PlayerGetRespawnLocationEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 11a39f8acb3f490fb83d92c6297a4bb22e3b0e6b..62c3ff9e46c859a489465828490b06f65ff7e879 100644
+index d0ec7a195c3efd2dfdbec1396ebc7794358e74c5..8cef43d4ffbdbf96380a274d80045405b5cff780 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -876,49 +876,57 @@ public abstract class PlayerList {
@@ -73,14 +73,14 @@ index 11a39f8acb3f490fb83d92c6297a4bb22e3b0e6b..62c3ff9e46c859a489465828490b06f6
 -                    location = new Location(worldserver1.getWorld(), vec3d.x, vec3d.y, vec3d.z, f1, 0.0F);
 -                } else if (blockposition != null) {
 -                    entityplayer1.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
--                    entityplayer1.setRespawnPosition(null, null, 0f, false, false); // CraftBukkit - SPIGOT-5988: Clear respawn location when obstructed
+-                    entityplayer1.setRespawnPosition(null, null, 0f, false, false, com.destroystokyo.paper.event.player.PlayerSetSpawnEvent.Cause.PLAYER_RESPAWN); // CraftBukkit - SPIGOT-5988: Clear respawn location when obstructed // Paper - PlayerSetSpawnEvent
 +                        entityplayer1.setRespawnPosition(worldserver1.dimension(), blockposition, f, flag1, false, com.destroystokyo.paper.event.player.PlayerSetSpawnEvent.Cause.PLAYER_RESPAWN); // Paper - PlayerSetSpawnEvent
 +                        flag2 = !flag && flag3;
 +                        isBedSpawn = true;
 +                        location = new Location(worldserver1.getWorld(), vec3d.x, vec3d.y, vec3d.z, f1, 0.0F);
 +                    } else if (blockposition != null) {
 +                        entityplayer1.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
-+                        entityplayer1.setRespawnPosition(null, null, 0f, false, false); // CraftBukkit - SPIGOT-5988: Clear respawn location when obstructed
++                        entityplayer1.setRespawnPosition(null, null, 0f, false, false); // CraftBukkit - SPIGOT-5988: Clear respawn location when obstructed // Paper - PlayerSetSpawnEvent
 +                    }
                  }
 -            }

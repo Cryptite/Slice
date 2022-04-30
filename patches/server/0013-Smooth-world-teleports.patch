@@ -5,10 +5,10 @@ Subject: [PATCH] Smooth world teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index e74c13e7aaa144fcd07036de70e80bebf0be698a..df879789ad494ffb897584e6c90d0221e767b90e 100644
+index 2f5e40437d1865a874c352999edd084226d4e47b..6e796cae90112c3b087aa12cf7d7899d1d9bcbc9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -256,6 +256,7 @@ public class ServerPlayer extends Player {
+@@ -257,6 +257,7 @@ public class ServerPlayer extends Player {
      public double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
@@ -17,7 +17,7 @@ index e74c13e7aaa144fcd07036de70e80bebf0be698a..df879789ad494ffb897584e6c90d0221
      public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
          super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 02dc93c394d37c9a84aa4a58d80615c403c54fb9..11a39f8acb3f490fb83d92c6297a4bb22e3b0e6b 100644
+index 95fe4240f3e1174ec36598f24d63f0073c13b376..d0ec7a195c3efd2dfdbec1396ebc7794358e74c5 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -948,12 +948,12 @@ public abstract class PlayerList {

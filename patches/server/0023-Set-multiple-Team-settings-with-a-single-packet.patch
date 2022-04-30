@@ -106,10 +106,10 @@ index defff79eb28adc52851fa781d4d4a7745a884bdc..fb48bfbce1bca47d71a0ed35af1b1296
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-index be5e4c2f3c552e0438ed1cc660e411c41fd13df7..22d5bbd30b35e2a15a0172e124abe4fe1c7373de 100644
+index d3d9641862f4746469bca946ef6d89a88f15698b..986d0dd921361a0dd8ca5ae6025521d086ec2143 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-@@ -339,6 +339,37 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
+@@ -346,6 +346,37 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
          }
      }
  
@@ -118,7 +118,7 @@ index be5e4c2f3c552e0438ed1cc660e411c41fd13df7..22d5bbd30b35e2a15a0172e124abe4fe
 +    public void teamOptions(net.kyori.adventure.text.Component displayName,
 +                            net.kyori.adventure.text.Component prefix,
 +                            net.kyori.adventure.text.Component suffix,
-+                            net.kyori.adventure.text.format.TextColor color,
++                            net.kyori.adventure.text.format.NamedTextColor color,
 +                            java.util.List<org.apache.commons.lang3.tuple.Pair<Option, OptionStatus>> options) throws IllegalStateException {
 +        checkState();
 +        team.setUpdateTeamChangeInstantly(false);
