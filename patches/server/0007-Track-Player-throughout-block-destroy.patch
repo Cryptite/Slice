@@ -37,7 +37,7 @@ index 6837c965592d4584cfc958a1008b98791a0fc780..070dab06db870f3c67dffe7637fe1a92
              CompoundTag newData = this.getTagClone();
              int newCount = this.getCount();
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 8b6ea24dc8d0286c0814c86dcf4c51cacc572854..6764f174d0685c02d5e81aa38228d02a77bf9632 100644
+index b2fd675cfe9301b0cfc42a8e9bba3fb8356b4789..be12155798e5ad6ae8bf47acfbfdb5b20ad45fe5 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -172,6 +172,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -115,10 +115,10 @@ index e12b76238cb52a1007f2102473b7f892f8521b62..301dfb74fec49b7f6f0452e4c49c8f1d
                  BlockState iblockdata2 = iblockdata1.hasProperty(BlockStateProperties.WATERLOGGED) && (Boolean) iblockdata1.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index 61590f2f04a797235299f1bd6b78a08f5bfe4a33..9f757e1f0287f9146298ce6c09bb7aa207edbbc2 100644
+index 7f83c9390823b42fc30d04e1d3222e2825eaad50..a099fcaabe26378157c429ad899714fd3227f9ef 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -968,6 +968,18 @@ public abstract class BlockBehaviour {
+@@ -988,6 +988,18 @@ public abstract class BlockBehaviour {
  
                  blockposition_mutableblockposition.setWithOffset(pos, enumdirection);
                  BlockState iblockdata = world.getBlockState(blockposition_mutableblockposition);

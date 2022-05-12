@@ -155,10 +155,10 @@ index f91e1a876ad4c46a7c92cead18947a941b4d9e68..13973b8803afefd491dc05e1df6e9b10
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 382d32045417174f5ef3fe556762146d07e30e17..d76e8d2030adba305368590158d8767cfe5190e1 100644
+index 5b222edfda19c1446f1fe6ad67b2248f003ff0b0..be293253c6e90c1f109b5e270c527a4e2b0cff2f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2991,7 +2991,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2986,7 +2986,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }
@@ -168,7 +168,7 @@ index 382d32045417174f5ef3fe556762146d07e30e17..d76e8d2030adba305368590158d8767c
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index e909d2cc08a5cea3a8b98ad6faf8eb65c33a35ef..e3725c380839257fa5b08c34b339ce30c8f3143f 100644
+index 0156525637f8aa2e4e639bc493d8617b5af4cc32..1c598a97ed78a744907ae310f3568c447aad0949 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -632,7 +632,7 @@ public abstract class Player extends LivingEntity {

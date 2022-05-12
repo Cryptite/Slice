@@ -6,10 +6,10 @@ Subject: [PATCH] Add PlayerShieldDisableEvent
 
 diff --git a/src/main/java/io/papermc/paper/event/player/PlayerShieldDisableEvent.java b/src/main/java/io/papermc/paper/event/player/PlayerShieldDisableEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f0f3a57a0ce76b4736219c6ece52b8bc47a7a4ec
+index 0000000000000000000000000000000000000000..d4bda54582228377c902e4743168e084e1bf8b2d
 --- /dev/null
 +++ b/src/main/java/io/papermc/paper/event/player/PlayerShieldDisableEvent.java
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,60 @@
 +package io.papermc.paper.event.player;
 +
 +import org.bukkit.entity.Entity;
@@ -27,16 +27,26 @@ index 0000000000000000000000000000000000000000..f0f3a57a0ce76b4736219c6ece52b8bc
 +public class PlayerShieldDisableEvent extends PlayerEvent implements Cancellable {
 +    private static final HandlerList handlers = new HandlerList();
 +    private final Entity damager;
++    private int cooldown;
 +    private boolean cancelled = false;
 +
-+    public PlayerShieldDisableEvent(@NotNull final Player player, @Nullable final Entity damager) {
++    public PlayerShieldDisableEvent(@NotNull final Player player, @Nullable final Entity damager, int cooldown) {
 +        super(player);
 +        this.damager = damager;
++        this.cooldown = cooldown;
 +    }
 +
 +    @Nullable
 +    public Entity getDamager() {
 +        return damager;
++    }
++
++    public int getCooldown() {
++        return cooldown;
++    }
++
++    public void setCooldown(int cooldown) {
++        this.cooldown = cooldown;
 +    }
 +
 +    @NotNull
