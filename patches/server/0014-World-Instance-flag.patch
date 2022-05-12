@@ -8,14 +8,15 @@ diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/mai
 index b5b56d4549e97abbbe9e91d881b9bca8428f1eec..b884688d0fb3e46e04a4546c202476df6f94f59b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -212,6 +212,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -212,6 +212,7 @@
      public final UUID uuid;
      public boolean hasPhysicsEvent = true; // Paper
      public boolean hasEntityMoveEvent = false; // Paper
 +    public boolean instance; // Slice
+     private final alternate.current.wire.WireHandler wireHandler = new alternate.current.wire.WireHandler(this); // Paper - optimize redstone (Alternate Current)
      public static Throwable getAddToWorldStackTrace(Entity entity) {
          return new Throwable(entity + " Added to world at " + new java.util.Date());
-     }
+
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 index b2c5fbfcb64f3056d7975db43b2db45bfd5e9890..0bed6e05db5c6170161158fdd520042179491c6b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
