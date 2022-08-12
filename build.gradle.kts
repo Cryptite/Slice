@@ -4,7 +4,7 @@ plugins {
     java
     `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
-    id("io.papermc.paperweight.patcher") version "1.3.6"
+    id("io.papermc.paperweight.patcher") version "1.3.8"
 }
 
 val paperMavenPublicUrl = "https://papermc.io/repo/repository/maven-public/"
@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     remapper("net.fabricmc:tiny-remapper:0.8.2:fat")
-    decompiler("net.minecraftforge:forgeflower:1.5.605.7")
+    decompiler("net.minecraftforge:forgeflower:1.5.498.29")
     paperclip("io.papermc:paperclip:3.0.2")
 }
 
@@ -78,7 +78,7 @@ tasks.generateDevelopmentBundle {
     libraryRepositories.set(
         listOf(
             "https://repo.maven.apache.org/maven2/",
-            "https://ysera.dyndns.org:444/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api'),
+            "https://test.lokamc.org:444/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api'),
             paperMavenPublicUrl
         )
     )
@@ -91,7 +91,7 @@ allprojects {
         repositories {
             maven {
                 name = "Ysera"
-                url = uri("https://ysera.dyndns.org:444/releases")
+                url = uri("https://test.lokamc.com:444/releases")
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
                 credentials(PasswordCredentials::class)
