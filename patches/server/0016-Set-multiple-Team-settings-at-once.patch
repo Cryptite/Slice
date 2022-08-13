@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
-Date: Thu, 7 Apr 2022 16:35:36 -0500
-Subject: [PATCH] Set multiple Team settings with a single packet
+Date: Sat, 13 Aug 2022 08:40:09 -0500
+Subject: [PATCH] Set multiple Team settings at once
 
 
 diff --git a/src/main/java/net/minecraft/world/scores/PlayerTeam.java b/src/main/java/net/minecraft/world/scores/PlayerTeam.java
-index defff79eb28adc52851fa781d4d4a7745a884bdc..fb48bfbce1bca47d71a0ed35af1b1296529fa2bd 100644
+index 9464054912e19fc78dd965b71fce20a18564b351..1624a0f8ea211a4c43fd01612674ca501c10d7e6 100644
 --- a/src/main/java/net/minecraft/world/scores/PlayerTeam.java
 +++ b/src/main/java/net/minecraft/world/scores/PlayerTeam.java
 @@ -28,6 +28,7 @@ public class PlayerTeam extends Team {
@@ -17,7 +17,7 @@ index defff79eb28adc52851fa781d4d4a7745a884bdc..fb48bfbce1bca47d71a0ed35af1b1296
      public PlayerTeam(Scoreboard scoreboard, String name) {
          this.scoreboard = scoreboard;
 @@ -36,6 +37,12 @@ public class PlayerTeam extends Team {
-         this.displayNameStyle = Style.EMPTY.withInsertion(name).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(name)));
+         this.displayNameStyle = Style.EMPTY.withInsertion(name).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(name)));
      }
  
 +    // Slice start
@@ -39,7 +39,7 @@ index defff79eb28adc52851fa781d4d4a7745a884bdc..fb48bfbce1bca47d71a0ed35af1b1296
      }
  
      public void setPlayerPrefix(@Nullable Component prefix) {
-         this.playerPrefix = prefix == null ? TextComponent.EMPTY : prefix;
+         this.playerPrefix = prefix == null ? CommonComponents.EMPTY : prefix;
 -        this.scoreboard.onTeamChanged(this);
 +        if (updateTeamChangeInstantly) this.scoreboard.onTeamChanged(this); // Slice
      }
@@ -48,7 +48,7 @@ index defff79eb28adc52851fa781d4d4a7745a884bdc..fb48bfbce1bca47d71a0ed35af1b1296
 @@ -79,7 +86,7 @@ public class PlayerTeam extends Team {
  
      public void setPlayerSuffix(@Nullable Component suffix) {
-         this.playerSuffix = suffix == null ? TextComponent.EMPTY : suffix;
+         this.playerSuffix = suffix == null ? CommonComponents.EMPTY : suffix;
 -        this.scoreboard.onTeamChanged(this);
 +        if (updateTeamChangeInstantly) this.scoreboard.onTeamChanged(this); // Slice
      }
@@ -106,10 +106,10 @@ index defff79eb28adc52851fa781d4d4a7745a884bdc..fb48bfbce1bca47d71a0ed35af1b1296
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-index d3d9641862f4746469bca946ef6d89a88f15698b..986d0dd921361a0dd8ca5ae6025521d086ec2143 100644
+index 67efb0d38ae369ff5254f7b1ec85d32d4eee8291..e4110e3a60242b958c9983a090b28aae540b2bdf 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-@@ -346,6 +346,37 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
+@@ -347,6 +347,37 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
          }
      }
  

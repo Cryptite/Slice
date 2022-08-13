@@ -1,31 +1,31 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
-Date: Mon, 28 Feb 2022 09:11:14 -0600
-Subject: [PATCH] Smooth world teleports
+Date: Sat, 13 Aug 2022 08:58:14 -0500
+Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 2f5e40437d1865a874c352999edd084226d4e47b..6e796cae90112c3b087aa12cf7d7899d1d9bcbc9 100644
+index 3615576c24d5d6790a6894a91180de25fa0e5a9c..b438cdedd1927749f1fb0776404f4646c498090c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -257,6 +257,7 @@ public class ServerPlayer extends Player {
+@@ -266,6 +266,7 @@ public class ServerPlayer extends Player {
      public double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
 +    public boolean smoothWorldTeleport; // Slice
  
-     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
-         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile, @Nullable ProfilePublicKey publicKey) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile, publicKey);
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 95fe4240f3e1174ec36598f24d63f0073c13b376..d0ec7a195c3efd2dfdbec1396ebc7794358e74c5 100644
+index 3d3a8e1b535cab761aa696ec6bc350e0e83b1589..ae92661b1530b97dcf4960db5a893670ed9bb51a 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -948,12 +948,12 @@ public abstract class PlayerList {
+@@ -960,12 +960,12 @@ public abstract class PlayerList {
          }
          // CraftBukkit start
          LevelData worlddata = worldserver1.getLevelData();
--        entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeRegistration(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag));
-+        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeRegistration(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag));
+-        entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag, entityplayer1.getLastDeathLocation()));
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag, entityplayer1.getLastDeathLocation()));
          entityplayer1.connection.send(new ClientboundSetChunkCacheRadiusPacket(worldserver1.getChunkSource().chunkMap.playerChunkManager.getTargetSendDistance())); // Spigot // Paper - replace old player chunk management
          entityplayer1.connection.send(new ClientboundSetSimulationDistancePacket(worldserver1.getChunkSource().chunkMap.playerChunkManager.getTargetTickViewDistance())); // Spigot // Paper - replace old player chunk management
          entityplayer1.spawnIn(worldserver1);
@@ -35,3 +35,23 @@ index 95fe4240f3e1174ec36598f24d63f0073c13b376..d0ec7a195c3efd2dfdbec1396ebc7794
          entityplayer1.setShiftKeyDown(false);
  
          // entityplayer1.connection.teleport(entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 6fca2d4de4b74bb24e29b5963a3f500e62760ad1..081a5ac8f3e16233e98b830594b28a1c7760b8c1 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1172,6 +1172,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+     }
+     // Paper end
+ 
++    // Slice start
++    public void teleportWithoutRespawn(Location location) {
++        ServerPlayer serverPlayer = getHandle();
++        serverPlayer.smoothWorldTeleport = true;
++        teleport(location);
++        serverPlayer.smoothWorldTeleport = false;
++    }
++    // Slice end
++
+     @Override
+     public boolean teleport(Location location, PlayerTeleportEvent.TeleportCause cause) {
+         // Paper start - Teleport API

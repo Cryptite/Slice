@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
-Date: Thu, 7 Apr 2022 16:35:36 -0500
-Subject: [PATCH] Set multiple Team settings with a single packet
+Date: Sat, 13 Aug 2022 08:40:03 -0500
+Subject: [PATCH] Set multiple Team settings at once
 
 
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index 0f5c49d41c9460da0ba913b4ca8bef375f2c23df..30d2c56d71244e595afccdd47899548f6fb13886 100644
+index 06a5d3177ca7ab90c3fd9d2053b2ec5e887c7c62..31e2756c134462debfcfa768d2d0ccb988046d72 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
-@@ -534,6 +534,24 @@ public interface Team {
+@@ -532,6 +532,24 @@ public interface Team {
      boolean hasEntity(@NotNull org.bukkit.entity.Entity entity) throws IllegalStateException, IllegalArgumentException;
      // Paper end
  

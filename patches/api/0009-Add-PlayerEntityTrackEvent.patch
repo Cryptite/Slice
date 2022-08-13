@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
-Date: Mon, 28 Feb 2022 09:33:54 -0600
-Subject: [PATCH] Add PlayerTrackEntityEvent
+Date: Sat, 13 Aug 2022 08:33:02 -0500
+Subject: [PATCH] Add PlayerEntityTrackEvent
 
 
 diff --git a/src/main/java/org/bukkit/event/player/PlayerTrackEntityEvent.java b/src/main/java/org/bukkit/event/player/PlayerTrackEntityEvent.java
