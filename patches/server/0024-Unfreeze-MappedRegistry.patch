@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 7 Sep 2022 17:37:47 -0500
+Subject: [PATCH] Unfreeze MappedRegistry
+
+
+diff --git a/src/main/java/net/minecraft/core/MappedRegistry.java b/src/main/java/net/minecraft/core/MappedRegistry.java
+index c3c0e52cfe8ef5fe9049c4582778040702131b47..c37676f6c70fcf21fc6e3b7322f9d73c4c128c06 100644
+--- a/src/main/java/net/minecraft/core/MappedRegistry.java
++++ b/src/main/java/net/minecraft/core/MappedRegistry.java
+@@ -306,6 +306,8 @@ public class MappedRegistry<T> extends WritableRegistry<T> {
+ 
+     @Override
+     public Registry<T> freeze() {
++        if (true) return this; // Slice (a TODO in Paper, thanks Owen)
++
+         this.frozen = true;
+         List<ResourceLocation> list = this.byKey.entrySet().stream().filter((entry) -> {
+             return !entry.getValue().isBound();
