@@ -1,0 +1,95 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 3 Oct 2022 08:17:50 -0500
+Subject: [PATCH] Equipment Packet Caching
+
+
+diff --git a/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java b/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..41e8d3ca7889be8659092ff0cf81d1844e65a20f
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java
+@@ -0,0 +1,83 @@
++package org.bukkit.event.player;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.entity.Player;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.inventory.EquipmentSlot;
++import org.bukkit.inventory.ItemStack;
++import org.jetbrains.annotations.NotNull;
++
++import java.util.Map;
++import java.util.Set;
++import java.util.function.Function;
++
++/**
++ * Called when a player is about to receive an equipment packet about another player
++ */
++public class PlayerReceiveEquipmentEvent extends PlayerEvent implements Cancellable {
++    private static final HandlerList handlers = new HandlerList();
++    private final Entity tracked;
++    private final Set<String> existingTags;
++    private Map<EquipmentSlot, ItemStack> equipmentPairs;
++    private boolean cancel;
++    private String tag;
++
++    public PlayerReceiveEquipmentEvent(@NotNull final Player player, Set<String> existingTags, @NotNull final Entity tracked) {
++        super(player);
++        this.existingTags = existingTags;
++        this.tracked = tracked;
++    }
++
++    /**
++     * Gets the tracked entity
++     *
++     * @return Entity the player is now tracking
++     */
++    @NotNull
++    public Entity getTracked() {
++        return tracked;
++    }
++
++    public Map<EquipmentSlot, ItemStack> getEquipmentPairs() {
++        return equipmentPairs;
++    }
++
++    public String getTag() {
++        return tag;
++    }
++
++    /**
++     * @param tag This sets a "tag" for the event based on the viewing player. If the tag exists in the internally cached equipment packet,
++     *            the cached equipment packet will be used rather than constructing a whole new packet (which can be a bit expensive)
++     * @param providedPairs If the tag provided does not exist on the tracked player's cached equipment, this is the function to provide the equipment
++     */
++    public void setTagOrProvide(String tag, Function<String, Map<EquipmentSlot, ItemStack>> providedPairs) {
++        this.tag = tag;
++
++        if (existingTags == null || !existingTags.contains(tag)) {
++            equipmentPairs = providedPairs.apply(tag);
++        }
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancel;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancel = cancel;
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}

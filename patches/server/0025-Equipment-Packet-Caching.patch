@@ -1,0 +1,144 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 3 Oct 2022 08:17:50 -0500
+Subject: [PATCH] Equipment Packet Caching
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index d9481017e36f607c6dee8ab833a36ac700267a9f..f410bffdb0d46de4b8d0ba017b2bc31e9977609e 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -3,12 +3,8 @@ package net.minecraft.server.level;
+ import com.google.common.collect.Lists;
+ import com.mojang.datafixers.util.Pair;
+ import com.mojang.logging.LogUtils;
+-import java.util.Collection;
+-import java.util.Collections;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Objects;
+-import java.util.Set;
++
++import java.util.*;
+ import java.util.function.Consumer;
+ import net.minecraft.network.protocol.Packet;
+ import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
+@@ -311,26 +307,53 @@ public class ServerEntity {
+         }
+ 
+         if (this.entity instanceof LivingEntity) {
+-            List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
+-            EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
+-            int i = aenumitemslot.length;
+-
+-            for (int j = 0; j < i; ++j) {
+-                EquipmentSlot enumitemslot = aenumitemslot[j];
+-                ItemStack itemstack = ((LivingEntity) this.entity).getItemBySlot(enumitemslot);
+-
+-                if (!itemstack.isEmpty()) {
+-                    // Paper start - prevent oversized data
+-                    final ItemStack sanitized = LivingEntity.sanitizeItemStack(itemstack.copy(), false);
+-                    list.add(Pair.of(enumitemslot, ((LivingEntity) this.entity).stripMeta(sanitized, false))); // Paper - remove unnecessary item meta
+-                    // Paper end
++            // Slice
++            Set<String> existingTags = null;
++            if (this.entity instanceof ServerPlayer player) {
++                existingTags = player.cachedEquipmentMap.keySet();
++            }
++
++            org.bukkit.event.player.PlayerReceiveEquipmentEvent event = new org.bukkit.event.player.PlayerReceiveEquipmentEvent(entityplayer.getBukkitEntity(), existingTags, this.entity.getBukkitEntity());
++            this.entity.level.getCraftServer().getPluginManager().callEvent(event);
++
++            boolean sendEquipment = !event.isCancelled();
++            if (sendEquipment && this.entity instanceof ServerPlayer player) {
++                String tag = event.getTag();
++                if (tag != null) {
++                    ClientboundSetEquipmentPacket equipmentPacket = player.cachedEquipmentMap.get(tag);
++                    if (equipmentPacket != null) {
++                        consumer.accept(equipmentPacket);
++                        sendEquipment = false;
++                    } else if (event.getEquipmentPairs() != null) {
++                        consumer.accept(player.setCachedEquipment(tag, event.getEquipmentPairs()));
++                        sendEquipment = false;
++                    }
+                 }
+             }
+ 
+-            if (!list.isEmpty()) {
+-                consumer.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
++            if (sendEquipment) {
++                List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
++                EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
++                int i = aenumitemslot.length;
++
++                for (int j = 0; j < i; ++j) {
++                    EquipmentSlot enumitemslot = aenumitemslot[j];
++                    ItemStack itemstack = ((LivingEntity) this.entity).getItemBySlot(enumitemslot);
++
++                    if (!itemstack.isEmpty()) {
++                        // Paper start - prevent oversized data
++                        final ItemStack sanitized = LivingEntity.sanitizeItemStack(itemstack.copy(), false);
++                        list.add(Pair.of(enumitemslot, ((LivingEntity) this.entity).stripMeta(sanitized, false))); // Paper - remove unnecessary item meta
++                        // Paper end
++                    }
++                }
++
++                if (!list.isEmpty()) {
++                    consumer.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
++                }
++                ((LivingEntity) this.entity).detectEquipmentUpdates(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
+             }
+-            ((LivingEntity) this.entity).detectEquipmentUpdates(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
++            // Slice end
+         }
+ 
+         // CraftBukkit start - Fix for nonsensical head yaw
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 44612616560c087ca80bd10c2077e955f5ce7c85..ac58fb2af2f4a68e315070f240544eb4eb8b58d7 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -6,14 +6,8 @@ import com.mojang.authlib.GameProfile;
+ import com.mojang.datafixers.util.Either;
+ import com.mojang.logging.LogUtils;
+ import com.mojang.serialization.DataResult;
+-import java.util.Collection;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Objects;
+-import java.util.Optional;
+-import java.util.OptionalInt;
+-import java.util.Random;
+-import java.util.UUID;
++
++import java.util.*;
+ import javax.annotation.Nullable;
+ import net.minecraft.BlockUtil;
+ import net.minecraft.ChatFormatting;
+@@ -258,6 +252,7 @@ public class ServerPlayer extends Player {
+     public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
+     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
+     public boolean smoothWorldTeleport; // Slice
++    public java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentMap = new java.util.HashMap<>(); // Slice
+ 
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
+@@ -2447,4 +2442,19 @@ public class ServerPlayer extends Player {
+     // CraftBukkit end
+ 
+     public final int getViewDistance() { throw new UnsupportedOperationException("Use PlayerChunkLoader"); } // Paper - placeholder
++
++    // Slice
++    public net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket setCachedEquipment(String tag, java.util.Map<org.bukkit.inventory.EquipmentSlot, org.bukkit.inventory.ItemStack> equipment) {
++        List<com.mojang.datafixers.util.Pair<net.minecraft.world.entity.EquipmentSlot, net.minecraft.world.item.ItemStack>> pairs = new ArrayList<>(equipment.size());
++        for (java.util.Map.Entry<org.bukkit.inventory.EquipmentSlot, org.bukkit.inventory.ItemStack> entry : equipment.entrySet()) {
++            com.mojang.datafixers.util.Pair<net.minecraft.world.entity.EquipmentSlot, net.minecraft.world.item.ItemStack> pair = com.mojang.datafixers.util.Pair.of(net.minecraft.world.entity.EquipmentSlot.byName(entry.getKey().name()),
++                    CraftItemStack.asNMSCopy(entry.getValue()));
++            pairs.add(pair);
++        }
++
++        net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket packet = new net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket(getId(), pairs);
++        cachedEquipmentMap.put(tag, packet);
++        return packet;
++    }
++    // Slice end
+ }
