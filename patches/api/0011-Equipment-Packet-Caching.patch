@@ -4,25 +4,79 @@ Date: Mon, 3 Oct 2022 08:17:50 -0500
 Subject: [PATCH] Equipment Packet Caching
 
 
+diff --git a/src/main/java/org/bukkit/event/entity/EntityEquipmentItemLookup.java b/src/main/java/org/bukkit/event/entity/EntityEquipmentItemLookup.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..6c329ca3c22d1fd712041334c5c1e7bd7e7201ac
+--- /dev/null
++++ b/src/main/java/org/bukkit/event/entity/EntityEquipmentItemLookup.java
+@@ -0,0 +1,54 @@
++package org.bukkit.event.entity;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.event.HandlerList;
++import org.bukkit.inventory.EquipmentSlot;
++import org.bukkit.inventory.ItemStack;
++import org.jetbrains.annotations.NotNull;
++
++/**
++ * Called when requesting a cached equipment item lookup
++ */
++public class EntityEquipmentItemLookup extends EntityEvent {
++    private static final HandlerList handlers = new HandlerList();
++    private final String tag;
++    private final EquipmentSlot equipmentSlot;
++    private ItemStack itemStack;
++
++    public EntityEquipmentItemLookup(@NotNull final Entity entity, @NotNull String tag, @NotNull EquipmentSlot slot, @NotNull final ItemStack itemStack) {
++        super(entity);
++        this.tag = tag;
++        this.equipmentSlot = slot;
++        this.itemStack = itemStack;
++    }
++
++    @NotNull
++    public ItemStack getItemStack() {
++        return itemStack;
++    }
++
++    public void setItemStack(ItemStack itemStack) {
++        this.itemStack = itemStack;
++    }
++
++    @NotNull
++    public EquipmentSlot getEquipmentSlot() {
++        return equipmentSlot;
++    }
++
++    @NotNull
++    public String getTag() {
++        return tag;
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
 diff --git a/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java b/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..41e8d3ca7889be8659092ff0cf81d1844e65a20f
+index 0000000000000000000000000000000000000000..513d62342d8e29e8d3c92fe932d0d77f659cf2f1
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,61 @@
 +package org.bukkit.event.player;
 +
 +import org.bukkit.entity.Entity;
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.Cancellable;
 +import org.bukkit.event.HandlerList;
-+import org.bukkit.inventory.EquipmentSlot;
-+import org.bukkit.inventory.ItemStack;
 +import org.jetbrains.annotations.NotNull;
-+
-+import java.util.Map;
-+import java.util.Set;
-+import java.util.function.Function;
 +
 +/**
 + * Called when a player is about to receive an equipment packet about another player
@@ -30,14 +84,11 @@ index 0000000000000000000000000000000000000000..41e8d3ca7889be8659092ff0cf81d184
 +public class PlayerReceiveEquipmentEvent extends PlayerEvent implements Cancellable {
 +    private static final HandlerList handlers = new HandlerList();
 +    private final Entity tracked;
-+    private final Set<String> existingTags;
-+    private Map<EquipmentSlot, ItemStack> equipmentPairs;
 +    private boolean cancel;
 +    private String tag;
 +
-+    public PlayerReceiveEquipmentEvent(@NotNull final Player player, Set<String> existingTags, @NotNull final Entity tracked) {
++    public PlayerReceiveEquipmentEvent(@NotNull final Player player, @NotNull final Entity tracked) {
 +        super(player);
-+        this.existingTags = existingTags;
 +        this.tracked = tracked;
 +    }
 +
@@ -51,25 +102,12 @@ index 0000000000000000000000000000000000000000..41e8d3ca7889be8659092ff0cf81d184
 +        return tracked;
 +    }
 +
-+    public Map<EquipmentSlot, ItemStack> getEquipmentPairs() {
-+        return equipmentPairs;
-+    }
-+
 +    public String getTag() {
 +        return tag;
 +    }
 +
-+    /**
-+     * @param tag This sets a "tag" for the event based on the viewing player. If the tag exists in the internally cached equipment packet,
-+     *            the cached equipment packet will be used rather than constructing a whole new packet (which can be a bit expensive)
-+     * @param providedPairs If the tag provided does not exist on the tracked player's cached equipment, this is the function to provide the equipment
-+     */
-+    public void setTagOrProvide(String tag, Function<String, Map<EquipmentSlot, ItemStack>> providedPairs) {
++    public void setTag(String tag) {
 +        this.tag = tag;
-+
-+        if (existingTags == null || !existingTags.contains(tag)) {
-+            equipmentPairs = providedPairs.apply(tag);
-+        }
 +    }
 +
 +    @Override
