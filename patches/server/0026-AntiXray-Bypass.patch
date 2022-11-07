@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sun, 6 Nov 2022 08:29:18 -0600
+Subject: [PATCH] AntiXray Bypass
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java b/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java
+index 8e2baa21f71e7105a8e72cba4ded6aa99370fca0..b295dcb214d54cd049e0b8e59c02b165714eacdd 100644
+--- a/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java
++++ b/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java
+@@ -161,6 +161,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
+ 
+     @Override
+     public boolean shouldModify(ServerPlayer player, LevelChunk chunk) {
++        if (player.getBukkitEntity().hasAntiXrayBypass()) return false; // Slice
+         return !usePermission || !player.getBukkitEntity().hasPermission("paper.antixray.bypass");
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index df22a1407f3d1e93f0f1d50b5dbec3df12b106d2..2e7c1a99697c31f005a62b5d663708c9d4bc85df 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -174,6 +174,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+     private static final boolean DISABLE_CHANNEL_LIMIT = System.getProperty("paper.disableChannelLimit") != null; // Paper - add a flag to disable the channel limit
+     private long lastSaveTime;
+     // Paper end
++    private boolean antiXrayBypass; // Slice
+ 
+     public CraftPlayer(CraftServer server, ServerPlayer entity) {
+         super(server, entity);
+@@ -2432,6 +2433,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+     }
+     // Paper end
+ 
++    // Slice start
++    public boolean hasAntiXrayBypass() {
++        return this.antiXrayBypass;
++    }
++
++    @Override
++    public void toggleAntiXrayBypass(boolean bypass) {
++        this.antiXrayBypass = bypass;
++    }
++    // Slice end
++
+     @Override
+     public void updateCommands() {
+         if (this.getHandle().connection == null) return;

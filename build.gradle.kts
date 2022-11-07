@@ -78,7 +78,6 @@ tasks.generateDevelopmentBundle {
     libraryRepositories.set(
         listOf(
             "https://repo.maven.apache.org/maven2/",
-            "https://ysera.dyndns.org:444/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api'),
             paperMavenPublicUrl
         )
     )
@@ -90,9 +89,8 @@ allprojects {
     publishing {
         repositories {
             maven {
-                name = "Ysera"
-                url = uri("https://ysera.dyndns.org:444/releases")
-                // See Gradle docs for how to provide credentials to PasswordCredentials
+                name = "jitpack"
+                url = uri("https://jitpack.io")
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
                 credentials(PasswordCredentials::class)
             }
