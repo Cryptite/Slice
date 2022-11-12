@@ -244,6 +244,21 @@ index 9002ace5beb17b5a8b7efd0e83de17f2dbfc054a..6b504b854ccd9f0d63baf4cff4b1f279
 +    }
 +    // Slice end
  }
+diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
+index 070dab06db870f3c67dffe7637fe1a92c7eaa6a8..1005f44dd5a6906351852ea5fb35360683765cc6 100644
+--- a/src/main/java/net/minecraft/world/item/ItemStack.java
++++ b/src/main/java/net/minecraft/world/item/ItemStack.java
+@@ -695,7 +695,9 @@ public final class ItemStack {
+     }
+ 
+     public static boolean isSameIgnoreDurability(ItemStack left, ItemStack right) {
+-        return left == right ? true : (!left.isEmpty() && !right.isEmpty() ? left.sameItemStackIgnoreDurability(right) : false);
++        boolean rightEmpty = right.isEmpty();
++        boolean leftEmpty = left.isEmpty();
++        return left == right || leftEmpty && rightEmpty ? true : (!leftEmpty && !rightEmpty ? left.sameItemStackIgnoreDurability(right) : false);
+     }
+ 
+     public boolean sameItem(ItemStack stack) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 index c022751e3b45469cc0ad6732e2d6ff08918bafa4..04708105c6264bfacd0cc20a25178f7a62ebd78e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
