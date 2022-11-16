@@ -21,7 +21,7 @@ index fafbebbb5e8c1a381b673f97f1fa210687b52823..8c846971b56930ff10740986d71ad47a
 +    // Slice end
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index ce51ebeb5df07abc4a8bb31bc737ab3e4214ce83..29c07b4c624d6d39b1af1b2b1b1211d633d47734 100644
+index ce51ebeb5df07abc4a8bb31bc737ab3e4214ce83..8129c62692b9d1c4be85387dc52096b94956920e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -308,6 +308,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -62,7 +62,7 @@ index ce51ebeb5df07abc4a8bb31bc737ab3e4214ce83..29c07b4c624d6d39b1af1b2b1b1211d6
 +                if (sharedDataFolder != null) {
 +                    File sharedDir = new File(sharedDataFolder);
 +                    sharedDir.mkdirs();
-+                    if (this.sharedDataStorage != null) this.sharedDataStorage = new DimensionDataStorage(sharedDir, fixerUpper);
++                    this.sharedDataStorage = new DimensionDataStorage(sharedDir, fixerUpper);
 +                }
 +                // Slice end
 +
