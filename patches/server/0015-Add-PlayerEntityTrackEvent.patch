@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerEntityTrackEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 201574cfdd6abbbf346c2feb468409028b4ce7f0..95587048f8aa51cd0247d419d5d51f358db360b1 100644
+index 8b30e408d12ccabb66f94829879781e88023f271..e4b5c07b4f310832315711885726cfc4c01663c5 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -354,6 +354,7 @@ public class ServerEntity {
+@@ -355,6 +355,7 @@ public class ServerEntity {
              }
          }
  

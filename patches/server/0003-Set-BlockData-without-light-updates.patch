@@ -27,10 +27,10 @@ index 80c1e0e47818486a68e0114b063395290365346b..c7aa378d081c43838c6f8169125c46cb
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 5a2a1d394852d39ea576624586f7fa736dec807c..f9117486a51a1456842b03b2d2f2ee72cf1bc297 100644
+index 596fb8ee21ba8450db13a11890d241ef3974d81d..2fff811d725dedaac2085bb3eaedea8bd7620c56 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -510,12 +510,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -509,12 +509,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -46,7 +46,7 @@ index 5a2a1d394852d39ea576624586f7fa736dec807c..f9117486a51a1456842b03b2d2f2ee72
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start
-@@ -562,7 +562,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -561,7 +561,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              } else {
                  BlockState iblockdata2 = this.getBlockState(pos);
  
@@ -150,7 +150,7 @@ index 0d47460494135d4ec4c95260de033e054c2f0404..4d49cc4ceba781bc24ac9b4229483625
                  world.getMinecraftWorld().sendBlockUpdated(
                          position,
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
-index 966ac60daebb7bb211ab8096fc0c5f33db67320a..d68b046e30d0f3d186ed90b7c36086ccd889de1f 100644
+index a8ab1d3ee81664193be39d2735d6495136e0e310..fd4f00fa38b2d90e13937f114d96ea37bbc6dcdb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
 @@ -213,7 +213,7 @@ public class CraftBlockState implements BlockState {

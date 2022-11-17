@@ -5,10 +5,10 @@ Subject: [PATCH] Packet obfuscation and reduction
 
 
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
-index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725fcb902848 100644
+index bf838c097aeb79fbe82c0b6cdf3315acf03474cd..88c488cc9bcbfdec50654a8d67ebbd65b325cedf 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
 +++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket.java
-@@ -22,6 +22,13 @@ public class ClientboundSetEntityDataPacket implements Packet<ClientGamePacketLi
+@@ -27,6 +27,13 @@ public class ClientboundSetEntityDataPacket implements Packet<ClientGamePacketLi
  
      }
  
@@ -23,7 +23,7 @@ index 3e17f6131bf590d7c4a16b79c1c145cb4f565bc9..e1233fa58d068448d0accef7a7f6725f
          this.id = buf.readVarInt();
          this.packedItems = SynchedEntityData.unpack(buf);
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index 1c4e812c8b3f85ac5d69b637eb43d4b9751ad150..f647b2fc50a91467f68b1e5f2143d09668b0713c 100644
+index a376fc453986b66560f57076f0a72dcae9d427c2..2f28c2a8f99732c1791283429730b5d2fd3c1d4f 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 @@ -137,6 +137,11 @@ public class SynchedEntityData {
@@ -130,10 +130,10 @@ index 1c4e812c8b3f85ac5d69b637eb43d4b9751ad150..f647b2fc50a91467f68b1e5f2143d096
      }
  }
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 3b144c820531122eb37d41be06c182b5f5dc0724..201574cfdd6abbbf346c2feb468409028b4ce7f0 100644
+index 2358bb1788cfb902bac9b3b7588954af2d2cd823..8b30e408d12ccabb66f94829879781e88023f271 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -360,7 +360,19 @@ public class ServerEntity {
+@@ -361,7 +361,19 @@ public class ServerEntity {
          SynchedEntityData datawatcher = this.entity.getEntityData();
  
          if (datawatcher.isDirty()) {
@@ -155,10 +155,10 @@ index 3b144c820531122eb37d41be06c182b5f5dc0724..201574cfdd6abbbf346c2feb46840902
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 7e31ac6b1097fc5d4faac98d0f1b5673da4e6694..e6286e7127824d2b605672586ab145f3fad3e099 100644
+index a6c58a4cd3e9b0621fa1691d585c284e72091873..e8ca5bed288ee13b68de2e5d01fbccfe9cac5b1d 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3086,7 +3086,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3100,7 +3100,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }
@@ -168,7 +168,7 @@ index 7e31ac6b1097fc5d4faac98d0f1b5673da4e6694..e6286e7127824d2b605672586ab145f3
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index fb768b689c2bc7d6901bcf98bee4b1d64d82456a..ff0a092563d9a6dea7f2757bb636e3a8ff4d04a8 100644
+index 08732b3a77ad0541b3ca57b4478e13a337e31439..a03477da71266e61dc219b5da9a15c48f32b508a 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -641,7 +641,7 @@ public abstract class Player extends LivingEntity {
@@ -181,10 +181,10 @@ index fb768b689c2bc7d6901bcf98bee4b1d64d82456a..ff0a092563d9a6dea7f2757bb636e3a8
  
      public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 067d64ce06f626ce90b3ccf608d98f3c64fce335..6fca2d4de4b74bb24e29b5963a3f500e62760ad1 100644
+index 66830ccee464083879f79db4111e08fecee417ec..46c3f5327adb2324a77c3576958cc91866960e7c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2307,7 +2307,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2351,7 +2351,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

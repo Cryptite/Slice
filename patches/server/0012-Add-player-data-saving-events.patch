@@ -5,10 +5,10 @@ Subject: [PATCH] Add player data saving events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 99c7fa99cf25a090859c276301752dcc94a446b4..63376555eb5356e5eb6976d4027da717289a5eef 100644
+index d074483088ab4d2377e1bf249ca8cb59f1c45a1d..83886825ffa726e7e58f828d947eca7cce081eb4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-@@ -589,6 +589,8 @@ public class ServerPlayerGameMode {
+@@ -590,6 +590,8 @@ public class ServerPlayerGameMode {
                      enuminteractionresult1 = stack.useOn(itemactioncontext, hand);
                  }
  

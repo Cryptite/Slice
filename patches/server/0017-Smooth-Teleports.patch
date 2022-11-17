@@ -5,7 +5,7 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 3615576c24d5d6790a6894a91180de25fa0e5a9c..b438cdedd1927749f1fb0776404f4646c498090c 100644
+index 3b122f521c166253f20d233c0fcebdede6660be5..1972c2d20f7d07488dbf89b1e742d234390dc08b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -266,6 +266,7 @@ public class ServerPlayer extends Player {
@@ -17,10 +17,10 @@ index 3615576c24d5d6790a6894a91180de25fa0e5a9c..b438cdedd1927749f1fb0776404f4646
      public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile, @Nullable ProfilePublicKey publicKey) {
          super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile, publicKey);
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 3d3a8e1b535cab761aa696ec6bc350e0e83b1589..ae92661b1530b97dcf4960db5a893670ed9bb51a 100644
+index 6f0efd3459da45e4aa3a59e8b647725b779cdf51..3b3a4d7b1e94c8a9be64e3423654a1490b762ef9 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -960,12 +960,12 @@ public abstract class PlayerList {
+@@ -966,12 +966,12 @@ public abstract class PlayerList {
          }
          // CraftBukkit start
          LevelData worlddata = worldserver1.getLevelData();
@@ -36,12 +36,12 @@ index 3d3a8e1b535cab761aa696ec6bc350e0e83b1589..ae92661b1530b97dcf4960db5a893670
  
          // entityplayer1.connection.teleport(entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 6fca2d4de4b74bb24e29b5963a3f500e62760ad1..081a5ac8f3e16233e98b830594b28a1c7760b8c1 100644
+index 46c3f5327adb2324a77c3576958cc91866960e7c..79badb82b2904c5d59840d747eedd84cd404b2dd 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1172,6 +1172,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1216,6 +1216,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+         // Paper end
      }
-     // Paper end
  
 +    // Slice start
 +    public void teleportWithoutRespawn(Location location) {

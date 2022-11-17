@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 5a60f5dc202c44b06ca34e9a19d45cb715f74fd3..99c7fa99cf25a090859c276301752dcc94a446b4 100644
+index 0a5f8d990cce5df339fd9b2b0fcb291a20ddad41..d074483088ab4d2377e1bf249ca8cb59f1c45a1d 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -410,6 +410,7 @@ public class ServerPlayerGameMode {
@@ -37,7 +37,7 @@ index c18a0bc94d0210396046f4475e49a739088593f3..03f057134831bd119bb8dd820d4a0868
              CompoundTag newData = this.getTagClone();
              int newCount = this.getCount();
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index f9117486a51a1456842b03b2d2f2ee72cf1bc297..5084cd803c27519115dadb298c46b98ad20059ef 100644
+index 2fff811d725dedaac2085bb3eaedea8bd7620c56..fac83e6a3c6120a8e8768e363fc82083e4e53265 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -182,6 +182,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -68,7 +68,7 @@ index f9117486a51a1456842b03b2d2f2ee72cf1bc297..5084cd803c27519115dadb298c46b98a
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -664,6 +685,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -663,6 +684,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index f9117486a51a1456842b03b2d2f2ee72cf1bc297..5084cd803c27519115dadb298c46b98a
              // CraftBukkit end
          }
      }
-@@ -685,6 +707,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -684,6 +706,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          if (iblockdata.isAir()) {
              return false;
          } else {
@@ -115,10 +115,10 @@ index fa97966d39f01301a8ba976c02dc697e0a74bfb1..3f0cbdb4294f3fc1b953d7baa7903d2e
                  BlockState iblockdata2 = iblockdata1.hasProperty(BlockStateProperties.WATERLOGGED) && (Boolean) iblockdata1.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index fd74cc9c0dab84b176f7da3fbbbdbc8fd3a7e26d..94799f653f2888847ffe8733ae0eefe60143e6ca 100644
+index b86c17b5572f8f74bfefd0f3c6f9d25187574392..473161ff4ba0939d69d212eb032ceb630fe5d19e 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -988,6 +988,16 @@ public abstract class BlockBehaviour {
+@@ -989,6 +989,16 @@ public abstract class BlockBehaviour {
                  Direction enumdirection = aenumdirection[l];
  
                  blockposition_mutableblockposition.setWithOffset(pos, enumdirection);
