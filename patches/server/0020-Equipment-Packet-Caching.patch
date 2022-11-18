@@ -1,0 +1,218 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 18 Nov 2022 08:02:11 -0600
+Subject: [PATCH] Equipment Packet Caching
+
+
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java
+index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..997c9656c9cf815ad2769d4dea6f67a2301fca7c 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java
+@@ -18,6 +18,17 @@ public class ClientboundSetEquipmentPacket implements Packet<ClientGamePacketLis
+         this.slots = equipmentList;
+     }
+ 
++    // Slice start
++    public ClientboundSetEquipmentPacket(int id, List<Pair<EquipmentSlot, ItemStack>> equipmentList, net.minecraft.world.entity.LivingEntity entity, String tag) {
++        this.entity = id;
++        slots = new java.util.ArrayList<>(equipmentList.size());
++        for (Pair<EquipmentSlot, ItemStack> pair : equipmentList) {
++            EquipmentSlot slot = pair.getFirst();
++            slots.add(Pair.of(slot, entity.getOrCreateCachedEquipmentItem(tag, slot, pair.getSecond())));
++        }
++    }
++    // Slice end
++
+     public ClientboundSetEquipmentPacket(FriendlyByteBuf buf) {
+         this.entity = buf.readVarInt();
+         EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index e4b5c07b4f310832315711885726cfc4c01663c5..a0c6bb02fc3452c4d05c1e29f9d804f2eaf6b8b3 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -300,27 +300,8 @@ public class ServerEntity {
+             consumer.accept(new ClientboundSetEntityMotionPacket(this.entity.getId(), this.ap));
+         }
+ 
+-        if (this.entity instanceof LivingEntity) {
+-            List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
+-            EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
+-            int i = aenumitemslot.length;
+-
+-            for (int j = 0; j < i; ++j) {
+-                EquipmentSlot enumitemslot = aenumitemslot[j];
+-                ItemStack itemstack = ((LivingEntity) this.entity).getItemBySlot(enumitemslot);
+-
+-                if (!itemstack.isEmpty()) {
+-                    // Paper start - prevent oversized data
+-                    final ItemStack sanitized = LivingEntity.sanitizeItemStack(itemstack.copy(), false);
+-                    list.add(Pair.of(enumitemslot, ((LivingEntity) this.entity).stripMeta(sanitized, false))); // Paper - remove unnecessary item meta
+-                    // Paper end
+-                }
+-            }
+-
+-            if (!list.isEmpty()) {
+-                consumer.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
+-            }
+-            ((LivingEntity) this.entity).detectEquipmentUpdates(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
++        if (this.entity instanceof LivingEntity livingEntity) {
++            livingEntity.sendEquipment(entityplayer); // Slice
+         }
+ 
+         // CraftBukkit start - Fix for nonsensical head yaw
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index f75ed54d012164dd461a3e086b1818fa153e2f4d..9356785f4f70b74bcc8ab9dcd79e0da43b14f33c 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -264,6 +264,8 @@ public abstract class LivingEntity extends Entity {
+     public boolean bukkitPickUpLoot;
+     public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
+     public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
++    private final com.google.common.collect.Table<String, ItemStack, ItemStack> equipmentPacketCache = com.google.common.collect.HashBasedTable.create(); // Slice
++    public java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentMap = new java.util.HashMap<>(); // Slice
+ 
+     @Override
+     public float getBukkitYaw() {
+@@ -3040,6 +3042,7 @@ public abstract class LivingEntity extends Entity {
+         if (map != null) {
+             this.handleHandSwap(map);
+             if (!map.isEmpty()) {
++                cachedEquipmentMap.clear(); // Slice - Must invalidate cached equipment map if we have changes
+                 this.handleEquipmentChanges(map);
+             }
+         }
+@@ -3128,7 +3131,25 @@ public abstract class LivingEntity extends Entity {
+             }
+ 
+         });
+-        ((ServerLevel) this.level).getChunkSource().broadcast(this, new ClientboundSetEquipmentPacket(this.getId(), list));
++
++        // Slice start
++        net.minecraft.server.level.ChunkMap.TrackedEntity entityTracker = ((ServerLevel) this.level).getChunkSource().chunkMap.entityMap.get(getId());
++        if (entityTracker != null) {
++            ClientboundSetEquipmentPacket packet = new ClientboundSetEquipmentPacket(this.getId(), list);
++            for (net.minecraft.server.network.ServerPlayerConnection playerConnection : entityTracker.seenBy) {
++                ServerPlayer player = playerConnection.getPlayer();
++                org.bukkit.event.player.PlayerReceiveEquipmentEvent event = new org.bukkit.event.player.PlayerReceiveEquipmentEvent(player.getBukkitEntity(), getBukkitEntity());
++                level.getCraftServer().getPluginManager().callEvent(event);
++
++                String tag = event.getTag();
++                if (tag != null) {
++                    playerConnection.send(new ClientboundSetEquipmentPacket(this.getId(), list, this, tag));
++                } else {
++                    playerConnection.send(packet);
++                }
++            }
++        }
++        // Slice end
+     }
+ 
+     // Paper start - hide unnecessary item meta
+@@ -4377,4 +4398,72 @@ public abstract class LivingEntity extends Entity {
+     public static record Fallsounds(SoundEvent small, SoundEvent big) {
+ 
+     }
++
++    // Slice start
++    public void sendEquipment(ServerPlayer p) {
++        org.bukkit.event.player.PlayerReceiveEquipmentEvent event = new org.bukkit.event.player.PlayerReceiveEquipmentEvent(p.getBukkitEntity(), getBukkitEntity());
++        level.getCraftServer().getPluginManager().callEvent(event);
++
++        boolean sendEquipment = !event.isCancelled();
++        String tag = event.getTag();
++        if (sendEquipment && this instanceof ServerPlayer player && tag != null) {
++            ClientboundSetEquipmentPacket equipmentPacket = player.cachedEquipmentMap.get(tag);
++            if (equipmentPacket != null) {
++                //Event says use a tag, and our tag exists; so we simply used our entire cached packet
++                p.connection.send(equipmentPacket);
++                sendEquipment = false;
++            }
++        }
++
++        if (sendEquipment) {
++            EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
++            List<Pair<EquipmentSlot, ItemStack>> list = new ArrayList<>(equipmentSlots.length);
++
++            for (EquipmentSlot enumitemslot : equipmentSlots) {
++                ItemStack itemstack = getItemBySlot(enumitemslot);
++
++                if (!itemstack.isEmpty()) {
++                    // Paper start - prevent oversized data
++                    final ItemStack sanitized = LivingEntity.sanitizeItemStack(itemstack.copy(), false);
++                    ItemStack strippedItem = stripMeta(sanitized, false);
++
++                    if (tag != null) {
++                        strippedItem = getOrCreateCachedEquipmentItem(tag, enumitemslot, strippedItem);
++                    }
++
++                    list.add(Pair.of(enumitemslot, strippedItem)); // Paper - remove unnecessary item meta
++                    // Paper end
++                }
++            }
++
++            if (!list.isEmpty()) {
++                ClientboundSetEquipmentPacket equipmentPacket = new ClientboundSetEquipmentPacket(getId(), list);
++                if (tag != null) {
++                    cachedEquipmentMap.put(tag, equipmentPacket);
++                }
++                p.connection.send(equipmentPacket);
++            }
++
++            detectEquipmentUpdates(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
++        }
++    }
++
++    public ItemStack getOrCreateCachedEquipmentItem(String tag, EquipmentSlot slot, ItemStack itemStack) {
++        return equipmentPacketCache.row(tag).computeIfAbsent(itemStack, i -> {
++            String name = slot.name();
++
++            //How neat is this.
++            if (name.equals("MAINHAND")) {
++                name = "HAND";
++            } else if (name.equals("OFFHAND")) {
++                name = "OFF_HAND";
++            }
++
++            org.bukkit.event.entity.EntityEquipmentItemLookup event = new org.bukkit.event.entity.EntityEquipmentItemLookup(getBukkitEntity(), tag, org.bukkit.inventory.EquipmentSlot.valueOf(name), CraftItemStack.asBukkitCopy(i));
++            this.level.getCraftServer().getPluginManager().callEvent(event);
++            org.bukkit.inventory.ItemStack eventItem = event.getItemStack();
++            return CraftItemStack.asNMSCopy(eventItem);
++        });
++    }
++    // Slice end
+ }
+diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
+index 03f057134831bd119bb8dd820d4a0868b8f90b31..990e56e7bb892f6c7fb5ba19b565e96bb85bc0f2 100644
+--- a/src/main/java/net/minecraft/world/item/ItemStack.java
++++ b/src/main/java/net/minecraft/world/item/ItemStack.java
+@@ -707,7 +707,11 @@ public final class ItemStack {
+     }
+ 
+     public static boolean isSameIgnoreDurability(ItemStack left, ItemStack right) {
+-        return left == right ? true : (!left.isEmpty() && !right.isEmpty() ? left.sameItemStackIgnoreDurability(right) : false);
++        // Slice start
++        boolean rightEmpty = right.isEmpty();
++        boolean leftEmpty = left.isEmpty();
++        return left == right || leftEmpty && rightEmpty ? true : (!leftEmpty && !rightEmpty ? left.sameItemStackIgnoreDurability(right) : false);
++        // Slice end
+     }
+ 
+     public boolean sameItem(ItemStack stack) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
+index 76ee8adfb6cccc15dde748b0796d1de7fc5507f8..340a6b314653767ed227ad01d3423227232f87a9 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
+@@ -984,4 +984,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+         getHandle().knockback(strength, directionX, directionZ);
+     };
+     // Paper end
++
++    // Slice start
++    @Override
++    public void sendEquipment(Player p) {
++        if (entity instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
++            livingEntity.sendEquipment(((CraftPlayer) p).getHandle());
++        }
++    }
++    // Slice end
+ }
