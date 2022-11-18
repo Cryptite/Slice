@@ -1,0 +1,53 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 18 Nov 2022 08:06:31 -0600
+Subject: [PATCH] PlayerPreChunkLoadEvent
+
+
+diff --git a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+index 0b060183429f4c72ec767075538477b4302bbf0d..e4461c176682644d842b15b833c662039333d24f 100644
+--- a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
++++ b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+@@ -787,7 +787,7 @@ public final class PlayerChunkLoader {
+         // warning: modifications of this field must be aware that the loadQueue inside PlayerChunkLoader uses this field
+         // in a comparator!
+         protected final ArrayDeque<ChunkPriorityHolder> loadQueue = new ArrayDeque<>();
+-        protected final LongOpenHashSet sentChunks = new LongOpenHashSet();
++        public final LongOpenHashSet sentChunks = new LongOpenHashSet(); // Slice - public
+         protected final LongOpenHashSet chunksToBeSent = new LongOpenHashSet();
+ 
+         protected final TreeSet<ChunkPriorityHolder> sendQueue = new TreeSet<>((final ChunkPriorityHolder p1, final ChunkPriorityHolder p2) -> {
+@@ -871,7 +871,14 @@ public final class PlayerChunkLoader {
+         }
+ 
+         public void sendChunk(final int chunkX, final int chunkZ, final Runnable onChunkSend) {
+-            if (this.sentChunks.add(CoordinateUtils.getChunkKey(chunkX, chunkZ))) {
++            // Slice start
++            if (!new io.papermc.paper.event.packet.PlayerPreChunkLoadEvent(this.player.getBukkitEntity().getWorld(), chunkX, chunkZ, this.player.getBukkitEntity()).callEvent()) {
++                this.player.connection.connection.execute(onChunkSend);
++                return;
++            }
++            // Slice end
++
++            if (this.sentChunks.add(CoordinateUtils.getChunkKey(chunkX, chunkZ))) {  // Slice
+                 this.player.getLevel().getChunkSource().chunkMap.updateChunkTracking(this.player,
+                         new ChunkPos(chunkX, chunkZ), new MutableObject<>(), false, true); // unloaded, loaded
+                 this.player.connection.connection.execute(onChunkSend);
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 6d92d1e1301555dd77968e9f1d7347497200dd63..24b7ea846bf19a99f670a40e3623578cfa888282 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -524,6 +524,13 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+         return true;
+     }
+ 
++    @Override
++    public it.unimi.dsi.fastutil.longs.LongOpenHashSet getSentChunks(Player p) {
++        CraftPlayer craftPlayer = (CraftPlayer) p;
++        io.papermc.paper.chunk.PlayerChunkLoader.PlayerLoaderData data = this.world.chunkSource.chunkMap.playerChunkManager.getData(craftPlayer.getHandle());
++        return data != null ? data.sentChunks : null;
++    }
++
+     @Override
+     public boolean isChunkInUse(int x, int z) {
+         return this.isChunkLoaded(x, z);
