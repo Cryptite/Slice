@@ -17,7 +17,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..8ffacd63c964b823ac607a05d3388e03
  
      public Fixes fixes;
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 571753395ecfe82e3c95ad7f322981991ab0c94d..3aac19995956d0d0116cba0bc1412fb9e8f4c2ad 100644
+index 571753395ecfe82e3c95ad7f322981991ab0c94d..04413e870189c896f0c761a7351c9a8f0946c44a 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -227,6 +227,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -29,21 +29,23 @@ index 571753395ecfe82e3c95ad7f322981991ab0c94d..3aac19995956d0d0116cba0bc1412fb9
      @Override public LevelChunk getChunkIfLoaded(int x, int z) { // Paper - this was added in world too but keeping here for NMS ABI
          return this.chunkSource.getChunkAtIfLoadedImmediately(x, z); // Paper
      }
-@@ -605,6 +607,13 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -605,6 +607,15 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
          this.chunkTaskScheduler = new io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler(this, io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.workerThreads); // Paper - rewrite chunk system
          this.entityLookup = new io.papermc.paper.chunk.system.entity.EntityLookup(this, new EntityCallbacks()); // Paper - rewrite chunk system
 +
++        // Slice start
 +        String sharedDataFolder = paperConfig().maps.sharedDataFolder;
-+        if (sharedDataFolder != "") {
++        if (sharedDataFolder != null) {
 +            java.io.File sharedDir = new java.io.File(sharedDataFolder);
 +            sharedDir.mkdirs();
 +            this.sharedDataStorage = new DimensionDataStorage(sharedDir, datafixer);
 +        }
++        // Slice end
      }
  
      public void setWeatherParameters(int clearDuration, int rainDuration, boolean raining, boolean thundering) {
-@@ -1318,6 +1327,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1318,6 +1329,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
              }// Paper
              // Paper - rewrite chunk system - entity saving moved into ChunkHolder
  
@@ -51,7 +53,7 @@ index 571753395ecfe82e3c95ad7f322981991ab0c94d..3aac19995956d0d0116cba0bc1412fb9
          } else if (close) { chunkproviderserver.close(false); } // Paper - rewrite chunk system
  
          // CraftBukkit start - moved from MinecraftServer.saveChunks
-@@ -1944,11 +1954,17 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1944,11 +1956,17 @@ public class ServerLevel extends Level implements WorldGenLevel {
          return this.getChunkSource().getDataStorage();
      }
  
@@ -70,7 +72,7 @@ index 571753395ecfe82e3c95ad7f322981991ab0c94d..3aac19995956d0d0116cba0bc1412fb9
              // We only get here when the data file exists, but is not a valid map
              MapItemSavedData newMap = MapItemSavedData.load(nbttagcompound);
              newMap.id = id;
-@@ -1962,12 +1978,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1962,12 +1980,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
      @Override
      public void setMapData(String id, MapItemSavedData state) {
          state.id = id; // CraftBukkit
