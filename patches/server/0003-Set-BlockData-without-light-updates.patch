@@ -5,10 +5,10 @@ Subject: [PATCH] Set BlockData without light updates
 
 
 diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-index 80c1e0e47818486a68e0114b063395290365346b..c7aa378d081c43838c6f8169125c46cbbfa72429 100644
+index 0d3587e2d454fb0994ecff930b5e496a3999746a..57896cf095bad0367f65a514ac8befa53f4863a4 100644
 --- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 +++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-@@ -233,7 +233,7 @@ public class WorldGenRegion implements WorldGenLevel {
+@@ -234,7 +234,7 @@ public class WorldGenRegion implements WorldGenLevel {
                  Block.dropResources(iblockdata, this.level, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  
@@ -17,7 +17,7 @@ index 80c1e0e47818486a68e0114b063395290365346b..c7aa378d081c43838c6f8169125c46cb
          }
      }
  
-@@ -308,7 +308,7 @@ public class WorldGenRegion implements WorldGenLevel {
+@@ -309,7 +309,7 @@ public class WorldGenRegion implements WorldGenLevel {
      }
  
      @Override
@@ -99,7 +99,7 @@ index 2e65b44f10aeb44fd524a58e7eb815a566c1ad61..f85777b5d4003a9fcc6f19976ea6ef23
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index 62bca85da6c5d9877e21fecb702370506ddf671c..9e339db1a9257e64f5645ba7e4025debaa4110e9 100644
+index 32865ef1903a5e499b27c82fd5be90aa084744cb..0c1349c6070cf2288b40ab1f9bf6894f4d2d377a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 @@ -277,7 +277,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {

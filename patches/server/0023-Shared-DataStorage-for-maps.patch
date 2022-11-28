@@ -5,10 +5,10 @@ Subject: [PATCH] Shared DataStorage for maps
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index a1bd848bbf924267e74e61dabdb840628712b1ad..8ffacd63c964b823ac607a05d3388e036fab0b52 100644
+index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..4635d78d194f28fb56e436383124f3f5a9fc9d2e 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-@@ -356,6 +356,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -360,6 +360,7 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Maps extends ConfigurationPart {
          public int itemFrameCursorLimit = 128;
          public int itemFrameCursorUpdateInterval = 10;
@@ -17,7 +17,7 @@ index a1bd848bbf924267e74e61dabdb840628712b1ad..8ffacd63c964b823ac607a05d3388e03
  
      public Fixes fixes;
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 571753395ecfe82e3c95ad7f322981991ab0c94d..04413e870189c896f0c761a7351c9a8f0946c44a 100644
+index eb6a4127acba7647d3cec0ec2f51c18ea6f22186..08aac55ad66e982b62d7baa52dd2b36ea97a27c0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -227,6 +227,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -29,7 +29,7 @@ index 571753395ecfe82e3c95ad7f322981991ab0c94d..04413e870189c896f0c761a7351c9a8f
      @Override public LevelChunk getChunkIfLoaded(int x, int z) { // Paper - this was added in world too but keeping here for NMS ABI
          return this.chunkSource.getChunkAtIfLoadedImmediately(x, z); // Paper
      }
-@@ -605,6 +607,15 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -606,6 +608,15 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
          this.chunkTaskScheduler = new io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler(this, io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.workerThreads); // Paper - rewrite chunk system
          this.entityLookup = new io.papermc.paper.chunk.system.entity.EntityLookup(this, new EntityCallbacks()); // Paper - rewrite chunk system
@@ -45,7 +45,7 @@ index 571753395ecfe82e3c95ad7f322981991ab0c94d..04413e870189c896f0c761a7351c9a8f
      }
  
      public void setWeatherParameters(int clearDuration, int rainDuration, boolean raining, boolean thundering) {
-@@ -1318,6 +1329,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1319,6 +1330,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
              }// Paper
              // Paper - rewrite chunk system - entity saving moved into ChunkHolder
  
@@ -53,7 +53,7 @@ index 571753395ecfe82e3c95ad7f322981991ab0c94d..04413e870189c896f0c761a7351c9a8f
          } else if (close) { chunkproviderserver.close(false); } // Paper - rewrite chunk system
  
          // CraftBukkit start - moved from MinecraftServer.saveChunks
-@@ -1944,11 +1956,17 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1945,11 +1957,17 @@ public class ServerLevel extends Level implements WorldGenLevel {
          return this.getChunkSource().getDataStorage();
      }
  
@@ -72,7 +72,7 @@ index 571753395ecfe82e3c95ad7f322981991ab0c94d..04413e870189c896f0c761a7351c9a8f
              // We only get here when the data file exists, but is not a valid map
              MapItemSavedData newMap = MapItemSavedData.load(nbttagcompound);
              newMap.id = id;
-@@ -1962,12 +1980,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1963,12 +1981,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
      @Override
      public void setMapData(String id, MapItemSavedData state) {
          state.id = id; // CraftBukkit

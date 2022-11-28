@@ -61,19 +61,19 @@ index e4b5c07b4f310832315711885726cfc4c01663c5..a0c6bb02fc3452c4d05c1e29f9d804f2
  
          // CraftBukkit start - Fix for nonsensical head yaw
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index f75ed54d012164dd461a3e086b1818fa153e2f4d..9356785f4f70b74bcc8ab9dcd79e0da43b14f33c 100644
+index be20f0971d34804b95f939896594f747497fde53..7e996a81b20c37a0570c21887b01490d106457e8 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -264,6 +264,8 @@ public abstract class LivingEntity extends Entity {
-     public boolean bukkitPickUpLoot;
+@@ -265,6 +265,8 @@ public abstract class LivingEntity extends Entity {
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
+     public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper
 +    private final com.google.common.collect.Table<String, ItemStack, ItemStack> equipmentPacketCache = com.google.common.collect.HashBasedTable.create(); // Slice
 +    public java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentMap = new java.util.HashMap<>(); // Slice
  
      @Override
      public float getBukkitYaw() {
-@@ -3040,6 +3042,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3057,6 +3059,7 @@ public abstract class LivingEntity extends Entity {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -81,7 +81,7 @@ index f75ed54d012164dd461a3e086b1818fa153e2f4d..9356785f4f70b74bcc8ab9dcd79e0da4
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3128,7 +3131,25 @@ public abstract class LivingEntity extends Entity {
+@@ -3145,7 +3148,25 @@ public abstract class LivingEntity extends Entity {
              }
  
          });
@@ -108,7 +108,7 @@ index f75ed54d012164dd461a3e086b1818fa153e2f4d..9356785f4f70b74bcc8ab9dcd79e0da4
      }
  
      // Paper start - hide unnecessary item meta
-@@ -4377,4 +4398,72 @@ public abstract class LivingEntity extends Entity {
+@@ -4413,4 +4434,72 @@ public abstract class LivingEntity extends Entity {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -182,7 +182,7 @@ index f75ed54d012164dd461a3e086b1818fa153e2f4d..9356785f4f70b74bcc8ab9dcd79e0da4
 +    // Slice end
  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 03f057134831bd119bb8dd820d4a0868b8f90b31..990e56e7bb892f6c7fb5ba19b565e96bb85bc0f2 100644
+index c77fec21a4e988da14af15dfd45a565c0cd7df00..f1b9cbc0642a92cae2424b2f16e9c9bf71f76141 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -707,7 +707,11 @@ public final class ItemStack {
@@ -199,10 +199,10 @@ index 03f057134831bd119bb8dd820d4a0868b8f90b31..990e56e7bb892f6c7fb5ba19b565e96b
  
      public boolean sameItem(ItemStack stack) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 76ee8adfb6cccc15dde748b0796d1de7fc5507f8..340a6b314653767ed227ad01d3423227232f87a9 100644
+index 316120a57802c45fb9b02a4daee207a0845c63be..df3d23c8465baed13eda276c2b0750de61bdb473 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -984,4 +984,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -1043,4 +1043,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          getHandle().knockback(strength, directionX, directionZ);
      };
      // Paper end
