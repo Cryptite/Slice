@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 18 Nov 2022 08:03:20 -0600
+Subject: [PATCH] AntiXray Bypass
+
+
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index 39c65831f38b3992c52f35abcc4aab1d2e09473c..8c101c66b2c8d7044d29474e37c10838ee3e5d0c 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -2543,6 +2543,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+      */
+     boolean hasResourcePack();
+ 
++    // Slice start
++    void toggleAntiXrayBypass(boolean bypass);
++    // Slice end
++
+     /**
+      * Gets a copy of this players profile
+      * @return The players profile object

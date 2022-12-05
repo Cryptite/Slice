@@ -27,7 +27,7 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..997c9656c9cf815ad2769d4dea6f67a2
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index e4b5c07b4f310832315711885726cfc4c01663c5..a0c6bb02fc3452c4d05c1e29f9d804f2eaf6b8b3 100644
+index 8b30e408d12ccabb66f94829879781e88023f271..52d021c87b40906a546678af6aa030843e6e669b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -300,27 +300,8 @@ public class ServerEntity {

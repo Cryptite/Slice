@@ -5,7 +5,7 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 3b122f521c166253f20d233c0fcebdede6660be5..1972c2d20f7d07488dbf89b1e742d234390dc08b 100644
+index 9c9b4d7e0637348a94befce9377fdb69c1239694..46ff63d0a2c05c67bcedccc2827120f088acd066 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -266,6 +266,7 @@ public class ServerPlayer extends Player {
@@ -36,7 +36,7 @@ index 6f0efd3459da45e4aa3a59e8b647725b779cdf51..3b3a4d7b1e94c8a9be64e3423654a149
  
          // entityplayer1.connection.teleport(entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 46c3f5327adb2324a77c3576958cc91866960e7c..79badb82b2904c5d59840d747eedd84cd404b2dd 100644
+index 3c301c3621cfc3c99788064231af7e106f418e3b..fb2703bc25242fe82e989032175e138ffa0b46b4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -1216,6 +1216,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
