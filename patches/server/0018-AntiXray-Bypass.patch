@@ -5,10 +5,10 @@ Subject: [PATCH] AntiXray Bypass
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java b/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java
-index dabd93c35bdbac6a8b668a82d5f3d4173a1baa4a..3c144e41dbe5735fb72094281596e22e95eea082 100644
+index 4f3670b2bdb8b1b252e9f074a6af56a018a8c465..31146c7cbaced5658ed43f05239b8165ce7c0a1d 100644
 --- a/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java
 +++ b/src/main/java/com/destroystokyo/paper/antixray/ChunkPacketBlockControllerAntiXray.java
-@@ -162,6 +162,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
+@@ -163,6 +163,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
  
      @Override
      public boolean shouldModify(ServerPlayer player, LevelChunk chunk) {
@@ -17,10 +17,10 @@ index dabd93c35bdbac6a8b668a82d5f3d4173a1baa4a..3c144e41dbe5735fb72094281596e22e
      }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index fb2703bc25242fe82e989032175e138ffa0b46b4..83b4bc9238a8adbebfd0dd62b99075632e79281a 100644
+index 2f614915026dd9d44589cb1c1da28aca9b202d12..abb7cb5cd93b7eb4f2f85cb40045bad35fc10b01 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -176,6 +176,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -178,6 +178,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      private static final boolean DISABLE_CHANNEL_LIMIT = System.getProperty("paper.disableChannelLimit") != null; // Paper - add a flag to disable the channel limit
      private long lastSaveTime;
      // Paper end
@@ -28,7 +28,7 @@ index fb2703bc25242fe82e989032175e138ffa0b46b4..83b4bc9238a8adbebfd0dd62b9907563
  
      public CraftPlayer(CraftServer server, ServerPlayer entity) {
          super(server, entity);
-@@ -2596,6 +2597,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2568,6 +2569,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      }
      // Paper end
  

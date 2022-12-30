@@ -5,7 +5,7 @@ Subject: [PATCH] Add player data saving events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index d074483088ab4d2377e1bf249ca8cb59f1c45a1d..83886825ffa726e7e58f828d947eca7cce081eb4 100644
+index 58b093bb1de78ee3b3b2ea364aa50474883f443a..0989c7deef13ee202560fb2f44cbd273f9817f91 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -590,6 +590,8 @@ public class ServerPlayerGameMode {
@@ -18,10 +18,10 @@ index d074483088ab4d2377e1bf249ca8cb59f1c45a1d..83886825ffa726e7e58f828d947eca7c
                      CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, blockposition, itemstack1);
                  }
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index c59f98ca3adfdd90cdc5999aeadbb0834efedc0f..6e819bd376eb9edee6bf8bd8c08a755599f1514a 100644
+index 72946e324c575ef39f3939225b96b68f724da460..cc6eded233655888664cab9808c7c3ecd07c5cce 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-@@ -201,7 +201,12 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -202,7 +202,12 @@ public class ServerStatsCounter extends StatsCounter {
          return nbttagcompound;
      }
  
@@ -35,7 +35,7 @@ index c59f98ca3adfdd90cdc5999aeadbb0834efedc0f..6e819bd376eb9edee6bf8bd8c08a7555
          Map<StatType<?>, JsonObject> map = Maps.newHashMap();
          ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
  
-@@ -227,7 +232,7 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -228,7 +233,7 @@ public class ServerStatsCounter extends StatsCounter {
  
          jsonobject1.add("stats", jsonobject);
          jsonobject1.addProperty("DataVersion", SharedConstants.getCurrentVersion().getWorldVersion());

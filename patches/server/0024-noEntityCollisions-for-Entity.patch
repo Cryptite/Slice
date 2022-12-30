@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 30 Dec 2022 15:00:35 -0600
+Subject: [PATCH] noEntityCollisions for Entity
+
+
+diff --git a/src/main/java/io/papermc/paper/util/CollisionUtil.java b/src/main/java/io/papermc/paper/util/CollisionUtil.java
+index a87f6380b2c387fb0cdd40d5087b5c93492e3c88..cd35c2136a638c07fed683a2f92e70aa57bcfa8e 100644
+--- a/src/main/java/io/papermc/paper/util/CollisionUtil.java
++++ b/src/main/java/io/papermc/paper/util/CollisionUtil.java
+@@ -809,7 +809,7 @@ public final class CollisionUtil {
+ 
+     public static boolean getEntityHardCollisions(final CollisionGetter getter, final Entity entity, AABB aabb,
+                                                   final List<AABB> into, final boolean checkOnly, final Predicate<Entity> predicate) {
+-        if (isEmpty(aabb) || !(getter instanceof EntityGetter entityGetter)) {
++        if ((entity != null && entity.noEntityCollisions) || isEmpty(aabb) || !(getter instanceof EntityGetter entityGetter)) { // Slice
+             return false;
+         }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 282cee03458ce6fa16896d988ac4d1dc887e5501..f83e5383e950c9261804991431ff0da89673f277 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -433,6 +433,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+      * Overriding this field will cause memory leaks.
+      */
+     private final boolean hardCollides;
++    public boolean noEntityCollisions; // Slice
+ 
+     private static final java.util.Map<Class<? extends Entity>, Boolean> cachedOverrides = java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
+     {

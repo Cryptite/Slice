@@ -5,10 +5,10 @@ Subject: [PATCH] Equipment Packet Caching
 
 
 diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
-index 97336be470a9d545d93f78e683a793f328013ad8..d57ff4b918e3c6e97b2d0664394c7faf46aa3b00 100644
+index ead90b002034c463983af948a4fb882109b8d3a2..aa58f8c94e967465e79f85f08b45b86e1bce7803 100644
 --- a/src/main/java/org/bukkit/entity/LivingEntity.java
 +++ b/src/main/java/org/bukkit/entity/LivingEntity.java
-@@ -1059,4 +1059,11 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
+@@ -1107,4 +1107,11 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
       */
      void damageItemStack(org.bukkit.inventory.@NotNull EquipmentSlot slot, int amount);
      // Paper end

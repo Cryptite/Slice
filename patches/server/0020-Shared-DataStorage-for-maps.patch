@@ -5,10 +5,10 @@ Subject: [PATCH] Shared DataStorage for maps
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..4635d78d194f28fb56e436383124f3f5a9fc9d2e 100644
+index 4532f3a0d74feae0a1249b53e1bfbc18a8808b32..2df8d02d7151d3483587c22f70dea1439d439553 100644
 --- a/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/WorldConfiguration.java
-@@ -360,6 +360,7 @@ public class WorldConfiguration extends ConfigurationPart {
+@@ -364,6 +364,7 @@ public class WorldConfiguration extends ConfigurationPart {
      public class Maps extends ConfigurationPart {
          public int itemFrameCursorLimit = 128;
          public int itemFrameCursorUpdateInterval = 10;
@@ -17,10 +17,10 @@ index 5982dda61e07f1661b0a68d0ba1fcc1122e8d428..4635d78d194f28fb56e436383124f3f5
  
      public Fixes fixes;
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index eb6a4127acba7647d3cec0ec2f51c18ea6f22186..08aac55ad66e982b62d7baa52dd2b36ea97a27c0 100644
+index 274a8deb22d0d6d07d1e6278935000756ae37ac5..79f85a4d93b837e4b7f2e62f599359bf939ddc90 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -227,6 +227,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -229,6 +229,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
          return thr;
      }
  
@@ -45,7 +45,7 @@ index eb6a4127acba7647d3cec0ec2f51c18ea6f22186..08aac55ad66e982b62d7baa52dd2b36e
      }
  
      public void setWeatherParameters(int clearDuration, int rainDuration, boolean raining, boolean thundering) {
-@@ -1319,6 +1330,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1337,6 +1348,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
              }// Paper
              // Paper - rewrite chunk system - entity saving moved into ChunkHolder
  
@@ -53,7 +53,7 @@ index eb6a4127acba7647d3cec0ec2f51c18ea6f22186..08aac55ad66e982b62d7baa52dd2b36e
          } else if (close) { chunkproviderserver.close(false); } // Paper - rewrite chunk system
  
          // CraftBukkit start - moved from MinecraftServer.saveChunks
-@@ -1945,11 +1957,17 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1918,11 +1930,17 @@ public class ServerLevel extends Level implements WorldGenLevel {
          return this.getChunkSource().getDataStorage();
      }
  
@@ -72,7 +72,7 @@ index eb6a4127acba7647d3cec0ec2f51c18ea6f22186..08aac55ad66e982b62d7baa52dd2b36e
              // We only get here when the data file exists, but is not a valid map
              MapItemSavedData newMap = MapItemSavedData.load(nbttagcompound);
              newMap.id = id;
-@@ -1963,12 +1981,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1936,12 +1954,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
      @Override
      public void setMapData(String id, MapItemSavedData state) {
          state.id = id; // CraftBukkit
@@ -98,7 +98,7 @@ index eb6a4127acba7647d3cec0ec2f51c18ea6f22186..08aac55ad66e982b62d7baa52dd2b36e
  
      // Paper start - helper function for configurable spawn radius
 diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-index 2513069f4ffe594857762ef51f1b9a078b8b1d17..88b13bfa3393d9901c8a1b62bcc37f03919d747b 100644
+index 2da78bc43af715fe399eac1d83b3bf6e8fb8afac..3a8d2344b8e3485c9d4a7abb1b22e853b710ef4e 100644
 --- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
 @@ -58,7 +58,7 @@ public class DimensionDataStorage {

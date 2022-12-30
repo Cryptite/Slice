@@ -5,15 +5,46 @@ Subject: [PATCH] Ignore durability change equipment updates
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 11d7c42d65b91bf57b7bba7812aa17e60e018c67..be20f0971d34804b95f939896594f747497fde53 100644
+index 529ea9094c0c7b6263c13b3b7a2d1e652f7bc29e..b9fbbd5d775af0ce7d9eba97e14046233c64b0fd 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3086,7 +3086,7 @@ public abstract class LivingEntity extends Entity {
+@@ -3103,7 +3103,7 @@ public abstract class LivingEntity extends Entity {
  
              ItemStack itemstack1 = this.getItemBySlot(enumitemslot);
  
--            if (!ItemStack.matches(itemstack1, itemstack)) {
-+            if (!ItemStack.isSameIgnoreDurability(itemstack1, itemstack)) { // Slice
+-            if (this.equipmentHasChanged(itemstack, itemstack1)) {
++            if (!net.minecraft.world.item.ItemStack.isSameIgnoreDurability(itemstack, itemstack1)) { // Slice
                  // Paper start - PlayerArmorChangeEvent
                  if (this instanceof ServerPlayer && enumitemslot.getType() == EquipmentSlot.Type.ARMOR) {
                      final org.bukkit.inventory.ItemStack oldItem = CraftItemStack.asBukkitCopy(itemstack);
+diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
+index 8450a22b0fc6e8dc5cad0f61ac52a82b3cd3791e..6ed921621f66dc4bfec66a307db24defb3caf380 100644
+--- a/src/main/java/net/minecraft/world/item/ItemStack.java
++++ b/src/main/java/net/minecraft/world/item/ItemStack.java
+@@ -720,6 +720,26 @@ public final class ItemStack {
+         return left == right ? true : (!left.isEmpty() && !right.isEmpty() ? left.sameItem(right) : false);
+     }
+ 
++    // Slice start
++    public static boolean isSameIgnoreDurability(ItemStack left, ItemStack right) {
++        if (left == right) return true;
++
++        boolean rightEmpty = right.isEmpty();
++        boolean leftEmpty = left.isEmpty();
++        if (leftEmpty && rightEmpty) return true;
++
++        if (!leftEmpty && !rightEmpty) {
++            return left.sameItemStackIgnoreDurability(right);
++        }
++
++        return false;
++    }
++
++    public boolean sameItemStackIgnoreDurability(ItemStack stack) {
++        return this.isDamageableItem() ? !stack.isEmpty() && this.is(stack.getItem()) : this.sameItem(stack);
++    }
++    // Slice end
++
+     public boolean sameItem(ItemStack stack) {
+         return !stack.isEmpty() && this.is(stack.getItem());
+     }

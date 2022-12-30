@@ -5,15 +5,15 @@ Subject: [PATCH] Unfreeze MappedRegistry
 
 
 diff --git a/src/main/java/net/minecraft/core/MappedRegistry.java b/src/main/java/net/minecraft/core/MappedRegistry.java
-index 3ef5d440fd3ce209110543bfd36569e846a5b749..7afb07a24c21706473c28a058214e81ebff1ab0a 100644
+index 1e33434f9f361542e03da3e4812bc6d76768a202..834a6f2eb2d6c0aa3afd450034f32b4e008b3a3c 100644
 --- a/src/main/java/net/minecraft/core/MappedRegistry.java
 +++ b/src/main/java/net/minecraft/core/MappedRegistry.java
-@@ -331,6 +331,8 @@ public class MappedRegistry<T> extends WritableRegistry<T> {
+@@ -335,7 +335,7 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
  
      @Override
      public Registry<T> freeze() {
-+        if (true) return this; // Slice (a TODO in Paper, thanks Owen)
-+
-         this.frozen = true;
-         List<ResourceLocation> list = this.byKey.entrySet().stream().filter((entry) -> {
-             return !entry.getValue().isBound();
+-        if (this.frozen) {
++        if (this.true) { // Slice (a TODO in Paper, thanks Owen)
+             return this;
+         } else {
+             this.frozen = true;

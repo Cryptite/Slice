@@ -5,27 +5,27 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 9c9b4d7e0637348a94befce9377fdb69c1239694..46ff63d0a2c05c67bcedccc2827120f088acd066 100644
+index 7d6d3c8556033d289fdadc489e73fba478fce41a..fc07b3340c8e90df20ab3989bb07a8c4bfc13579 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -266,6 +266,7 @@ public class ServerPlayer extends Player {
-     public double lastEntitySpawnRadiusSquared; // Paper - optimise isOutsideRange, this field is in blocks
+@@ -268,6 +268,7 @@ public class ServerPlayer extends Player {
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
+     public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
 +    public boolean smoothWorldTeleport; // Slice
  
-     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile, @Nullable ProfilePublicKey publicKey) {
-         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile, publicKey);
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 6f0efd3459da45e4aa3a59e8b647725b779cdf51..3b3a4d7b1e94c8a9be64e3423654a1490b762ef9 100644
+index 673930ebb5027b71bc4a780ecd354108ed8c7226..b1e0a4f51b58ffdff72127886d5c9014002dd52f 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -966,12 +966,12 @@ public abstract class PlayerList {
-         }
+@@ -899,12 +899,12 @@ public abstract class PlayerList {
+         int i = flag ? 1 : 0;
          // CraftBukkit start
          LevelData worlddata = worldserver1.getLevelData();
--        entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag, entityplayer1.getLastDeathLocation()));
-+        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), flag, entityplayer1.getLastDeathLocation()));
+-        entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), (byte) i, entityplayer1.getLastDeathLocation()));
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), (byte) i, entityplayer1.getLastDeathLocation()));
          entityplayer1.connection.send(new ClientboundSetChunkCacheRadiusPacket(worldserver1.getChunkSource().chunkMap.playerChunkManager.getTargetSendDistance())); // Spigot // Paper - replace old player chunk management
          entityplayer1.connection.send(new ClientboundSetSimulationDistancePacket(worldserver1.getChunkSource().chunkMap.playerChunkManager.getTargetTickViewDistance())); // Spigot // Paper - replace old player chunk management
          entityplayer1.spawnIn(worldserver1);
@@ -36,10 +36,10 @@ index 6f0efd3459da45e4aa3a59e8b647725b779cdf51..3b3a4d7b1e94c8a9be64e3423654a149
  
          // entityplayer1.connection.teleport(entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 3c301c3621cfc3c99788064231af7e106f418e3b..fb2703bc25242fe82e989032175e138ffa0b46b4 100644
+index 2c3b361d604b30cc114ecaa9874bc1f6cdcae22a..2f614915026dd9d44589cb1c1da28aca9b202d12 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1216,6 +1216,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1175,6 +1175,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          // Paper end
      }
  

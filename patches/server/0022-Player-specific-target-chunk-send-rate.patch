@@ -37,10 +37,10 @@ index e4461c176682644d842b15b833c662039333d24f..9dabd5bb2d9e6c2f9a6dc7103ca91447
  
              synchronized (this.sendingChunkCounts) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 46ff63d0a2c05c67bcedccc2827120f088acd066..b30d6d9e8a4157d3238bad6ea68b4de52f27334b 100644
+index fc07b3340c8e90df20ab3989bb07a8c4bfc13579..5fc08093a818486642fbff9a3587bc5e7d051ea2 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -13,6 +13,8 @@ import java.util.Objects;
+@@ -14,6 +14,8 @@ import java.util.Objects;
  import java.util.Optional;
  import java.util.OptionalInt;
  import javax.annotation.Nullable;
@@ -49,11 +49,11 @@ index 46ff63d0a2c05c67bcedccc2827120f088acd066..b30d6d9e8a4157d3238bad6ea68b4de5
  import net.minecraft.BlockUtil;
  import net.minecraft.ChatFormatting;
  import net.minecraft.CrashReport;
-@@ -267,6 +269,7 @@ public class ServerPlayer extends Player {
-     public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
+@@ -269,6 +271,7 @@ public class ServerPlayer extends Player {
+     public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
      public boolean smoothWorldTeleport; // Slice
 +    public double targetChunkSendRate = GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate; // Slice
  
-     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile, @Nullable ProfilePublicKey publicKey) {
-         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile, publicKey);
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
