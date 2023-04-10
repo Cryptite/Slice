@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 10 Apr 2023 08:45:12 -0500
+Subject: [PATCH] Disable Azalea generation
+
+
+diff --git a/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java b/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java
+index 8f5178e934b5f9bc48beacd082e479fd9fb80fa6..d580238d733ba2dbbbbaa2659d1a7834c8cf7dac 100644
+--- a/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java
++++ b/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java
+@@ -161,7 +161,7 @@ public class BiomeDefaultFeatures {
+         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.CAVE_VINES);
+         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.LUSH_CAVES_CLAY);
+         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.LUSH_CAVES_VEGETATION);
+-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.ROOTED_AZALEA_TREE);
++//        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.ROOTED_AZALEA_TREE); // Slice
+         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.SPORE_BLOSSOM);
+         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.CLASSIC_VINES);
+     }
+diff --git a/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java b/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java
+index feabf6db6a5987bec36b611b160b67ca30af2ecf..974c4d03dd36cd30ff0736cdc1605623e21e7c78 100644
+--- a/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java
++++ b/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java
+@@ -110,7 +110,7 @@ public class CaveFeatures {
+         RandomizedIntStateProvider randomizedIntStateProvider = new RandomizedIntStateProvider(new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(Blocks.CAVE_VINES.defaultBlockState(), 4).add(Blocks.CAVE_VINES.defaultBlockState().setValue(CaveVines.BERRIES, Boolean.valueOf(true)), 1)), CaveVinesBlock.AGE, UniformInt.of(23, 25));
+         FeatureUtils.register(featureRegisterable, CAVE_VINE, Feature.BLOCK_COLUMN, new BlockColumnConfiguration(List.of(BlockColumnConfiguration.layer(new WeightedListInt(SimpleWeightedRandomList.<IntProvider>builder().add(UniformInt.of(0, 19), 2).add(UniformInt.of(0, 2), 3).add(UniformInt.of(0, 6), 10).build()), weightedStateProvider), BlockColumnConfiguration.layer(ConstantInt.of(1), randomizedIntStateProvider)), Direction.DOWN, BlockPredicate.ONLY_IN_AIR_PREDICATE, true));
+         FeatureUtils.register(featureRegisterable, CAVE_VINE_IN_MOSS, Feature.BLOCK_COLUMN, new BlockColumnConfiguration(List.of(BlockColumnConfiguration.layer(new WeightedListInt(SimpleWeightedRandomList.<IntProvider>builder().add(UniformInt.of(0, 3), 5).add(UniformInt.of(1, 7), 1).build()), weightedStateProvider), BlockColumnConfiguration.layer(ConstantInt.of(1), randomizedIntStateProvider)), Direction.DOWN, BlockPredicate.ONLY_IN_AIR_PREDICATE, true));
+-        FeatureUtils.register(featureRegisterable, MOSS_VEGETATION, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(Blocks.FLOWERING_AZALEA.defaultBlockState(), 4).add(Blocks.AZALEA.defaultBlockState(), 7).add(Blocks.MOSS_CARPET.defaultBlockState(), 25).add(Blocks.GRASS.defaultBlockState(), 50).add(Blocks.TALL_GRASS.defaultBlockState(), 10))));
++        FeatureUtils.register(featureRegisterable, MOSS_VEGETATION, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(Blocks.MOSS_CARPET.defaultBlockState(), 25).add(Blocks.GRASS.defaultBlockState(), 50).add(Blocks.TALL_GRASS.defaultBlockState(), 10))));
+         FeatureUtils.register(featureRegisterable, MOSS_PATCH, Feature.VEGETATION_PATCH, new VegetationPatchConfiguration(BlockTags.MOSS_REPLACEABLE, BlockStateProvider.simple(Blocks.MOSS_BLOCK), PlacementUtils.inlinePlaced(holderGetter.getOrThrow(MOSS_VEGETATION)), CaveSurface.FLOOR, ConstantInt.of(1), 0.0F, 5, 0.8F, UniformInt.of(4, 7), 0.3F));
+         FeatureUtils.register(featureRegisterable, MOSS_PATCH_BONEMEAL, Feature.VEGETATION_PATCH, new VegetationPatchConfiguration(BlockTags.MOSS_REPLACEABLE, BlockStateProvider.simple(Blocks.MOSS_BLOCK), PlacementUtils.inlinePlaced(holderGetter.getOrThrow(MOSS_VEGETATION)), CaveSurface.FLOOR, ConstantInt.of(1), 0.0F, 5, 0.6F, UniformInt.of(1, 2), 0.75F));
+         FeatureUtils.register(featureRegisterable, DRIPLEAF, Feature.SIMPLE_RANDOM_SELECTOR, new SimpleRandomFeatureConfiguration(HolderSet.direct(makeSmallDripleaf(), makeDripleaf(Direction.EAST), makeDripleaf(Direction.WEST), makeDripleaf(Direction.SOUTH), makeDripleaf(Direction.NORTH))));

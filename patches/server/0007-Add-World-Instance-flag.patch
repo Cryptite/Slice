@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 10 Apr 2023 07:37:05 -0500
+Subject: [PATCH] Add World Instance flag
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index 3bb63a652aca3c23f5f1bbf9cb70fce6540f2e33..5813349d484cf40c5b75de6e55dff95286285934 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -219,6 +219,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     public final UUID uuid;
+     public boolean hasPhysicsEvent = true; // Paper
+     public boolean hasEntityMoveEvent = false; // Paper
++    public boolean instance; // Slice
+     private final alternate.current.wire.WireHandler wireHandler = new alternate.current.wire.WireHandler(this); // Paper - optimize redstone (Alternate Current)
+     public static Throwable getAddToWorldStackTrace(Entity entity) {
+         final Throwable thr = new Throwable(entity + " Added to world at " + new java.util.Date());
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+index 86ffc869b57410fd4993c0fd0ae000da2e2c070c..7b67bcba6d3dea4da815566d0a24e547cd5a1e87 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
+@@ -1276,6 +1276,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+         world.noSave = !value;
+     }
+ 
++    // Slice start
++    @Override
++    public boolean isInstance() {
++        return world.instance;
++    }
++
++    @Override
++    public void setInstance(boolean value) {
++        world.instance = value;
++    }
++    // Slice end
++
+     @Override
+     public void setDifficulty(Difficulty difficulty) {
+         this.getHandle().getServer().setDifficulty(this.getHandle(), net.minecraft.world.Difficulty.byId(difficulty.getValue()), true); // Paper - don't skip other difficulty-changing logic

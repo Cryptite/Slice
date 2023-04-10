@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerShieldDisableEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index 12fcc84e9de914657409142dc70ced7015cf5533..9d942d4e60d3f4647bd83d187acefda3be21218d 100644
+index 02cb6b8c1d59855ff4a8aad3024fe12007eca0ee..e5d853e7a2feaae6236cf6aa2ee77e0472621c1b 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
-@@ -1634,7 +1634,10 @@ public abstract class Mob extends LivingEntity {
+@@ -1686,7 +1686,10 @@ public abstract class Mob extends LivingEntity implements Targeting {
              float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
  
              if (this.random.nextFloat() < f) {
@@ -21,10 +21,10 @@ index 12fcc84e9de914657409142dc70ced7015cf5533..9d942d4e60d3f4647bd83d187acefda3
              }
          }
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 55bdf4f91be6750dcfd0589c566fbefde4512a1e..08732b3a77ad0541b3ca57b4478e13a337e31439 100644
+index 0629c471d38a77c44fc1c86ccdfcb0690f61ca17..a144f9a911297891645f704c361e1d8ba0e28a69 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -993,7 +993,7 @@ public abstract class Player extends LivingEntity {
+@@ -976,7 +976,7 @@ public abstract class Player extends LivingEntity {
      protected void blockUsingShield(LivingEntity attacker) {
          super.blockUsingShield(attacker);
          if (attacker.canDisableShield()) {
@@ -33,7 +33,7 @@ index 55bdf4f91be6750dcfd0589c566fbefde4512a1e..08732b3a77ad0541b3ca57b4478e13a3
          }
  
      }
-@@ -1473,6 +1473,12 @@ public abstract class Player extends LivingEntity {
+@@ -1461,6 +1461,12 @@ public abstract class Player extends LivingEntity {
      }
  
      public void disableShield(boolean sprinting) {
@@ -46,7 +46,7 @@ index 55bdf4f91be6750dcfd0589c566fbefde4512a1e..08732b3a77ad0541b3ca57b4478e13a3
          float f = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(this) * 0.05F;
  
          if (sprinting) {
-@@ -1480,7 +1486,12 @@ public abstract class Player extends LivingEntity {
+@@ -1468,7 +1474,12 @@ public abstract class Player extends LivingEntity {
          }
  
          if (this.random.nextFloat() < f) {
