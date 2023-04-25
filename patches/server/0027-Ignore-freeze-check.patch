@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 25 Apr 2023 09:05:16 -0500
+Subject: [PATCH] Ignore freeze check
+
+
+diff --git a/src/main/java/net/minecraft/core/MappedRegistry.java b/src/main/java/net/minecraft/core/MappedRegistry.java
+index 1e33434f9f361542e03da3e4812bc6d76768a202..4f0632ce9b47196e4181408aff84acaa1ddd9aff 100644
+--- a/src/main/java/net/minecraft/core/MappedRegistry.java
++++ b/src/main/java/net/minecraft/core/MappedRegistry.java
+@@ -123,9 +123,9 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
+     }
+ 
+     private void validateWrite(ResourceKey<T> key) {
+-        if (this.frozen) {
+-            throw new IllegalStateException("Registry is already frozen (trying to add key " + key + ")");
+-        }
++//        if (this.frozen) {
++//            throw new IllegalStateException("Registry is already frozen (trying to add key " + key + ")");
++//        }
+     }
+ 
+     @Override
