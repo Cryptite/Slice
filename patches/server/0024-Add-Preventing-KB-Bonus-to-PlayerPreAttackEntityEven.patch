@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 25 Apr 2023 08:17:39 -0500
+Subject: [PATCH] Add Preventing KB Bonus to PlayerPreAttackEntityEvent
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index a3f47872173eb9798b263c419e87b0adedcc4e25..28125492ceed99b244c5e177edb6739a9c2d68d9 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -1268,7 +1268,11 @@ public abstract class Player extends LivingEntity {
+                     boolean flag = f2 > 0.9F;
+                     boolean flag1 = false;
+                     byte b0 = 0;
+-                    int i = b0 + EnchantmentHelper.getKnockbackBonus(this);
++                    int i = b0; // Slice start
++                    if (!playerAttackEntityEvent.isPreventKnockbackBonus()) {
++                        i += EnchantmentHelper.getKnockbackBonus(this);
++                    }
++                    // Slice end
+ 
+                     if (this.isSprinting() && flag) {
+                         sendSoundEffect(this, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, this.getSoundSource(), 1.0F, 1.0F); // Paper - send while respecting visibility

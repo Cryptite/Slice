@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 25 Apr 2023 08:17:39 -0500
+Subject: [PATCH] Add Preventing KB Bonus to PlayerPreAttackEntityEvent
+
+
+diff --git a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
+index 4ed53b14f94154043e3043f4fef540b45b2b272d..608df52360df66390fce3070e52e4ecd4cd5fb64 100644
+--- a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
++++ b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
+@@ -27,6 +27,7 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+     private boolean cancelled;
+     private final boolean willAttack;
+     private boolean forceCrit; // Slice
++    private boolean preventKnockbackBonus; // Slice
+ 
+     public PrePlayerAttackEntityEvent(@NotNull Player who, @NotNull Entity attacked, boolean willAttack) {
+         super(who);
+@@ -64,6 +65,15 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+     public void setForceCrit(boolean forceCrit) {
+         this.forceCrit = forceCrit;
+     }
++
++    public boolean isPreventKnockbackBonus() {
++        return preventKnockbackBonus;
++    }
++
++    public void setPreventKnockbackBonus(boolean preventKnockbackBonus) {
++        this.preventKnockbackBonus = preventKnockbackBonus;
++    }
++
+     // Slice end
+ 
+     @NotNull

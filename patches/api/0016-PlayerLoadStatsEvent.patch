@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 25 Apr 2023 08:25:26 -0500
+Subject: [PATCH] PlayerLoadStatsEvent
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadStatsEvent.java b/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadStatsEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..80b67d390152b114ad385f7eb6af5ef975b7ca20
+--- /dev/null
++++ b/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadStatsEvent.java
+@@ -0,0 +1,54 @@
++package com.destroystokyo.paper.event.player;
++
++import com.google.gson.JsonObject;
++import org.bukkit.Bukkit;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++import java.util.UUID;
++
++/**
++ * Calls an event in which player stats can be provided. If null, will load from disk, otherwise will use provided data
++ */
++public class PlayerLoadStatsEvent extends Event {
++    private static final HandlerList handlers = new HandlerList();
++    private final UUID playerId;
++    private JsonObject statistics;
++
++    public PlayerLoadStatsEvent(@NotNull UUID playerId) {
++        super(!Bukkit.isPrimaryThread());
++        this.playerId = playerId;
++    }
++
++    /**
++     * Gets the player's unique ID.
++     *
++     * @return The unique ID
++     */
++    @NotNull
++    public UUID getUniqueId() {
++        return playerId;
++    }
++
++    @Nullable
++    public JsonObject getStatistics() {
++        return statistics;
++    }
++
++    public void setStatistics(@NotNull JsonObject statistics) {
++        this.statistics = statistics;
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}

@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 25 Apr 2023 08:16:50 -0500
+Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index a144f9a911297891645f704c361e1d8ba0e28a69..a3f47872173eb9798b263c419e87b0adedcc4e25 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -1276,10 +1276,11 @@ public abstract class Player extends LivingEntity {
+                         flag1 = true;
+                     }
+ 
+-                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity; // Paper - Add critical damage API - conflict on change
++                    boolean forceCrit = playerAttackEntityEvent.isForceCrit();
++                    boolean flag2 = forceCrit || (flag && this.fallDistance > 0.0F && !this.onGround && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity); // Paper - Add critical damage API - conflict on change // Slice
+ 
+                     flag2 = flag2 && !level.paperConfig().entities.behavior.disablePlayerCrits; // Paper
+-                    flag2 = flag2 && !this.isSprinting();
++                    flag2 = forceCrit || (flag2 && !this.isSprinting()); // Slice
+                     if (flag2) {
+                         f *= 1.5F;
+                     }
+@@ -2394,27 +2395,6 @@ public abstract class Player extends LivingEntity {
+         this.lastDeathLocation = lastDeathPos;
+     }
+ 
+-    @Override
+-    public float getHurtDir() {
+-        return this.hurtDir;
+-    }
+-
+-    @Override
+-    public void animateHurt(float yaw) {
+-        super.animateHurt(yaw);
+-        this.hurtDir = yaw;
+-    }
+-
+-    @Override
+-    public boolean canSprint() {
+-        return true;
+-    }
+-
+-    @Override
+-    protected float getFlyingSpeed() {
+-        return this.abilities.flying && !this.isPassenger() ? (this.isSprinting() ? this.abilities.getFlyingSpeed() * 2.0F : this.abilities.getFlyingSpeed()) : (this.isSprinting() ? 0.025999999F : 0.02F);
+-    }
+-
+     public static enum BedSleepingProblem {
+ 
+         NOT_POSSIBLE_HERE, NOT_POSSIBLE_NOW(Component.translatable("block.minecraft.bed.no_sleep")), TOO_FAR_AWAY(Component.translatable("block.minecraft.bed.too_far_away")), OBSTRUCTED(Component.translatable("block.minecraft.bed.obstructed")), OTHER_PROBLEM, NOT_SAFE(Component.translatable("block.minecraft.bed.not_safe"));

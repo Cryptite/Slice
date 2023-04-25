@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 25 Apr 2023 08:20:19 -0500
+Subject: [PATCH] Player specific target chunk send rate
+
+
+diff --git a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+index 5b32567bcf532994a31f184743cf42f4ea0113a4..cf2656a4290bbf57d8a911eee4b94af4dea44637 100644
+--- a/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
++++ b/src/main/java/io/papermc/paper/chunk/PlayerChunkLoader.java
+@@ -386,8 +386,8 @@ public final class PlayerChunkLoader {
+         return (int)Math.ceil(Math.min(config * MinecraftServer.getServer().getPlayerCount(), max <= 1.0 ? Double.MAX_VALUE : max));
+     }
+ 
+-    protected long getTargetSendPerPlayerAddend() {
+-        return GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate <= 1.0 ? 0L : (long)Math.round(1.0e9 / GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate);
++    protected long getTargetSendPerPlayerAddend(ServerPlayer player) { // Slice
++        return player.targetChunkSendRate <= 1.0 ? 0L : (long)Math.round(1.0e9 / player.targetChunkSendRate); // Slice
+     }
+ 
+     protected long getMaxSendAddend() {
+@@ -541,7 +541,6 @@ public final class PlayerChunkLoader {
+         }
+ 
+         final int maxSends = this.getMaxConcurrentChunkSends();
+-        final long nextPlayerDeadline = this.getTargetSendPerPlayerAddend() + time;
+         for (;;) {
+             if (this.chunkSendQueue.isEmpty()) {
+                 break;
+@@ -574,7 +573,7 @@ public final class PlayerChunkLoader {
+                 throw new IllegalStateException();
+             }
+ 
+-            data.nextChunkSendTarget = nextPlayerDeadline;
++            data.nextChunkSendTarget = this.getTargetSendPerPlayerAddend(data.player) + time; // Slice
+             this.chunkSendWaitQueue.add(data);
+ 
+             synchronized (this.sendingChunkCounts) {
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 4b28d3c0c973e0c33cb7e0063021556f8d3976d4..cc69ec55f0aaac0abda5be7cf2d707b7448627f6 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -276,6 +276,7 @@ public class ServerPlayer extends Player {
+     public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
+     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
+     public boolean smoothWorldTeleport; // Slice
++    public double targetChunkSendRate = io.papermc.paper.configuration.GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate; // Slice
+ 
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
