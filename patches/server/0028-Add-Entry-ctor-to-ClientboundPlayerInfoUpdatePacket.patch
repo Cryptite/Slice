@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 26 Apr 2023 08:19:29 -0500
+Subject: [PATCH] Add Entry ctor to ClientboundPlayerInfoUpdatePacket
+
+
+diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.java
+index 4aa8b483841028fbcc43f9ed47730881263e5065..618ba8b495968896dc6011089972921715930ecf 100644
+--- a/src/main/java/net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.java
++++ b/src/main/java/net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket.java
+@@ -24,6 +24,13 @@ public class ClientboundPlayerInfoUpdatePacket implements Packet<ClientGamePacke
+         this.entries = players.stream().map(ClientboundPlayerInfoUpdatePacket.Entry::new).toList();
+     }
+ 
++    // Slice
++    public ClientboundPlayerInfoUpdatePacket(EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions, List<ClientboundPlayerInfoUpdatePacket.Entry> entries) {
++        this.actions = actions;
++        this.entries = entries;
++    }
++    // End Slice
++
+     public ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action action, ServerPlayer player) {
+         this.actions = EnumSet.of(action);
+         this.entries = List.of(new ClientboundPlayerInfoUpdatePacket.Entry(player));
