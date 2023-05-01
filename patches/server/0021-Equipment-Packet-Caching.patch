@@ -5,14 +5,14 @@ Subject: [PATCH] Equipment Packet Caching
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 8d442c5a498ecf288a0cc0c54889c6e2fda849ce..8fc13d7b004da228fc58554ea5058ef8e58833a4 100644
+index 8d442c5a498ecf288a0cc0c54889c6e2fda849ce..1530d48a67ae548fd088edd3d575a1b8f694eb48 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 @@ -286,5 +286,6 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean lagCompensateBlockBreaking = true;
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
-+        public String sharedDataFolder; // Slice
++        public String sharedDataFolder = "";
      }
  }
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java
@@ -36,10 +36,18 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index fa14ab3d8117e9d357380d21d3c6a2cd1df7c04c..bf79373dd6a0cf1e8252555d43012371390a51c7 100644
+index fa14ab3d8117e9d357380d21d3c6a2cd1df7c04c..e5462d8d3f89c93c7c691a4759860be1ff8117fc 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -313,6 +313,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2,6 +2,7 @@ package net.minecraft.server;
+ 
+ import com.google.common.base.Preconditions;
+ import com.google.common.base.Splitter;
++import com.google.common.base.Strings;
+ import com.google.common.collect.ImmutableList;
+ import co.aikar.timings.Timings;
+ import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+@@ -313,6 +314,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public volatile Thread shutdownThread; // Paper
      public volatile boolean abnormalExit = false; // Paper
      public boolean isIteratingOverLevels = false; // Paper
@@ -47,7 +55,7 @@ index fa14ab3d8117e9d357380d21d3c6a2cd1df7c04c..bf79373dd6a0cf1e8252555d43012371
  
      public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
          AtomicReference<S> atomicreference = new AtomicReference();
-@@ -413,6 +414,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -413,6 +415,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      }
      // CraftBukkit end
  
@@ -60,7 +68,7 @@ index fa14ab3d8117e9d357380d21d3c6a2cd1df7c04c..bf79373dd6a0cf1e8252555d43012371
      private void readScoreboard(DimensionDataStorage persistentStateManager) {
          ServerScoreboard scoreboardserver = this.getScoreboard();
  
-@@ -890,6 +897,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -890,6 +898,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              this.isSaving = true;
              this.getPlayerList().saveAll(); // Diff on change
              flag3 = this.saveAllChunks(suppressLogs, flush, force);
@@ -68,13 +76,13 @@ index fa14ab3d8117e9d357380d21d3c6a2cd1df7c04c..bf79373dd6a0cf1e8252555d43012371
          } finally {
              this.isSaving = false;
          }
-@@ -1105,6 +1113,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1105,6 +1114,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  throw new IllegalStateException("Failed to initialize server");
              }
  
 +            // Slice start
 +            String sharedDataFolder = io.papermc.paper.configuration.GlobalConfiguration.get().misc.sharedDataFolder;
-+            if (!sharedDataFolder.equals("")) {
++            if (!Strings.isNullOrEmpty(sharedDataFolder)) {
 +                File sharedDir = new File(sharedDataFolder);
 +                sharedDir.mkdirs();
 +                this.sharedDataStorage = new DimensionDataStorage(sharedDir, fixerUpper);
@@ -84,7 +92,7 @@ index fa14ab3d8117e9d357380d21d3c6a2cd1df7c04c..bf79373dd6a0cf1e8252555d43012371
              this.nextTickTime = Util.getMillis();
              this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
              this.status = this.buildServerStatus();
-@@ -1417,6 +1434,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1417,6 +1435,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                      level.saveIncrementally(fullSave);
                  }
              }

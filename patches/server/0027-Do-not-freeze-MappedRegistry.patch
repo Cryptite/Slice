@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 25 Apr 2023 09:05:16 -0500
+Subject: [PATCH] Do not freeze MappedRegistry
+
+
+diff --git a/src/main/java/net/minecraft/core/MappedRegistry.java b/src/main/java/net/minecraft/core/MappedRegistry.java
+index 1e33434f9f361542e03da3e4812bc6d76768a202..828d9472bf90fe098825c15bc55949497a40ae39 100644
+--- a/src/main/java/net/minecraft/core/MappedRegistry.java
++++ b/src/main/java/net/minecraft/core/MappedRegistry.java
+@@ -338,7 +338,7 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
+         if (this.frozen) {
+             return this;
+         } else {
+-            this.frozen = true;
++//            this.frozen = true; // Slice
+             this.byValue.forEach((value, entry) -> {
+                 entry.bindValue(value);
+             });
+@@ -365,14 +365,16 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
+ 
+     @Override
+     public Holder.Reference<T> createIntrusiveHolder(T value) {
++        // Slice start
+         if (this.unregisteredIntrusiveHolders == null) {
+-            throw new IllegalStateException("This registry can't create intrusive holders");
+-        } else {
+-            this.validateWrite();
+-            return this.unregisteredIntrusiveHolders.computeIfAbsent(value, (valuex) -> {
+-                return Holder.Reference.createIntrusive(this.asLookup(), valuex);
+-            });
++            this.unregisteredIntrusiveHolders = new HashMap<>();
+         }
++        // Slice end
++
++        this.validateWrite();
++        return this.unregisteredIntrusiveHolders.computeIfAbsent(value, (valuex) -> {
++            return Holder.Reference.createIntrusive(this.asLookup(), valuex);
++        });
+     }
+ 
+     @Override
