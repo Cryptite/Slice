@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 18 Apr 2023 07:49:59 -0500
+Subject: [PATCH] Allow opening covered chests
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/ChestBlock.java b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+index 5e22d175b1048a58802cdf64ac70a8b56329e915..0f15e574b5c0cc8648bc1c0a12f1c72aa8653724 100644
+--- a/src/main/java/net/minecraft/world/level/block/ChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+@@ -355,9 +355,10 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
+     }
+ 
+     private static boolean isBlockedChestByBlock(BlockGetter world, BlockPos pos) {
+-        BlockPos blockposition1 = pos.above();
+-
+-        return world.getBlockState(blockposition1).isRedstoneConductor(world, blockposition1);
++        return false;
++//        BlockPos blockposition1 = pos.above();
++//
++//        return world.getBlockState(blockposition1).isRedstoneConductor(world, blockposition1);
+     }
+ 
+     private static boolean isCatSittingOnChest(LevelAccessor world, BlockPos pos) {
+diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+index 7385e91f32f070e86a4e0fd3d214f55d832c7979..4911b099f865b9202286f51087e5c00ffeaa95a5 100644
+--- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+@@ -76,10 +76,10 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
+         PlayerEnderChestContainer playerEnderChestContainer = player.getEnderChestInventory();
+         BlockEntity blockEntity = world.getBlockEntity(pos);
+         if (playerEnderChestContainer != null && blockEntity instanceof EnderChestBlockEntity) {
+-            BlockPos blockPos = pos.above();
+-            if (world.getBlockState(blockPos).isRedstoneConductor(world, blockPos)) {
+-                return InteractionResult.sidedSuccess(world.isClientSide);
+-            } else if (world.isClientSide) {
++//            BlockPos blockPos = pos.above();
++//            if (world.getBlockState(blockPos).isRedstoneConductor(world, blockPos)) {
++//                return InteractionResult.sidedSuccess(world.isClientSide);
++            if (world.isClientSide) {
+                 return InteractionResult.SUCCESS;
+             } else {
+                 EnderChestBlockEntity enderChestBlockEntity = (EnderChestBlockEntity)blockEntity;
