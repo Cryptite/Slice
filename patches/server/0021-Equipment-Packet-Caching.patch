@@ -173,7 +173,7 @@ index 5813349d484cf40c5b75de6e55dff95286285934..e24b0871819add31e00e1e3d782fda31
  
      // Paper start - helper function for configurable spawn radius
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 72739d5949314b242869fd5fef3b5f0c076434d0..997ba564bb45484aa67e72cdabf7d09313843e64 100644
+index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d054b5cd3f 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -261,6 +261,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -256,7 +256,7 @@ index 72739d5949314b242869fd5fef3b5f0c076434d0..997ba564bb45484aa67e72cdabf7d093
 +            ClientboundSetEquipmentPacket equipmentPacket = player.cachedEquipmentMap.get(tag);
 +            if (equipmentPacket != null) {
 +                //Event says use a tag, and our tag exists; so we simply used our entire cached packet
-+                p.connection.send(equipmentPacket);
++                consumer.accept(equipmentPacket);
 +                sendEquipment = false;
 +            }
 +        }
