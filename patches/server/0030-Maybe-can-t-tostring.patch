@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 6 May 2023 18:14:26 -0500
+Subject: [PATCH] Maybe can't tostring?
+
+
+diff --git a/src/main/java/net/minecraft/nbt/CompoundTag.java b/src/main/java/net/minecraft/nbt/CompoundTag.java
+index 7e94ebe06fc62293e665d6db19e42d947e7eb30f..158c012b8a6808ca0f820c2997af282529148c7c 100644
+--- a/src/main/java/net/minecraft/nbt/CompoundTag.java
++++ b/src/main/java/net/minecraft/nbt/CompoundTag.java
+@@ -466,6 +466,9 @@ public class CompoundTag implements Tag {
+     @Override
+     public CompoundTag copy() {
+         // Paper start - reduce memory footprint of NBTTagCompound
++        if (this.tags.size() < 0) {
++            net.minecraft.server.MinecraftServer.LOGGER.debug("Tried to copy an invalid item with negative tags: {}, {}, {}, {}", this.tags, this.tags.getClass().getName());
++        }
+         it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap<String, Tag> ret = new it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap<>(this.tags.size(), 0.8f);
+         java.util.Iterator<java.util.Map.Entry<String, Tag>> iterator = (this.tags instanceof it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap) ? ((it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap)this.tags).object2ObjectEntrySet().fastIterator() : this.tags.entrySet().iterator();
+         while (iterator.hasNext()) {
+diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
+index 588a4fdcb294b9b1a92ef9969ef64f999bf529cc..431ea53e4fb9c26c24003da7e216a1f5fe070985 100644
+--- a/src/main/java/net/minecraft/world/item/ItemStack.java
++++ b/src/main/java/net/minecraft/world/item/ItemStack.java
+@@ -719,7 +719,11 @@ public final class ItemStack {
+ 
+             itemstack.setPopTime(this.getPopTime());
+             if (this.tag != null) {
+-                itemstack.tag = this.tag.copy();
++                if (this.tag.tags.size() < 0) {
++                    ItemStack.LOGGER.debug("Tried to copy an invalid item with negative tags: {}, {}, {}, {}", this.tag, this.tag.tags, this.tag.tags.getClass().getName());
++                } else {
++                    itemstack.tag = this.tag.copy();
++                }
+             }
+ 
+             return itemstack;
