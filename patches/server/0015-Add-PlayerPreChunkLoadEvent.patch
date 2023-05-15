@@ -34,10 +34,10 @@ index e77972c4c264100ffdd824bfa2dac58dbbc6d678..5b32567bcf532994a31f184743cf42f4
                          new ChunkPos(chunkX, chunkZ), new MutableObject<>(), false, true); // unloaded, loaded
                  this.player.connection.connection.execute(onChunkSend);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 7b67bcba6d3dea4da815566d0a24e547cd5a1e87..3e45551d8d677ccfb362e3039d7dee10018206d6 100644
+index f1c867a59b9ed1589028db3efd9652d274dce405..174ef57ed527e95ac1089383b63e0effae8968ee 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -534,6 +534,13 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -530,6 +530,13 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          return true;
      }
  

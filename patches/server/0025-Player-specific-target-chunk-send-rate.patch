@@ -37,10 +37,10 @@ index 5b32567bcf532994a31f184743cf42f4ea0113a4..cf2656a4290bbf57d8a911eee4b94af4
  
              synchronized (this.sendingChunkCounts) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 4b28d3c0c973e0c33cb7e0063021556f8d3976d4..cc69ec55f0aaac0abda5be7cf2d707b7448627f6 100644
+index 35d24300f72cdd68d46db7c880ab17eec95fae68..e7ef3882461344cfd1c53ac03de9ef1991378623 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -276,6 +276,7 @@ public class ServerPlayer extends Player {
+@@ -278,6 +278,7 @@ public class ServerPlayer extends Player {
      public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
      public boolean smoothWorldTeleport; // Slice
