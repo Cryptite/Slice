@@ -1,0 +1,71 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 15 May 2023 08:02:36 -0500
+Subject: [PATCH] Add PlayerInsideBlockEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index e7ef3882461344cfd1c53ac03de9ef1991378623..beaa1f06bb5ece8e803f20592358baa5261e07ef 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -139,10 +139,7 @@ import net.minecraft.world.level.GameRules;
+ import net.minecraft.world.level.GameType;
+ import net.minecraft.world.level.Level;
+ import net.minecraft.world.level.biome.BiomeManager;
+-import net.minecraft.world.level.block.Blocks;
+-import net.minecraft.world.level.block.ChestBlock;
+-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+-import net.minecraft.world.level.block.NetherPortalBlock;
++import net.minecraft.world.level.block.*;
+ import net.minecraft.world.level.block.entity.BlockEntity;
+ import net.minecraft.world.level.block.entity.CommandBlockEntity;
+ import net.minecraft.world.level.block.entity.SignBlockEntity;
+@@ -153,6 +150,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
+ import net.minecraft.world.level.portal.PortalInfo;
+ import net.minecraft.world.phys.AABB;
+ import net.minecraft.world.phys.Vec3;
++import org.bukkit.Material;
+ import org.slf4j.Logger;
+ import net.minecraft.world.Container;
+ import net.minecraft.world.InteractionHand;
+@@ -279,6 +277,7 @@ public class ServerPlayer extends Player {
+     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
+     public boolean smoothWorldTeleport; // Slice
+     public double targetChunkSendRate = io.papermc.paper.configuration.GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate; // Slice
++    public BlockPos insideBlock; // Slice
+ 
+     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
+         super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
+@@ -655,8 +654,9 @@ public class ServerPlayer extends Player {
+     }
+ 
+     @Override
+-    protected void onInsideBlock(BlockState state) {
++    protected void onInsideBlock(BlockState state, BlockPos.MutableBlockPos blockPos) { // Slice
+         CriteriaTriggers.ENTER_BLOCK.trigger(this, state);
++        insideBlock = state.getBukkitMaterial() != Material.AIR ? blockPos : null; // Slice
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 28dc8b5d39297b0077484b1b7d55b1e3002d95e7..991a2857ed3b755c7761b1f8d6d5bfee455b6542 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -1536,7 +1536,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+                         try {
+                             iblockdata.entityInside(this.level, blockposition_mutableblockposition, this);
+-                            this.onInsideBlock(iblockdata);
++                            this.onInsideBlock(iblockdata, blockposition_mutableblockposition); // Slice
+                         } catch (Throwable throwable) {
+                             CrashReport crashreport = CrashReport.forThrowable(throwable, "Colliding entity with block");
+                             CrashReportCategory crashreportsystemdetails = crashreport.addCategory("Block being collided with");
+@@ -1551,7 +1551,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+     }
+ 
+-    protected void onInsideBlock(BlockState state) {}
++    protected void onInsideBlock(BlockState state, BlockPos.MutableBlockPos blockposition_mutableblockposition) {} // Slice
+ 
+     public void gameEvent(GameEvent event, @Nullable Entity entity) {
+         this.level.gameEvent(entity, event, this.position);
