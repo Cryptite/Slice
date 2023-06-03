@@ -17,7 +17,7 @@ index 98df2463bf41fc736aa6a2b6ddf89e5abde6eb39..35d24300f72cdd68d46db7c880ab17ee
      public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
          super(world, world.getSharedSpawnPos(), world.getSharedSpawnAngle(), profile);
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 2672d1d05abb9aeaaa18ee58174ed95b7ba9ae4d..a42a47b112a154f1cbfaad6d1c8bd3a8d6007a58 100644
+index c2e3ea95c6098536c03ded1e43f5ef692ed34800..83ee1b514aa4b5ed05f31c946956661dd0427eaf 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -919,12 +919,12 @@ public abstract class PlayerList {
@@ -36,10 +36,10 @@ index 2672d1d05abb9aeaaa18ee58174ed95b7ba9ae4d..a42a47b112a154f1cbfaad6d1c8bd3a8
  
          // entityplayer1.connection.teleport(entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 3f498543cf0476ff1b184788d93f13b70c476c16..02a675ac819decbf6d68645f05f9aed2d20d362f 100644
+index be64633c8bcee96f2ad5247525cac965b7b031b1..a96db3d93a54beac623f7d08b3c994d53b70dc1c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1261,6 +1261,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1262,6 +1262,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          // Paper end
      }
  

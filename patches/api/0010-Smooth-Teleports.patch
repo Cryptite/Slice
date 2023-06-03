@@ -5,10 +5,10 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 9cd49bf6db451af67cd15c8857d7bf51a4e1a67a..568a800795d4a6c4fa748f0145d50616e8156a79 100644
+index 88c4885569d2b8b22fce55601d50608ac8e9388c..12c249be755580ec6d83dfe1781f892f222d9ecd 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2939,6 +2939,19 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2950,6 +2950,19 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      String getClientBrandName();
      // Paper end
  
