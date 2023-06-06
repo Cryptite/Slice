@@ -81,10 +81,10 @@ index 0000000000000000000000000000000000000000..b5cc9538a70c7ce0b494d4878d51b521
 +}
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index 8a1731e8cb2cdd94542df0e95530162850f534c0..81e50f88785bb503266e617d6fb0e540db86ae04 100644
+index c89a373233f48da4ea8baed39ccc72a0deb5bb7c..e3b8f58492863b0ccbef2e3061d1fc6052ea86c3 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -481,6 +481,8 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+@@ -482,6 +482,8 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      //@Deprecated // Paper
      public boolean refreshChunk(int x, int z);
  
