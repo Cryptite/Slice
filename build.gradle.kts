@@ -78,26 +78,9 @@ tasks.generateDevelopmentBundle {
     libraryRepositories.set(
         listOf(
             "https://repo.maven.apache.org/maven2/",
-            "https://test.lokamc.org:444/releases", // This should be a repo hosting your API (in this example, 'com.example.paperfork:slice-api'),
             paperMavenPublicUrl
         )
     )
-}
-
-allprojects {
-    // Publishing API:
-    // ./gradlew :Slice-API:publish[ToMavenLocal]
-    publishing {
-        repositories {
-            maven {
-                name = "Ysera"
-                url = uri("https://test.lokamc.com:444/releases")
-                // See Gradle docs for how to provide credentials to PasswordCredentials
-                // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
-                credentials(PasswordCredentials::class)
-            }
-        }
-    }
 }
 
 publishing {
