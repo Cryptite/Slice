@@ -1,0 +1,134 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 12 Jun 2023 14:09:36 -0500
+Subject: [PATCH] Shared Data Storage
+
+
+diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
+index 77d05f7efdcdceef681a75692c208075d873d368..c40bd0fdbfa793c56071f1a5c2fd33da8393054f 100644
+--- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
++++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
+@@ -271,6 +271,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+         public boolean lagCompensateBlockBreaking = true;
+         public boolean useDimensionTypeForCustomSpawners = false;
+         public boolean strictAdvancementDimensionCheck = false;
++        public String sharedDataFolder = "";
+     }
+ 
+     public ChunkLoadingBasic chunkLoadingBasic;
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index 53188d488936c0ab97ed5dea558831c8ced4cd0d..3020deeb43a43522af53dce1330d7c7c25e5305d 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -2,6 +2,7 @@ package net.minecraft.server;
+ 
+ import com.google.common.base.Preconditions;
+ import com.google.common.base.Splitter;
++import com.google.common.base.Strings;
+ import com.google.common.collect.ImmutableList;
+ import co.aikar.timings.Timings;
+ import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+@@ -313,6 +314,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+     public volatile Thread shutdownThread; // Paper
+     public volatile boolean abnormalExit = false; // Paper
+     public boolean isIteratingOverLevels = false; // Paper
++    public @Nullable DimensionDataStorage sharedDataStorage; // Slice
+ 
+     public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
+         AtomicReference<S> atomicreference = new AtomicReference();
+@@ -413,6 +415,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+     }
+     // CraftBukkit end
+ 
++        // Slice start
++    public DimensionDataStorage getMapDataStorage() {
++        return sharedDataStorage != null ? sharedDataStorage : overworld().getDataStorage();
++    }
++    // Slice end
++
+     private void readScoreboard(DimensionDataStorage persistentStateManager) {
+         ServerScoreboard scoreboardserver = this.getScoreboard();
+ 
+@@ -888,6 +896,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             this.isSaving = true;
+             this.getPlayerList().saveAll(); // Diff on change
+             flag3 = this.saveAllChunks(suppressLogs, flush, force);
++            if (sharedDataStorage != null) sharedDataStorage.save(); // Slice
+         } finally {
+             this.isSaving = false;
+         }
+@@ -1104,6 +1113,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 throw new IllegalStateException("Failed to initialize server");
+             }
+ 
++            // Slice start
++            String sharedDataFolder = io.papermc.paper.configuration.GlobalConfiguration.get().misc.sharedDataFolder;
++            if (!Strings.isNullOrEmpty(sharedDataFolder)) {
++                File sharedDir = new File(sharedDataFolder);
++                sharedDir.mkdirs();
++                this.sharedDataStorage = new DimensionDataStorage(sharedDir, fixerUpper);
++            }
++            // Slice end
++
+             this.nextTickTime = Util.getMillis();
+             this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
+             this.status = this.buildServerStatus();
+@@ -1416,6 +1434,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                     level.saveIncrementally(fullSave);
+                 }
+             }
++            if (sharedDataStorage != null) sharedDataStorage.save(); // Slice
+         } finally {
+             this.isSaving = false;
+         }
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index af0720fb8bd334aac5493121c6373d87421204b4..564591e9f18dd6bb0f76ae4f153adcc0a228d4fa 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -2068,7 +2068,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     @Override
+     public MapItemSavedData getMapData(String id) {
+         // CraftBukkit start
+-        return (MapItemSavedData) this.getServer().overworld().getDataStorage().get((nbttagcompound) -> {
++        return (MapItemSavedData) this.getServer().getMapDataStorage().get((nbttagcompound) -> { // Slice
+             // We only get here when the data file exists, but is not a valid map
+             MapItemSavedData newMap = MapItemSavedData.load(nbttagcompound);
+             newMap.id = id;
+@@ -2082,12 +2082,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     @Override
+     public void setMapData(String id, MapItemSavedData state) {
+         state.id = id; // CraftBukkit
+-        this.getServer().overworld().getDataStorage().set(id, state);
++        this.getServer().getMapDataStorage().set(id, state); // Slice
+     }
+ 
+     @Override
+     public int getFreeMapId() {
+-        return ((MapIndex) this.getServer().overworld().getDataStorage().computeIfAbsent(MapIndex::load, MapIndex::new, "idcounts")).getFreeAuxValueForMap();
++        // Slice start
++        DimensionDataStorage storage = this.getServer().getMapDataStorage();
++        MapIndex mapIndex = storage.readSavedData(MapIndex::load, "idcounts");
++        if (mapIndex == null) {
++            mapIndex = new MapIndex();
++        }
++        int newId = mapIndex.getFreeAuxValueForMap();
++        storage.set("idcounts", mapIndex);
++        storage.save();
++        return newId;
++        // Slice end
+     }
+ 
+     // Paper start - helper function for configurable spawn radius
+diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
+index defe31a5d3aa89a3d18b94f2ff005594e38754b3..637a86e74d633901fdd2f2f1ba6aa4ed49780ead 100644
+--- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
+@@ -58,7 +58,7 @@ public class DimensionDataStorage {
+     }
+ 
+     @Nullable
+-    private <T extends SavedData> T readSavedData(Function<CompoundTag, T> readFunction, String id) {
++    public <T extends SavedData> T readSavedData(Function<CompoundTag, T> readFunction, String id) { // Slice private -> public
+         try {
+             File file = this.getDataFile(id);
+             if (file.exists()) {

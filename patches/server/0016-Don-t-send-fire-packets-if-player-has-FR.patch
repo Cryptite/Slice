@@ -5,13 +5,13 @@ Subject: [PATCH] Don't send fire packets if player has FR
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 280ee1838106201f5e3ba7753caced6d030f7e55..53f33b19277cdfd364b84362475a72f8d1a3cd60 100644
+index 92202262eff01ae3bbeff0e6ebdcf26ad613c169..05b60a115c3bc9c34fd01a2ed199e152b57044b1 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -848,7 +848,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -854,7 +854,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
-         this.checkOutOfWorld();
-         if (!this.level.isClientSide) {
+         this.checkBelowWorld();
+         if (!this.level().isClientSide) {
 -            this.setSharedFlagOnFire(this.remainingFireTicks > 0);
 +            if (this instanceof net.minecraft.world.entity.LivingEntity livingEntity) {
 +                this.setSharedFlagOnFire(this.remainingFireTicks > 0 && !livingEntity.hasEffect(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE));

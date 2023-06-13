@@ -5,24 +5,25 @@ Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index a144f9a911297891645f704c361e1d8ba0e28a69..a3f47872173eb9798b263c419e87b0adedcc4e25 100644
+index 58152160d609d0e9d105153aeb166a56a7955603..5d52d8821edc8dd2cac3391081a223811297faf8 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -1276,10 +1276,11 @@ public abstract class Player extends LivingEntity {
+@@ -1277,10 +1277,11 @@ public abstract class Player extends LivingEntity {
                          flag1 = true;
                      }
  
--                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity; // Paper - Add critical damage API - conflict on change
+-                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity; // Paper - Add critical damage API - conflict on change
 +                    boolean forceCrit = playerAttackEntityEvent.isForceCrit();
-+                    boolean flag2 = forceCrit || (flag && this.fallDistance > 0.0F && !this.onGround && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity); // Paper - Add critical damage API - conflict on change // Slice
++                    boolean flag2 = forceCrit || (flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity); // Paper - Add critical damage API - conflict on change // Slice
  
-                     flag2 = flag2 && !level.paperConfig().entities.behavior.disablePlayerCrits; // Paper
+-                    flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper
 -                    flag2 = flag2 && !this.isSprinting();
++                    flag2 = flag2 && !level().paperConfig().entities.behavior.disablePlayerCrits; // Paper
 +                    flag2 = forceCrit || (flag2 && !this.isSprinting()); // Slice
                      if (flag2) {
                          f *= 1.5F;
                      }
-@@ -2394,27 +2395,6 @@ public abstract class Player extends LivingEntity {
+@@ -2411,27 +2412,6 @@ public abstract class Player extends LivingEntity {
          this.lastDeathLocation = lastDeathPos;
      }
  

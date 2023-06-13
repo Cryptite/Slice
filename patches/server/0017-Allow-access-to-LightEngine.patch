@@ -5,11 +5,11 @@ Subject: [PATCH] Allow access to LightEngine
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index fbe209a66c77c47935ad026dd3e45e682af91fd8..67a8b0145e4ed096b4fc520202098b9b1d259bd6 100644
+index 9209b598d7168b82574e4800056b8b9f84265dd0..4321789e9222350266ea0830473861e2f5fd75ad 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -509,7 +509,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
-         return !ChunkMap.isChunkInRange(x1, z1, x2, z2, distance) ? false : (!ChunkMap.isChunkInRange(x1 + 1, z1, x2, z2, distance) ? true : (!ChunkMap.isChunkInRange(x1, z1 + 1, x2, z2, distance) ? true : (!ChunkMap.isChunkInRange(x1 - 1, z1, x2, z2, distance) ? true : !ChunkMap.isChunkInRange(x1, z1 - 1, x2, z2, distance))));
+@@ -505,7 +505,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+         return !ChunkMap.isChunkInRange(x1, z1, x2, z2, distance) ? false : !ChunkMap.isChunkInRange(x1 + 1, z1 + 1, x2, z2, distance) || !ChunkMap.isChunkInRange(x1 - 1, z1 + 1, x2, z2, distance) || !ChunkMap.isChunkInRange(x1 + 1, z1 - 1, x2, z2, distance) || !ChunkMap.isChunkInRange(x1 - 1, z1 - 1, x2, z2, distance);
      }
  
 -    protected ThreadedLevelLightEngine getLightEngine() {

@@ -1,20 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
-Date: Tue, 18 Apr 2023 08:16:32 -0500
+Date: Mon, 12 Jun 2023 14:14:48 -0500
 Subject: [PATCH] Equipment Packet Caching
 
 
-diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 8d442c5a498ecf288a0cc0c54889c6e2fda849ce..1530d48a67ae548fd088edd3d575a1b8f694eb48 100644
---- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-+++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -286,5 +286,6 @@ public class GlobalConfiguration extends ConfigurationPart {
-         public boolean lagCompensateBlockBreaking = true;
-         public boolean useDimensionTypeForCustomSpawners = false;
-         public boolean strictAdvancementDimensionCheck = false;
-+        public String sharedDataFolder = "";
-     }
- }
 diff --git a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java b/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java
 index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e5406934a208a31 100644
 --- a/src/main/java/net/minecraft/network/protocol/game/ClientboundSetEquipmentPacket.java
@@ -35,77 +24,12 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
      public ClientboundSetEquipmentPacket(FriendlyByteBuf buf) {
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
-diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index fa14ab3d8117e9d357380d21d3c6a2cd1df7c04c..e5462d8d3f89c93c7c691a4759860be1ff8117fc 100644
---- a/src/main/java/net/minecraft/server/MinecraftServer.java
-+++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -2,6 +2,7 @@ package net.minecraft.server;
- 
- import com.google.common.base.Preconditions;
- import com.google.common.base.Splitter;
-+import com.google.common.base.Strings;
- import com.google.common.collect.ImmutableList;
- import co.aikar.timings.Timings;
- import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-@@ -313,6 +314,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-     public volatile Thread shutdownThread; // Paper
-     public volatile boolean abnormalExit = false; // Paper
-     public boolean isIteratingOverLevels = false; // Paper
-+    public @Nullable DimensionDataStorage sharedDataStorage; // Slice
- 
-     public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
-         AtomicReference<S> atomicreference = new AtomicReference();
-@@ -413,6 +415,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-     }
-     // CraftBukkit end
- 
-+        // Slice start
-+    public DimensionDataStorage getMapDataStorage() {
-+        return sharedDataStorage != null ? sharedDataStorage : overworld().getDataStorage();
-+    }
-+    // Slice end
-+
-     private void readScoreboard(DimensionDataStorage persistentStateManager) {
-         ServerScoreboard scoreboardserver = this.getScoreboard();
- 
-@@ -890,6 +898,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-             this.isSaving = true;
-             this.getPlayerList().saveAll(); // Diff on change
-             flag3 = this.saveAllChunks(suppressLogs, flush, force);
-+            if (sharedDataStorage != null) sharedDataStorage.save(); // Slice
-         } finally {
-             this.isSaving = false;
-         }
-@@ -1105,6 +1114,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-                 throw new IllegalStateException("Failed to initialize server");
-             }
- 
-+            // Slice start
-+            String sharedDataFolder = io.papermc.paper.configuration.GlobalConfiguration.get().misc.sharedDataFolder;
-+            if (!Strings.isNullOrEmpty(sharedDataFolder)) {
-+                File sharedDir = new File(sharedDataFolder);
-+                sharedDir.mkdirs();
-+                this.sharedDataStorage = new DimensionDataStorage(sharedDir, fixerUpper);
-+            }
-+            // Slice end
-+
-             this.nextTickTime = Util.getMillis();
-             this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
-             this.status = this.buildServerStatus();
-@@ -1417,6 +1435,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-                     level.saveIncrementally(fullSave);
-                 }
-             }
-+            if (sharedDataStorage != null) sharedDataStorage.save(); // Slice
-         } finally {
-             this.isSaving = false;
-         }
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index b7fd8e70413c38923d0719aff803449e392383ac..d86836541f5eaa654d3dc452fe7cc15eafff4dfa 100644
+index a3cff8bcc0e390865563c97c95f4e28e99a83948..53efe944288b6d58700242eaca97119a6aa77bc0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -334,27 +334,8 @@ public class ServerEntity {
-             consumer.accept(new ClientboundSetEntityMotionPacket(this.entity.getId(), this.ap));
+@@ -328,27 +328,8 @@ public class ServerEntity {
+             sender.accept(new ClientboundSetEntityMotionPacket(this.entity.getId(), this.ap));
          }
  
 -        if (this.entity instanceof LivingEntity) {
@@ -126,57 +50,19 @@ index b7fd8e70413c38923d0719aff803449e392383ac..d86836541f5eaa654d3dc452fe7cc15e
 -            }
 -
 -            if (!list.isEmpty()) {
--                consumer.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
+-                sender.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
 -            }
 -            ((LivingEntity) this.entity).detectEquipmentUpdates(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
 +        if (this.entity instanceof LivingEntity livingEntity) {
-+            livingEntity.sendEquipment(consumer, entityplayer); // Slice
++            livingEntity.sendEquipment(sender, player); // Slice
          }
  
          // CraftBukkit start - Fix for nonsensical head yaw
-diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 5813349d484cf40c5b75de6e55dff95286285934..e24b0871819add31e00e1e3d782fda31a2ad312f 100644
---- a/src/main/java/net/minecraft/server/level/ServerLevel.java
-+++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -1926,7 +1926,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
-     @Override
-     public MapItemSavedData getMapData(String id) {
-         // CraftBukkit start
--        return (MapItemSavedData) this.getServer().overworld().getDataStorage().get((nbttagcompound) -> {
-+        return (MapItemSavedData) this.getServer().getMapDataStorage().get((nbttagcompound) -> { // Slice
-             // We only get here when the data file exists, but is not a valid map
-             MapItemSavedData newMap = MapItemSavedData.load(nbttagcompound);
-             newMap.id = id;
-@@ -1940,12 +1940,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
-     @Override
-     public void setMapData(String id, MapItemSavedData state) {
-         state.id = id; // CraftBukkit
--        this.getServer().overworld().getDataStorage().set(id, state);
-+        this.getServer().getMapDataStorage().set(id, state); // Slice
-     }
- 
-     @Override
-     public int getFreeMapId() {
--        return ((MapIndex) this.getServer().overworld().getDataStorage().computeIfAbsent(MapIndex::load, MapIndex::new, "idcounts")).getFreeAuxValueForMap();
-+        // Slice start
-+        DimensionDataStorage storage = this.getServer().getMapDataStorage();
-+        MapIndex mapIndex = storage.readSavedData(MapIndex::load, "idcounts");
-+        if (mapIndex == null) {
-+            mapIndex = new MapIndex();
-+        }
-+        int newId = mapIndex.getFreeAuxValueForMap();
-+        storage.set("idcounts", mapIndex);
-+        storage.save();
-+        return newId;
-+        // Slice end
-     }
- 
-     // Paper start - helper function for configurable spawn radius
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d054b5cd3f 100644
+index e422d8352f6f7dda8fb7ae8f51ebd5ec2e116115..de88a8ba2e8308103ac0c5facbc428e443314b15 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -261,6 +261,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -264,6 +264,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper
@@ -185,7 +71,7 @@ index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d0
  
      @Override
      public float getBukkitYaw() {
-@@ -3040,6 +3042,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3078,6 +3080,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -193,20 +79,20 @@ index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d0
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3132,7 +3135,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3170,7 +3173,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
--        ((ServerLevel) this.level).getChunkSource().broadcast(this, new ClientboundSetEquipmentPacket(this.getId(), list));
+-        ((ServerLevel) this.level()).getChunkSource().broadcast(this, new ClientboundSetEquipmentPacket(this.getId(), list));
 +
 +        // Slice start
-+        net.minecraft.server.level.ChunkMap.TrackedEntity entityTracker = ((ServerLevel) this.level).getChunkSource().chunkMap.entityMap.get(getId());
++        net.minecraft.server.level.ChunkMap.TrackedEntity entityTracker = ((ServerLevel) this.level()).getChunkSource().chunkMap.entityMap.get(getId());
 +        if (entityTracker != null) {
 +            ClientboundSetEquipmentPacket packet = new ClientboundSetEquipmentPacket(this.getId(), list);
 +            for (net.minecraft.server.network.ServerPlayerConnection playerConnection : entityTracker.seenBy) {
 +                ServerPlayer player = playerConnection.getPlayer();
 +                org.bukkit.event.player.PlayerReceiveEquipmentEvent event = new org.bukkit.event.player.PlayerReceiveEquipmentEvent(player.getBukkitEntity(), getBukkitEntity());
-+                level.getCraftServer().getPluginManager().callEvent(event);
++                level().getCraftServer().getPluginManager().callEvent(event);
 +
 +                String tag = event.getTag();
 +                if (tag != null) {
@@ -220,7 +106,7 @@ index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d0
      }
  
      // Paper start - hide unnecessary item meta
-@@ -4402,4 +4423,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4451,4 +4472,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -238,7 +124,7 @@ index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d0
 +            }
 +
 +            org.bukkit.event.entity.EntityEquipmentItemLookup event = new org.bukkit.event.entity.EntityEquipmentItemLookup(getBukkitEntity(), tag, org.bukkit.inventory.EquipmentSlot.valueOf(name), CraftItemStack.asBukkitCopy(i));
-+            this.level.getCraftServer().getPluginManager().callEvent(event);
++            this.level().getCraftServer().getPluginManager().callEvent(event);
 +            org.bukkit.inventory.ItemStack eventItem = event.getItemStack();
 +            return CraftItemStack.asNMSCopy(eventItem);
 +        });
@@ -248,7 +134,7 @@ index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d0
 +    // Slice start
 +    public void sendEquipment(java.util.function.Consumer<net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ClientGamePacketListener>> consumer, ServerPlayer p) {
 +        org.bukkit.event.player.PlayerReceiveEquipmentEvent event = new org.bukkit.event.player.PlayerReceiveEquipmentEvent(p.getBukkitEntity(), getBukkitEntity());
-+        level.getCraftServer().getPluginManager().callEvent(event);
++        level().getCraftServer().getPluginManager().callEvent(event);
 +
 +        boolean sendEquipment = !event.isCancelled();
 +        String tag = event.getTag();
@@ -295,21 +181,8 @@ index 72739d5949314b242869fd5fef3b5f0c076434d0..8fad6542fa814a6d35a90970119c88d0
 +    }
 +    // Slice end
  }
-diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-index defe31a5d3aa89a3d18b94f2ff005594e38754b3..637a86e74d633901fdd2f2f1ba6aa4ed49780ead 100644
---- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-+++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-@@ -58,7 +58,7 @@ public class DimensionDataStorage {
-     }
- 
-     @Nullable
--    private <T extends SavedData> T readSavedData(Function<CompoundTag, T> readFunction, String id) {
-+    public <T extends SavedData> T readSavedData(Function<CompoundTag, T> readFunction, String id) { // Slice private -> public
-         try {
-             File file = this.getDataFile(id);
-             if (file.exists()) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index d43859f8aa7beed82dd3a146bb1086982cd0cda7..7d063ab5a136eebeb84b395dcb7b731dadc53e88 100644
+index 42a4a45ece562d543cc4fab9d9e7c70573705f10..012f5d2dc1dae4128871e1bcfa107db65642f58a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 @@ -1071,4 +1071,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {

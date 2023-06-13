@@ -5,7 +5,7 @@ Subject: [PATCH] Disable geode and monsterspawners generation
 
 
 diff --git a/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java b/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java
-index 1b6195cd9878e66eb20c45247d7005f9822e79c6..1808399adbbe239c158fc1f2849f5ade8ba1f654 100644
+index 84aa56cbcaa5539b556f42eb284d3dd2e200e358..a6d2ead225841192c2eb80b3b2e54ceeaa76546b 100644
 --- a/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java
 +++ b/src/main/java/net/minecraft/data/worldgen/biome/OverworldBiomes.java
 @@ -54,8 +54,8 @@ public class OverworldBiomes {

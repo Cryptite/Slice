@@ -18,7 +18,7 @@ index 8f5178e934b5f9bc48beacd082e479fd9fb80fa6..d580238d733ba2dbbbbaa2659d1a7834
          builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.CLASSIC_VINES);
      }
 diff --git a/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java b/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java
-index feabf6db6a5987bec36b611b160b67ca30af2ecf..974c4d03dd36cd30ff0736cdc1605623e21e7c78 100644
+index 3d899e4dbb96f64279485bbd5b708df88ddbfe8f..89f33b92dc8cfa22d1e1edbda1a31179743979e8 100644
 --- a/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java
 +++ b/src/main/java/net/minecraft/data/worldgen/features/CaveFeatures.java
 @@ -110,7 +110,7 @@ public class CaveFeatures {

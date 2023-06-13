@@ -5,28 +5,19 @@ Subject: [PATCH] Long distance tracking
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 67a8b0145e4ed096b4fc520202098b9b1d259bd6..47b500930645d8704f78d65e5dd6f148b08f8cb7 100644
+index 4321789e9222350266ea0830473861e2f5fd75ad..6245bbc5745787b835b9b3a89da088ee01d4d706 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1612,7 +1612,15 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
-                 double vec3d_dx = player.getX() - this.entity.getX();
-                 double vec3d_dz = player.getZ() - this.entity.getZ();
+@@ -1532,6 +1532,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
                  // Paper end - remove allocation of Vec3D here
--                double d0 = (double) Math.min(this.getEffectiveRange(), io.papermc.paper.chunk.PlayerChunkLoader.getSendViewDistance(player) * 16); // Paper - per player view distance
-+                // Slice start
-+                double d0 = io.papermc.paper.chunk.PlayerChunkLoader.getSendViewDistance(player) * 16;
-+                if (this.entity instanceof ServerPlayer serverPlayer && player.canSeeFromLongDistance(serverPlayer)) {
-+                    d0 = Math.min(level.spigotConfig.flyingPlayerTrackingRange, d0);
-+                }
-+                else {
-+                    d0 = Math.min(this.getEffectiveRange(), d0); // Paper - per player view distance
-+                }
-+                // Slice end
+                 Vec3 vec3d = player.position().subtract(this.entity.position());
+                 double d0 = (double) Math.min(this.getEffectiveRange(), io.papermc.paper.chunk.system.ChunkSystem.getSendViewDistance(player) * 16); // Paper - per player view distance
++                if (this.entity instanceof ServerPlayer serverPlayer && player.canSeeFromLongDistance(serverPlayer)) d0 = Math.min(level.spigotConfig.flyingPlayerTrackingRange, d0); // Slice
                  double d1 = vec3d_dx * vec3d_dx + vec3d_dz * vec3d_dz; // Paper
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index e7ef3882461344cfd1c53ac03de9ef1991378623..b043273a532ae994cca56f4516c3ba12f30b9495 100644
+index 66bedc539847f3bbe6f735898f53c1ea6f01a263..04b2c211db26ac851d5fdf3fb1277c8e1b4e4216 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -278,6 +278,7 @@ public class ServerPlayer extends Player {
@@ -36,8 +27,8 @@ index e7ef3882461344cfd1c53ac03de9ef1991378623..b043273a532ae994cca56f4516c3ba12
 +    public boolean hasLongDistanceTracking; // Slice
      public double targetChunkSendRate = io.papermc.paper.configuration.GlobalConfiguration.get().chunkLoading.targetPlayerChunkSendRate; // Slice
  
-     public ServerPlayer(MinecraftServer server, ServerLevel world, GameProfile profile) {
-@@ -2566,4 +2567,18 @@ public class ServerPlayer extends Player {
+     private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
+@@ -2651,4 +2652,18 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -57,10 +48,10 @@ index e7ef3882461344cfd1c53ac03de9ef1991378623..b043273a532ae994cca56f4516c3ba12
 +    // Slice end
  }
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index bbfafb1400721251dfd2cac4dd8a31be2d682d4b..ec2467432a0a3a285039e7ced36c9a5220a86849 100644
+index 5638290c72e0daeddfa79fd55e87334fa7d86f72..9f1daa3f9e8e04430a2329e9cbfa9f94ffc72c02 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-@@ -269,6 +269,7 @@ public class SpigotWorldConfig
+@@ -271,6 +271,7 @@ public class SpigotWorldConfig
      }
  
      public int playerTrackingRange = 48;
@@ -68,7 +59,7 @@ index bbfafb1400721251dfd2cac4dd8a31be2d682d4b..ec2467432a0a3a285039e7ced36c9a52
      public int animalTrackingRange = 48;
      public int monsterTrackingRange = 48;
      public int miscTrackingRange = 32;
-@@ -277,6 +278,7 @@ public class SpigotWorldConfig
+@@ -279,6 +280,7 @@ public class SpigotWorldConfig
      private void trackingRange()
      {
          this.playerTrackingRange = this.getInt( "entity-tracking-range.players", this.playerTrackingRange );
@@ -77,13 +68,13 @@ index bbfafb1400721251dfd2cac4dd8a31be2d682d4b..ec2467432a0a3a285039e7ced36c9a52
          this.monsterTrackingRange = this.getInt( "entity-tracking-range.monsters", this.monsterTrackingRange );
          this.miscTrackingRange = this.getInt( "entity-tracking-range.misc", this.miscTrackingRange );
 diff --git a/src/main/java/org/spigotmc/TrackingRange.java b/src/main/java/org/spigotmc/TrackingRange.java
-index 6ac5de214d0da921d0d0c822e7063f6738788cac..4a76e87188739b5fc1b3e0de0ded0d96def03176 100644
+index 8fca15099952626ee537f5ce3eefdfaa6518dc1b..1ddf149ce3d962905bec8c4562e4d86fbbe6e570 100644
 --- a/src/main/java/org/spigotmc/TrackingRange.java
 +++ b/src/main/java/org/spigotmc/TrackingRange.java
-@@ -27,9 +27,9 @@ public class TrackingRange
+@@ -26,9 +26,9 @@ public class TrackingRange
+             return defaultRange;
          }
-         if (entity instanceof net.minecraft.world.entity.boss.enderdragon.EnderDragon) return defaultRange; // Paper - enderdragon is exempt
-         SpigotWorldConfig config = entity.level.spigotConfig;
+         SpigotWorldConfig config = entity.level().spigotConfig;
 -        if ( entity instanceof ServerPlayer )
 +        if ( entity instanceof ServerPlayer serverPlayer)
          {

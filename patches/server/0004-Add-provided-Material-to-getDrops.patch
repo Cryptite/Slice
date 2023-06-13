@@ -5,7 +5,7 @@ Subject: [PATCH] Add provided Material to getDrops
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index 0a5b3a2f7db1042fe9f154ffaea99e1b9b4ce9ce..ad56206974135e3be74143d3ef86c37969855119 100644
+index a3baff85fe4df96602a2972082e6a6278eaef939..7164c583f0f15dab3b70376048b636ea98e82c68 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 @@ -618,7 +618,18 @@ public class CraftBlock implements Block {

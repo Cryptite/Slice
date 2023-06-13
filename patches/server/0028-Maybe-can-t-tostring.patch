@@ -19,10 +19,10 @@ index 7e94ebe06fc62293e665d6db19e42d947e7eb30f..158c012b8a6808ca0f820c2997af2825
          java.util.Iterator<java.util.Map.Entry<String, Tag>> iterator = (this.tags instanceof it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap) ? ((it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap)this.tags).object2ObjectEntrySet().fastIterator() : this.tags.entrySet().iterator();
          while (iterator.hasNext()) {
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 588a4fdcb294b9b1a92ef9969ef64f999bf529cc..431ea53e4fb9c26c24003da7e216a1f5fe070985 100644
+index 79ce85f7f3471bab9bd647848836670c3de38a9a..947a4f20b5fc4ef9bdd8d50a2d6d457e5d7c5ed8 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -719,7 +719,11 @@ public final class ItemStack {
+@@ -731,7 +731,11 @@ public final class ItemStack {
  
              itemstack.setPopTime(this.getPopTime());
              if (this.tag != null) {

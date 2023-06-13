@@ -5,7 +5,7 @@ Subject: [PATCH] Add jackson
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 1c7c148feb1785839b9dad0aa8477a52a2e12b3c..d21acd988d623f4dea90250ea1a729af3cc908e7 100644
+index 9387d8fdb70e882104155abb284cba129d20585e..9342475e878978af75d7ea7aa125acfbe40bc28c 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -13,6 +13,13 @@ dependencies {

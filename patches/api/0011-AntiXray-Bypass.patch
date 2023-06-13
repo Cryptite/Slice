@@ -5,10 +5,10 @@ Subject: [PATCH] AntiXray Bypass
 
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 12c249be755580ec6d83dfe1781f892f222d9ecd..804976415e79666c6b1df77b38e71c516847460e 100644
+index 895e1b57709edfbed7db3ed2d9e49baee663dbcf..1897af7e036483932924465719b6ab602be72a7f 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2732,6 +2732,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2761,6 +2761,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
       */
      boolean hasResourcePack();
  
