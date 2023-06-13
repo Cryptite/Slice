@@ -156,6 +156,19 @@ index e6c16982b50754bae5a31a193c95ef616b735967..aee2375bd72f3ab7f237132a05aada1e
          // CraftBukkit end
      }
  
+diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+index e422d8352f6f7dda8fb7ae8f51ebd5ec2e116115..f731f7131d3270de6bc81962bd713a59968aba34 100644
+--- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
++++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
+@@ -3134,7 +3134,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+     }
+ 
+     public boolean equipmentHasChanged(ItemStack stack, ItemStack stack2) {
+-        return !ItemStack.isSame(stack2, stack);
++        return !ItemStack.isSameItem(stack2, stack);
+     }
+ 
+     private void handleHandSwap(Map<EquipmentSlot, ItemStack> equipmentChanges) {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
 index 38e110a226aac27d86dfe89bc0e9ecaada6ff268..15515e871c89498ec936ab24871741f883f18a3b 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java

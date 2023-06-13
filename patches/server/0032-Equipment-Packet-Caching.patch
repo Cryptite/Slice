@@ -59,7 +59,7 @@ index a3cff8bcc0e390865563c97c95f4e28e99a83948..53efe944288b6d58700242eaca97119a
  
          // CraftBukkit start - Fix for nonsensical head yaw
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index e422d8352f6f7dda8fb7ae8f51ebd5ec2e116115..de88a8ba2e8308103ac0c5facbc428e443314b15 100644
+index f731f7131d3270de6bc81962bd713a59968aba34..09d298f05a6fb3d357cadc0e2d6ee51a24055c66 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -264,6 +264,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
