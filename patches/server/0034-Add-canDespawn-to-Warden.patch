@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 20 Jun 2023 08:04:37 -0500
+Subject: [PATCH] Add canDespawn to Warden
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
+index ceacc0d383e2ee674783d3c0a7df0a951595faca..de65adaf5674803f12f3ad8562eb9aba0d299d13 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityType.java
++++ b/src/main/java/net/minecraft/world/entity/EntityType.java
+@@ -588,7 +588,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+         }), (entity) -> {
+             entity.load(nbt);
+         }, () -> {
+-            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
++            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.toString());
+         });
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
+index b2b63d9df3c07696f47281e9be74f1799f50b93e..6599f2653ee94287a46d047eb4b15ff278d8455d 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
++++ b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
+@@ -109,6 +109,7 @@ public class Warden extends Monster implements VibrationListener.VibrationListen
+     public AnimationState sonicBoomAnimationState = new AnimationState();
+     private final DynamicGameEventListener<VibrationListener> dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()), 16, this));
+     private AngerManagement angerManagement = new AngerManagement(this::canTargetEntity, Collections.emptyList());
++    public boolean canDespawn; // Slice
+ 
+     public Warden(EntityType<? extends Monster> type, Level world) {
+         super(type, world);
+diff --git a/src/main/java/net/minecraft/world/entity/monster/warden/WardenAi.java b/src/main/java/net/minecraft/world/entity/monster/warden/WardenAi.java
+index 67329dd79450b20eba9055f9c16b600478247a01..9b1ef02f3d756da25795412e6d2ff543a86b0ef6 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/warden/WardenAi.java
++++ b/src/main/java/net/minecraft/world/entity/monster/warden/WardenAi.java
+@@ -139,7 +139,13 @@ public class WardenAi {
+ 
+     public static void setDigCooldown(LivingEntity warden) {
+         if (warden.getBrain().hasMemoryValue(MemoryModuleType.DIG_COOLDOWN)) {
+-            warden.getBrain().setMemoryWithExpiry(MemoryModuleType.DIG_COOLDOWN, Unit.INSTANCE, 1200L);
++            // Slice start
++            if (warden instanceof Warden nmsWarden && !nmsWarden.canDespawn) {
++                warden.getBrain().setMemory(MemoryModuleType.DIG_COOLDOWN, Unit.INSTANCE);
++            } else {
++                warden.getBrain().setMemoryWithExpiry(MemoryModuleType.DIG_COOLDOWN, Unit.INSTANCE, 1200L);
++            }
++            // Slice end
+         }
+ 
+     }
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
+index 6ecdc4bf1f6b8f0363e667135ba463433be5c0fb..6107439289f9932e6d68dbfa0c35ac58e4a61007 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
+@@ -92,4 +92,11 @@ public class CraftWarden extends CraftMonster implements org.bukkit.entity.Warde
+             case ANGRY -> AngerLevel.ANGRY;
+         };
+     }
++
++    // Slice start
++    @Override
++    public void setCanDespawn(boolean canDespawn) {
++        this.getHandle().canDespawn = canDespawn;
++    }
++    // Slice end
+ }

@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
 Date: Tue, 25 Apr 2023 08:25:26 -0500
-Subject: [PATCH] PlayerLoadStatsEvent
+Subject: [PATCH] Add canDespawn to Warden
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadStatsEvent.java b/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadStatsEvent.java
@@ -64,3 +64,14 @@ index 0000000000000000000000000000000000000000..80b67d390152b114ad385f7eb6af5ef9
 +        return handlers;
 +    }
 +}
+diff --git a/src/main/java/org/bukkit/entity/Warden.java b/src/main/java/org/bukkit/entity/Warden.java
+index efaa45f41bc1dc8df6665c55b4e5ade343d60d4c..7d4ff450d571a808ac2ffb667729b4ab76a28bd4 100644
+--- a/src/main/java/org/bukkit/entity/Warden.java
++++ b/src/main/java/org/bukkit/entity/Warden.java
+@@ -111,4 +111,6 @@ public interface Warden extends Monster {
+          */
+         ANGRY;
+     }
++
++    void setCanDespawn(boolean canDespawn); // Slice
+ }
