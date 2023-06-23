@@ -106,10 +106,10 @@ index 9464054912e19fc78dd965b71fce20a18564b351..1624a0f8ea211a4c43fd01612674ca50
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-index 67efb0d38ae369ff5254f7b1ec85d32d4eee8291..e4110e3a60242b958c9983a090b28aae540b2bdf 100644
+index 7098b77fe4275e39694ed7d8fb031b9397302b9f..910f6ae45f595a1ba036634467348ff7a7449449 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scoreboard/CraftTeam.java
-@@ -347,6 +347,37 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
+@@ -346,6 +346,37 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
          }
      }
  

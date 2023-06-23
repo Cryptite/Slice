@@ -5,7 +5,7 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 5fad40fa88f697108e42461c41012d5964ed7d75..4aa043cc25d7d770ead47bcc3bf0373336768e5c 100644
+index 9d46536f80b5b3e6641fd377c02166a431edfd77..d138cceffd95eda11d4f4179dffd7ddbcd22e26f 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -277,6 +277,7 @@ public class ServerPlayer extends Player {
@@ -17,10 +17,10 @@ index 5fad40fa88f697108e42461c41012d5964ed7d75..4aa043cc25d7d770ead47bcc3bf03733
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
      public io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.PlayerChunkLoaderData chunkLoader;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index aaa6283dec4570caf4c195059b44cc11e600d2ed..998e8a79ba88cb8dc421b890f86aff7cff730480 100644
+index 04d8f26e760e893ed9b30f6fc56e6753871d1d47..f42bcc36b6aae2560cebb9ceeab69577097fff14 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -926,12 +926,12 @@ public abstract class PlayerList {
+@@ -927,12 +927,12 @@ public abstract class PlayerList {
          int i = flag ? 1 : 0;
          // CraftBukkit start
          LevelData worlddata = worldserver1.getLevelData();
@@ -36,7 +36,7 @@ index aaa6283dec4570caf4c195059b44cc11e600d2ed..998e8a79ba88cb8dc421b890f86aff7c
  
          // entityplayer1.connection.teleport(entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index e41f5417304f5b05fa7e2f6b6e1c0095e820f1cc..585dd6d62930735bdda0c70b27a31f021056fb14 100644
+index 59c00045ec903a635966f16cf33e5b4110262953..e34f06f3d730932abbc7b9aada6139a4a06b170d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -1239,6 +1239,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

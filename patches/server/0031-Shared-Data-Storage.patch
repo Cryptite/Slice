@@ -5,10 +5,10 @@ Subject: [PATCH] Shared Data Storage
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 77d05f7efdcdceef681a75692c208075d873d368..c40bd0fdbfa793c56071f1a5c2fd33da8393054f 100644
+index ffbab76e55807f04ebb25242eadbea114004b1b3..fa2581c014d839195775aacf10b8e684cb60140f 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -271,6 +271,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+@@ -270,6 +270,7 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean lagCompensateBlockBreaking = true;
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
@@ -17,7 +17,7 @@ index 77d05f7efdcdceef681a75692c208075d873d368..c40bd0fdbfa793c56071f1a5c2fd33da
  
      public ChunkLoadingBasic chunkLoadingBasic;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 53188d488936c0ab97ed5dea558831c8ced4cd0d..3020deeb43a43522af53dce1330d7c7c25e5305d 100644
+index d15b822d7b12691608a3890d87b09c7562f91958..b6911bf0a72a7f96a4baaa70a72310d57ef480c8 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -28,7 +28,7 @@ index 53188d488936c0ab97ed5dea558831c8ced4cd0d..3020deeb43a43522af53dce1330d7c7c
  import com.google.common.collect.ImmutableList;
  import co.aikar.timings.Timings;
  import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-@@ -313,6 +314,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -311,6 +312,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public volatile Thread shutdownThread; // Paper
      public volatile boolean abnormalExit = false; // Paper
      public boolean isIteratingOverLevels = false; // Paper
@@ -36,7 +36,7 @@ index 53188d488936c0ab97ed5dea558831c8ced4cd0d..3020deeb43a43522af53dce1330d7c7c
  
      public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
          AtomicReference<S> atomicreference = new AtomicReference();
-@@ -413,6 +415,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -411,6 +413,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      }
      // CraftBukkit end
  
@@ -49,7 +49,7 @@ index 53188d488936c0ab97ed5dea558831c8ced4cd0d..3020deeb43a43522af53dce1330d7c7c
      private void readScoreboard(DimensionDataStorage persistentStateManager) {
          ServerScoreboard scoreboardserver = this.getScoreboard();
  
-@@ -888,6 +896,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -886,6 +894,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              this.isSaving = true;
              this.getPlayerList().saveAll(); // Diff on change
              flag3 = this.saveAllChunks(suppressLogs, flush, force);
@@ -57,7 +57,7 @@ index 53188d488936c0ab97ed5dea558831c8ced4cd0d..3020deeb43a43522af53dce1330d7c7c
          } finally {
              this.isSaving = false;
          }
-@@ -1104,6 +1113,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1102,6 +1111,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  throw new IllegalStateException("Failed to initialize server");
              }
  
@@ -73,7 +73,7 @@ index 53188d488936c0ab97ed5dea558831c8ced4cd0d..3020deeb43a43522af53dce1330d7c7c
              this.nextTickTime = Util.getMillis();
              this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
              this.status = this.buildServerStatus();
-@@ -1416,6 +1434,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1414,6 +1432,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                      level.saveIncrementally(fullSave);
                  }
              }

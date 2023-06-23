@@ -17,10 +17,10 @@ index 18aac3da3c88f33b1a71a5920a8daa27e9723913..af0720fb8bd334aac5493121c6373d87
      public static Throwable getAddToWorldStackTrace(Entity entity) {
          final Throwable thr = new Throwable(entity + " Added to world at " + new java.util.Date());
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 89514af7f3771db496e7e2a40fa4e7fdf527f095..347becd2658a257a7253edccf62fb5923da28b29 100644
+index 1a481fb4f4228f0fea8a7dc6132248c98b727c90..836bdbf4a4742f0cce0f9612d694db03305c7a00 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -1263,6 +1263,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1268,6 +1268,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          world.noSave = !value;
      }
  

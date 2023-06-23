@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerGetRespawnLocationEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 683b5d78f9e3dc34e40c54683f64be32317797ac..aaa6283dec4570caf4c195059b44cc11e600d2ed 100644
+index fff7ad7a45f310783ac96b44575ad3db13d537fa..04d8f26e760e893ed9b30f6fc56e6753871d1d47 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -844,49 +844,57 @@ public abstract class PlayerList {
+@@ -845,49 +845,57 @@ public abstract class PlayerList {
  
          // CraftBukkit start - fire PlayerRespawnEvent
          if (location == null) {

@@ -5,7 +5,7 @@ Subject: [PATCH] Packet obfuscation and reduction
 
 
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index bf6a70a69bb695ec1a202cd1e863c468329f80fc..7af1c0bc7f458f766e3f67a5caa8ec9626b17735 100644
+index 15add3f4dfd718ec09bb1db4f22223466936879c..f4319b98e114c4f3e84b9977d48a98c20f96c853 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 @@ -143,15 +143,29 @@ public class SynchedEntityData {
@@ -66,7 +66,7 @@ index bf6a70a69bb695ec1a202cd1e863c468329f80fc..7af1c0bc7f458f766e3f67a5caa8ec96
      @Nullable
      public List<SynchedEntityData.DataValue<?>> getNonDefaultValues() {
          List<SynchedEntityData.DataValue<?>> list = null;
-@@ -300,11 +334,14 @@ public class SynchedEntityData {
+@@ -314,11 +348,14 @@ public class SynchedEntityData {
          T value;
          private final T initialValue;
          private boolean dirty;
@@ -81,7 +81,7 @@ index bf6a70a69bb695ec1a202cd1e863c468329f80fc..7af1c0bc7f458f766e3f67a5caa8ec96
          }
  
          public EntityDataAccessor<T> getAccessor() {
-@@ -334,6 +371,35 @@ public class SynchedEntityData {
+@@ -348,6 +385,35 @@ public class SynchedEntityData {
          public SynchedEntityData.DataValue<T> value() {
              return SynchedEntityData.DataValue.create(this.accessor, this.value);
          }
@@ -144,10 +144,10 @@ index 6670e657e08e130f7e0368f418379fd1ece00cdf..a3cff8bcc0e390865563c97c95f4e28e
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index e6c16982b50754bae5a31a193c95ef616b735967..aee2375bd72f3ab7f237132a05aada1eba708252 100644
+index 8c2b633bef56d4cf52d33827df5bc301bbe2c6bd..b73e4f37884d58832e8fb7a2634aa3ddf0a0bb9a 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3275,7 +3275,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3288,7 +3288,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }
@@ -157,10 +157,10 @@ index e6c16982b50754bae5a31a193c95ef616b735967..aee2375bd72f3ab7f237132a05aada1e
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index e422d8352f6f7dda8fb7ae8f51ebd5ec2e116115..f731f7131d3270de6bc81962bd713a59968aba34 100644
+index 523e2864b49fc5501646482ea15694fd05cb0b9f..3d86de5060becac4936a36806fb4e73e38ea0187 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3134,7 +3134,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3137,7 +3137,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
      }
  
      public boolean equipmentHasChanged(ItemStack stack, ItemStack stack2) {
@@ -183,10 +183,10 @@ index 38e110a226aac27d86dfe89bc0e9ecaada6ff268..15515e871c89498ec936ab24871741f8
  
      public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index baccc49316bc3763add517650d364c908bf410b0..8b539beb563ef0d402e3d93fe9317cb386b65f53 100644
+index 5a54df1983721d8dcc368956c88e02109bbb4c80..ced211abb09de42057ca01e9413c183d3cf6193e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2492,7 +2492,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2476,7 +2476,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

@@ -5,10 +5,10 @@ Subject: [PATCH] Ignore durability changes for equipment updates
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 67627bbf84f5aab2872f636b1dcb6728c8494147..e422d8352f6f7dda8fb7ae8f51ebd5ec2e116115 100644
+index 064bd3f2615009b3f15f3a5006f0b5f7a7ba6bf5..523e2864b49fc5501646482ea15694fd05cb0b9f 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3134,7 +3134,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3137,7 +3137,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
      }
  
      public boolean equipmentHasChanged(ItemStack stack, ItemStack stack2) {

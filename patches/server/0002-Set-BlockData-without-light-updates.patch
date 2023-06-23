@@ -90,7 +90,7 @@ index 9522e646529f3d849471931b4b3c0d133e7fcfc5..2f58b13c70ddc52312512f64b02dbda6
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index cf6e22889437aa18fed66dc6a1b8394e6f21dcbc..f23fb2d82c8c612e6ae2708ace9d8bb777dd9140 100644
+index 23d77e6cc55c06d9c2cfb21421cd19c487dbe765..f878db4a2e9c9b28065420543f639e123f29a72c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 @@ -286,7 +286,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
@@ -103,10 +103,10 @@ index cf6e22889437aa18fed66dc6a1b8394e6f21dcbc..f23fb2d82c8c612e6ae2708ace9d8bb7
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index 01b401f7d691ef451266bbc3a94980d613b96f21..a3baff85fe4df96602a2972082e6a6278eaef939 100644
+index 5401ab9f8f6ce12e1c5368dbc3acc78a250b3822..243b5823ea99eefd812134b5c80d4d3c9f008499 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-@@ -188,15 +188,20 @@ public class CraftBlock implements Block {
+@@ -187,15 +187,20 @@ public class CraftBlock implements Block {
  
      @Override
      public void setBlockData(BlockData data, boolean applyPhysics) {
@@ -131,7 +131,7 @@ index 01b401f7d691ef451266bbc3a94980d613b96f21..a3baff85fe4df96602a2972082e6a627
          // SPIGOT-611: need to do this to prevent glitchiness. Easier to handle this here (like /setblock) than to fix weirdness in tile entity cleanup
          if (old.hasBlockEntity() && blockData.getBlock() != old.getBlock()) { // SPIGOT-3725 remove old tile entity if block changes
              // SPIGOT-4612: faster - just clear tile
-@@ -210,7 +215,7 @@ public class CraftBlock implements Block {
+@@ -209,7 +214,7 @@ public class CraftBlock implements Block {
          if (applyPhysics) {
              return world.setBlock(position, blockData, 3);
          } else {
@@ -141,10 +141,10 @@ index 01b401f7d691ef451266bbc3a94980d613b96f21..a3baff85fe4df96602a2972082e6a627
                  world.getMinecraftWorld().sendBlockUpdated(
                          position,
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
-index 577a352dab0f8a71558cb6dedce788e78053ef52..2c18c7da24e1c5ebd73b4370f370006612359daf 100644
+index b1abb332eca597b23888bca42d21d5b587f61b13..7286394d1de13247870aac7c3110964bf01a7078 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
-@@ -214,7 +214,7 @@ public class CraftBlockState implements BlockState {
+@@ -208,7 +208,7 @@ public class CraftBlockState implements BlockState {
          }
  
          net.minecraft.world.level.block.state.BlockState newBlock = this.data;

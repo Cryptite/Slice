@@ -5,7 +5,7 @@ Subject: [PATCH] Add PlayerPreChunkLoadEvent
 
 
 diff --git a/src/main/java/io/papermc/paper/chunk/system/RegionizedPlayerChunkLoader.java b/src/main/java/io/papermc/paper/chunk/system/RegionizedPlayerChunkLoader.java
-index a495d692841c1a6056ca82519ee9b9c66f1ff5cd..18e0fd0bcf3036f986f2726c89592f875a3c630e 100644
+index 924539d4ac50c70178ba220424ffacd6ff277c8b..f9b30f2904d06f2a7de6fa03287bc2e40e879e2d 100644
 --- a/src/main/java/io/papermc/paper/chunk/system/RegionizedPlayerChunkLoader.java
 +++ b/src/main/java/io/papermc/paper/chunk/system/RegionizedPlayerChunkLoader.java
 @@ -411,7 +411,7 @@ public class RegionizedPlayerChunkLoader {
@@ -18,10 +18,10 @@ index a495d692841c1a6056ca82519ee9b9c66f1ff5cd..18e0fd0bcf3036f986f2726c89592f87
          private static final byte CHUNK_TICKET_STAGE_NONE           = 0;
          private static final byte CHUNK_TICKET_STAGE_LOADING        = 1;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 347becd2658a257a7253edccf62fb5923da28b29..524f56735c3f4781be86d0f31e8fb17c578e5b2f 100644
+index 836bdbf4a4742f0cce0f9612d694db03305c7a00..fb79e3ee663709538d6e322fd8401564dcbbe5a7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -531,6 +531,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -530,6 +530,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          return true;
      }
  
