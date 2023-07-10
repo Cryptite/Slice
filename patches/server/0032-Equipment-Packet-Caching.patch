@@ -25,7 +25,7 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index a3cff8bcc0e390865563c97c95f4e28e99a83948..53efe944288b6d58700242eaca97119a6aa77bc0 100644
+index 516fcc67aa83a870b74372742b81d0acef242655..07febce429ebd15656e8483d2d2af9e93c13de19 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -328,27 +328,8 @@ public class ServerEntity {
@@ -57,12 +57,12 @@ index a3cff8bcc0e390865563c97c95f4e28e99a83948..53efe944288b6d58700242eaca97119a
 +            livingEntity.sendEquipment(sender, player); // Slice
          }
  
-         // CraftBukkit start - Fix for nonsensical head yaw
+         if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 3d86de5060becac4936a36806fb4e73e38ea0187..a13576b096322eccef4643c5aa5a33fe74f479d5 100644
+index b7c9876eaff4365d136a9af20c1a5845b3094336..a5165d76d8495242708093f7e4449f6f67386ad7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -264,6 +264,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -263,6 +263,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper
@@ -71,7 +71,7 @@ index 3d86de5060becac4936a36806fb4e73e38ea0187..a13576b096322eccef4643c5aa5a33fe
  
      @Override
      public float getBukkitYaw() {
-@@ -3081,6 +3083,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3071,6 +3073,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -79,7 +79,7 @@ index 3d86de5060becac4936a36806fb4e73e38ea0187..a13576b096322eccef4643c5aa5a33fe
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3173,7 +3176,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3163,7 +3166,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -106,7 +106,7 @@ index 3d86de5060becac4936a36806fb4e73e38ea0187..a13576b096322eccef4643c5aa5a33fe
      }
  
      // Paper start - hide unnecessary item meta
-@@ -4460,4 +4481,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4450,4 +4471,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -182,10 +182,10 @@ index 3d86de5060becac4936a36806fb4e73e38ea0187..a13576b096322eccef4643c5aa5a33fe
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 19212795df4024cfb2b9f56e1efcd4c9f20d1d83..59646fd15c90407b1a7bfe5c0b2a87ac2b10b356 100644
+index 6095d43e08bc1ffc4e9a4796fc7adbd07d69d716..8c29e292b8e495ca64668c6a22b9765ffe836a08 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -1072,4 +1072,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -1099,4 +1099,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          getHandle().knockback(strength, directionX, directionZ);
      };
      // Paper end

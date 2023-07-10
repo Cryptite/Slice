@@ -5,11 +5,11 @@ Subject: [PATCH] Add PlayerData Events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 8e09fa09ad5171c49d66cd890f37ca59e2962f94..74eaa6be9676d3e4bc2cd71de84b2d3defa95ce2 100644
+index 35d83c8ebfbf968943d103b520e0f3a83ed0ebe9..3364749824b35ecc81f17595627793b486f1e05b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -601,6 +601,8 @@ public class ServerPlayerGameMode {
-                     enuminteractionresult1 = stack.useOn(itemactioncontext, hand);
+                     enuminteractionresult1 = stack.useOn(itemactioncontext);
                  }
  
 +                world.pendingPlayerBlockEvents.remove(blockposition); // Paper

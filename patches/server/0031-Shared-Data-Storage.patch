@@ -5,7 +5,7 @@ Subject: [PATCH] Shared Data Storage
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index ffbab76e55807f04ebb25242eadbea114004b1b3..fa2581c014d839195775aacf10b8e684cb60140f 100644
+index 4ac3fa45cd155ae8a852e26d4d4d1f16b28efdc2..b89e3568cc9371984fe1cd8f83008a9250956465 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 @@ -270,6 +270,7 @@ public class GlobalConfiguration extends ConfigurationPart {
@@ -15,9 +15,9 @@ index ffbab76e55807f04ebb25242eadbea114004b1b3..fa2581c014d839195775aacf10b8e684
 +        public String sharedDataFolder = "";
      }
  
-     public ChunkLoadingBasic chunkLoadingBasic;
+     public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d15b822d7b12691608a3890d87b09c7562f91958..b6911bf0a72a7f96a4baaa70a72310d57ef480c8 100644
+index 681123682c1a0060d05860835e5b9f46147f7c1f..619956817b5fccb74a6d68d5e3ea1b317c69b779 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;

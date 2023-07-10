@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 1635fee928d64f4d2c336dca6675ed4641918830..8e09fa09ad5171c49d66cd890f37ca59e2962f94 100644
+index 34ecfb89372f459117db99d57a7edd6f681bbe8a..35d83c8ebfbf968943d103b520e0f3a83ed0ebe9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -419,6 +419,7 @@ public class ServerPlayerGameMode {
@@ -25,7 +25,7 @@ index 1635fee928d64f4d2c336dca6675ed4641918830..8e09fa09ad5171c49d66cd890f37ca59
                      org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - use stored ref
                  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index adb7220be617d6d9f2cdd7fbe4fa2dd24cc7d142..79ce85f7f3471bab9bd647848836670c3de38a9a 100644
+index ae9b821d71d2868ba4eb3c73558fdcd6caf264e3..14c04a8b9b772dc4167261edfb736407b0b867a9 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -360,6 +360,7 @@ public final class ItemStack {
@@ -33,7 +33,7 @@ index adb7220be617d6d9f2cdd7fbe4fa2dd24cc7d142..79ce85f7f3471bab9bd647848836670c
              }
              Item item = this.getItem();
 +            if (entityhuman != null) world.pendingPlayerBlockEvents.put(blockposition, new Level.PendingBlockEvent(blockposition, entityhuman)); // Paper
-             InteractionResult enuminteractionresult = item.useOn(itemactioncontext);
+             InteractionResult enuminteractionresult = item.useOn(context);
              CompoundTag newData = this.getTagClone();
              int newCount = this.getCount();
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
