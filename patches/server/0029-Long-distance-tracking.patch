@@ -5,10 +5,10 @@ Subject: [PATCH] Long distance tracking
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 4321789e9222350266ea0830473861e2f5fd75ad..6245bbc5745787b835b9b3a89da088ee01d4d706 100644
+index e08b72010f22ce680e88f443782bdfe6a46285f9..3809b2125254424d4939794961a9f08254af54c8 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1532,6 +1532,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1551,6 +1551,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
                  // Paper end - remove allocation of Vec3D here
                  Vec3 vec3d = player.position().subtract(this.entity.position());
                  double d0 = (double) Math.min(this.getEffectiveRange(), io.papermc.paper.chunk.system.ChunkSystem.getSendViewDistance(player) * 16); // Paper - per player view distance
@@ -17,10 +17,10 @@ index 4321789e9222350266ea0830473861e2f5fd75ad..6245bbc5745787b835b9b3a89da088ee
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 4aa043cc25d7d770ead47bcc3bf0373336768e5c..20aea9a41bcb21b8063ae3a227d8d385b7fe9665 100644
+index 2b93a37ee1f711c14140eb96f29dfdd3290641ad..f301178c2d68400c73a50c298a6bb6fd0f40e8ad 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -278,6 +278,7 @@ public class ServerPlayer extends Player {
+@@ -279,6 +279,7 @@ public class ServerPlayer extends Player {
      public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
      public boolean smoothWorldTeleport; // Slice
@@ -28,7 +28,7 @@ index 4aa043cc25d7d770ead47bcc3bf0373336768e5c..20aea9a41bcb21b8063ae3a227d8d385
  
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
      public io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.PlayerChunkLoaderData chunkLoader;
-@@ -2650,4 +2651,18 @@ public class ServerPlayer extends Player {
+@@ -2651,4 +2652,18 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -48,7 +48,7 @@ index 4aa043cc25d7d770ead47bcc3bf0373336768e5c..20aea9a41bcb21b8063ae3a227d8d385
 +    // Slice end
  }
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 5638290c72e0daeddfa79fd55e87334fa7d86f72..9f1daa3f9e8e04430a2329e9cbfa9f94ffc72c02 100644
+index 5b5109e942b18418b3a3a0e2109fe4ef15045fe5..507519c75fabe8991cddbc1aa7813cec25dee01b 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -271,6 +271,7 @@ public class SpigotWorldConfig

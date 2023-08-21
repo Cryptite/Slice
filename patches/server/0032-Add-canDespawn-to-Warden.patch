@@ -49,10 +49,10 @@ index 03f16a5541de6bc95407aaa24741570c1993dc9e..07600fdd32a058d0e3f9828efdc18f5e
  
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
-index 6ecdc4bf1f6b8f0363e667135ba463433be5c0fb..6107439289f9932e6d68dbfa0c35ac58e4a61007 100644
+index 46e3cc146a4b109c4baaf94f42d825646abade68..b248150c047890f45fae75716e40e495752f3732 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
-@@ -92,4 +92,11 @@ public class CraftWarden extends CraftMonster implements org.bukkit.entity.Warde
+@@ -86,4 +86,11 @@ public class CraftWarden extends CraftMonster implements org.bukkit.entity.Warde
              case ANGRY -> AngerLevel.ANGRY;
          };
      }

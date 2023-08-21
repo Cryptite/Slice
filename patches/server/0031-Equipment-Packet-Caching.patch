@@ -25,7 +25,7 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 516fcc67aa83a870b74372742b81d0acef242655..07febce429ebd15656e8483d2d2af9e93c13de19 100644
+index a514a1f26e439b5959093488ec9905fec327a404..0ac580f3cf8f95025992420702d67ad56db2ba05 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -328,27 +328,8 @@ public class ServerEntity {
@@ -57,7 +57,7 @@ index 516fcc67aa83a870b74372742b81d0acef242655..07febce429ebd15656e8483d2d2af9e9
 +            livingEntity.sendEquipment(sender, player); // Slice
          }
  
-         if (!this.entity.getPassengers().isEmpty()) {
+         // CraftBukkit start - MC-109346: Fix for nonsensical head yaw
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 index b7c9876eaff4365d136a9af20c1a5845b3094336..a5165d76d8495242708093f7e4449f6f67386ad7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
@@ -182,10 +182,10 @@ index b7c9876eaff4365d136a9af20c1a5845b3094336..a5165d76d8495242708093f7e4449f6f
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 6095d43e08bc1ffc4e9a4796fc7adbd07d69d716..8c29e292b8e495ca64668c6a22b9765ffe836a08 100644
+index f0ce29d21fe9af803ce4e41b8c037b2ec5d1b124..30eebb880d53132d03af656e4662de5566415358 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -1099,4 +1099,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -1094,4 +1094,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          getHandle().knockback(strength, directionX, directionZ);
      };
      // Paper end

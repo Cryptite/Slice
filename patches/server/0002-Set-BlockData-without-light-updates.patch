@@ -27,7 +27,7 @@ index 877498729c66de9aa6a27c9148f7494d7895615c..63959d7f15c682c2935f872d50de03fd
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 147d802d9207e358fdb2d1c7806fc2f634dcfd98..22558f4d5ae2eba71e2392729c2c2d931741483c 100644
+index f39ab10c5b0b8d86b579a5b683491204c51db70b..00c5dc8781bc9d893db8e180eb541108ae01c956 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -514,12 +514,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -46,7 +46,7 @@ index 147d802d9207e358fdb2d1c7806fc2f634dcfd98..22558f4d5ae2eba71e2392729c2c2d93
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start
-@@ -709,7 +709,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -710,7 +710,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  Block.dropResources(iblockdata, this, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  
@@ -77,7 +77,7 @@ index 134e5ec79bf2dddd4e31930f8a7cb2c02fa29518..fd72d278a2719911a46b6bc9e7da2dc2
  
      boolean removeBlock(BlockPos pos, boolean move);
 diff --git a/src/main/java/net/minecraft/world/level/block/Block.java b/src/main/java/net/minecraft/world/level/block/Block.java
-index 9522e646529f3d849471931b4b3c0d133e7fcfc5..2f58b13c70ddc52312512f64b02dbda641788038 100644
+index fdd9c61b7248e92dbcbec91cd6fe4c6310bba237..2f2197236d9ba64b62510df923378b0256629d02 100644
 --- a/src/main/java/net/minecraft/world/level/block/Block.java
 +++ b/src/main/java/net/minecraft/world/level/block/Block.java
 @@ -194,7 +194,7 @@ public class Block extends BlockBehaviour implements ItemLike {
@@ -90,7 +90,7 @@ index 9522e646529f3d849471931b4b3c0d133e7fcfc5..2f58b13c70ddc52312512f64b02dbda6
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index 23d77e6cc55c06d9c2cfb21421cd19c487dbe765..f878db4a2e9c9b28065420543f639e123f29a72c 100644
+index e2a3510cb2208f9cd4fc92d022ff5055a4cced45..b0dc1e87e034f428bcce67e563db79a8d803fd04 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 @@ -286,7 +286,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {

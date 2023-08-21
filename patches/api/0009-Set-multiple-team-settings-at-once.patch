@@ -5,12 +5,12 @@ Subject: [PATCH] Set multiple team settings at once
 
 
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index 0f1c08092577a7d66fdc1ea8b645ea67e0d9c6cf..f1b3d05901a4fe32366699280f44147a9cda2873 100644
+index 8424fdac153f6dea76acce89f4726408d9726c41..6effaeaf885d70f8aeb11b5c44e7f3ab42cf2a90 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
-@@ -532,6 +532,24 @@ public interface Team {
+@@ -514,6 +514,24 @@ public interface Team {
      boolean hasEntity(@NotNull org.bukkit.entity.Entity entity) throws IllegalStateException, IllegalArgumentException;
-     // Paper end
+     // Paper end - improve scoreboard entries
  
 +    //Slice start
 +    /**

@@ -5,11 +5,11 @@ Subject: [PATCH] Shared Data Storage
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 4ac3fa45cd155ae8a852e26d4d4d1f16b28efdc2..b89e3568cc9371984fe1cd8f83008a9250956465 100644
+index 019d3bbd78fb0b06861979d223915fedb6c99442..89ec08d2550084c1456ce885c71d1e5d121df19d 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -270,6 +270,7 @@ public class GlobalConfiguration extends ConfigurationPart {
-         public boolean lagCompensateBlockBreaking = true;
+@@ -316,6 +316,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+         public boolean useAlternativeLuckFormula = false;
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
 +        public String sharedDataFolder = "";
@@ -17,7 +17,7 @@ index 4ac3fa45cd155ae8a852e26d4d4d1f16b28efdc2..b89e3568cc9371984fe1cd8f83008a92
  
      public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 681123682c1a0060d05860835e5b9f46147f7c1f..619956817b5fccb74a6d68d5e3ea1b317c69b779 100644
+index ac1cb065ace9198e7e8fe65b3225d0caf456b9dc..0d92e021d83a6f467131b079660624be7cd8c137 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
