@@ -1,0 +1,56 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 22 Aug 2023 06:22:17 -0500
+Subject: [PATCH] Add reason to PlayerConnectionCloseEvent
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java b/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
+index 12c1c6fe9dc8dc5f5faf6dcf99f6857219ef22b8..42954466c13a926e735754949cc9d78fa1ad7b10 100644
+--- a/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
++++ b/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
+@@ -50,12 +50,18 @@ public class PlayerConnectionCloseEvent extends Event {
+     @NotNull private final UUID playerUniqueId;
+     @NotNull private final String playerName;
+     @NotNull private final InetAddress ipAddress;
++    @NotNull private final ConnectionCloseReason reason;
+ 
+     public PlayerConnectionCloseEvent(@NotNull final UUID playerUniqueId, @NotNull final String playerName, @NotNull final InetAddress ipAddress, final boolean async) {
++        this(playerUniqueId, playerName, ipAddress, ConnectionCloseReason.NORMAL, async);
++    }
++
++    public PlayerConnectionCloseEvent(@NotNull final UUID playerUniqueId, @NotNull final String playerName, @NotNull final InetAddress ipAddress, @NotNull ConnectionCloseReason reason, final boolean async) {
+         super(async);
+         this.playerUniqueId = playerUniqueId;
+         this.playerName = playerName;
+         this.ipAddress = ipAddress;
++        this.reason = reason;
+     }
+ 
+     /**
+@@ -92,4 +98,26 @@ public class PlayerConnectionCloseEvent extends Event {
+     public static HandlerList getHandlerList() {
+         return HANDLERS;
+     }
++
++    /**
++     * Returns the reason for the closed connection.
++     */
++    @NotNull
++    public ConnectionCloseReason getReason() {
++        return this.reason;
++    }
++
++    public enum ConnectionCloseReason {
++        /**
++         * Player disconnected normally
++         */
++        NORMAL,
++
++        /**
++         * Player has invalid data for some reason.
++         * <p>
++         * One example of this is a player logging into an unloaded world.
++         */
++        INVALID_PLAYER_DATA,
++    }
+ }
