@@ -1,0 +1,260 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 26 Aug 2023 07:39:46 -0500
+Subject: [PATCH] Disable feature generation
+
+
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/GeodeFeature.java b/src/main/java/net/minecraft/world/level/levelgen/feature/GeodeFeature.java
+index f945fae50983424091b58f83ed14f2e8f2621619..b4c16e355ebadf06b9405c06e2b598e7a478f6ab 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/feature/GeodeFeature.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/feature/GeodeFeature.java
+@@ -33,139 +33,5 @@ public class GeodeFeature extends Feature<GeodeConfiguration> {
+     }
+ 
+     @Override
+-    public boolean place(FeaturePlaceContext<GeodeConfiguration> context) {
+-        GeodeConfiguration geodeConfiguration = context.config();
+-        RandomSource randomSource = context.random();
+-        BlockPos blockPos = context.origin();
+-        WorldGenLevel worldGenLevel = context.level();
+-        int i = geodeConfiguration.minGenOffset;
+-        int j = geodeConfiguration.maxGenOffset;
+-        List<Pair<BlockPos, Integer>> list = Lists.newLinkedList();
+-        int k = geodeConfiguration.distributionPoints.sample(randomSource);
+-        WorldgenRandom worldgenRandom = new WorldgenRandom(new LegacyRandomSource(worldGenLevel.getSeed()));
+-        NormalNoise normalNoise = NormalNoise.create(worldgenRandom, -4, 1.0D);
+-        List<BlockPos> list2 = Lists.newLinkedList();
+-        double d = (double)k / (double)geodeConfiguration.outerWallDistance.getMaxValue();
+-        GeodeLayerSettings geodeLayerSettings = geodeConfiguration.geodeLayerSettings;
+-        GeodeBlockSettings geodeBlockSettings = geodeConfiguration.geodeBlockSettings;
+-        GeodeCrackSettings geodeCrackSettings = geodeConfiguration.geodeCrackSettings;
+-        double e = 1.0D / Math.sqrt(geodeLayerSettings.filling);
+-        double f = 1.0D / Math.sqrt(geodeLayerSettings.innerLayer + d);
+-        double g = 1.0D / Math.sqrt(geodeLayerSettings.middleLayer + d);
+-        double h = 1.0D / Math.sqrt(geodeLayerSettings.outerLayer + d);
+-        double l = 1.0D / Math.sqrt(geodeCrackSettings.baseCrackSize + randomSource.nextDouble() / 2.0D + (k > 3 ? d : 0.0D));
+-        boolean bl = (double)randomSource.nextFloat() < geodeCrackSettings.generateCrackChance;
+-        int m = 0;
+-
+-        for(int n = 0; n < k; ++n) {
+-            int o = geodeConfiguration.outerWallDistance.sample(randomSource);
+-            int p = geodeConfiguration.outerWallDistance.sample(randomSource);
+-            int q = geodeConfiguration.outerWallDistance.sample(randomSource);
+-            BlockPos blockPos2 = blockPos.offset(o, p, q);
+-            BlockState blockState = worldGenLevel.getBlockState(blockPos2);
+-            if (blockState.isAir() || blockState.is(BlockTags.GEODE_INVALID_BLOCKS)) {
+-                ++m;
+-                if (m > geodeConfiguration.invalidBlocksThreshold) {
+-                    return false;
+-                }
+-            }
+-
+-            list.add(Pair.of(blockPos2, geodeConfiguration.pointOffset.sample(randomSource)));
+-        }
+-
+-        if (bl) {
+-            int r = randomSource.nextInt(4);
+-            int s = k * 2 + 1;
+-            if (r == 0) {
+-                list2.add(blockPos.offset(s, 7, 0));
+-                list2.add(blockPos.offset(s, 5, 0));
+-                list2.add(blockPos.offset(s, 1, 0));
+-            } else if (r == 1) {
+-                list2.add(blockPos.offset(0, 7, s));
+-                list2.add(blockPos.offset(0, 5, s));
+-                list2.add(blockPos.offset(0, 1, s));
+-            } else if (r == 2) {
+-                list2.add(blockPos.offset(s, 7, s));
+-                list2.add(blockPos.offset(s, 5, s));
+-                list2.add(blockPos.offset(s, 1, s));
+-            } else {
+-                list2.add(blockPos.offset(0, 7, 0));
+-                list2.add(blockPos.offset(0, 5, 0));
+-                list2.add(blockPos.offset(0, 1, 0));
+-            }
+-        }
+-
+-        List<BlockPos> list3 = Lists.newArrayList();
+-        Predicate<BlockState> predicate = isReplaceable(geodeConfiguration.geodeBlockSettings.cannotReplace);
+-
+-        for(BlockPos blockPos3 : BlockPos.betweenClosed(blockPos.offset(i, i, i), blockPos.offset(j, j, j))) {
+-            double t = normalNoise.getValue((double)blockPos3.getX(), (double)blockPos3.getY(), (double)blockPos3.getZ()) * geodeConfiguration.noiseMultiplier;
+-            double u = 0.0D;
+-            double v = 0.0D;
+-
+-            for(Pair<BlockPos, Integer> pair : list) {
+-                u += Mth.invSqrt(blockPos3.distSqr(pair.getFirst()) + (double)pair.getSecond().intValue()) + t;
+-            }
+-
+-            for(BlockPos blockPos4 : list2) {
+-                v += Mth.invSqrt(blockPos3.distSqr(blockPos4) + (double)geodeCrackSettings.crackPointOffset) + t;
+-            }
+-
+-            if (!(u < h)) {
+-                if (bl && v >= l && u < e) {
+-                    this.safeSetBlock(worldGenLevel, blockPos3, Blocks.AIR.defaultBlockState(), predicate);
+-
+-                    for(Direction direction : DIRECTIONS) {
+-                        BlockPos blockPos5 = blockPos3.relative(direction);
+-                        FluidState fluidState = worldGenLevel.getFluidState(blockPos5);
+-                        if (!fluidState.isEmpty()) {
+-                            worldGenLevel.scheduleTick(blockPos5, fluidState.getType(), 0);
+-                        }
+-                    }
+-                } else if (u >= e) {
+-                    this.safeSetBlock(worldGenLevel, blockPos3, geodeBlockSettings.fillingProvider.getState(randomSource, blockPos3), predicate);
+-                } else if (u >= f) {
+-                    boolean bl2 = (double)randomSource.nextFloat() < geodeConfiguration.useAlternateLayer0Chance;
+-                    if (bl2) {
+-                        this.safeSetBlock(worldGenLevel, blockPos3, geodeBlockSettings.alternateInnerLayerProvider.getState(randomSource, blockPos3), predicate);
+-                    } else {
+-                        this.safeSetBlock(worldGenLevel, blockPos3, geodeBlockSettings.innerLayerProvider.getState(randomSource, blockPos3), predicate);
+-                    }
+-
+-                    if ((!geodeConfiguration.placementsRequireLayer0Alternate || bl2) && (double)randomSource.nextFloat() < geodeConfiguration.usePotentialPlacementsChance) {
+-                        list3.add(blockPos3.immutable());
+-                    }
+-                } else if (u >= g) {
+-                    this.safeSetBlock(worldGenLevel, blockPos3, geodeBlockSettings.middleLayerProvider.getState(randomSource, blockPos3), predicate);
+-                } else if (u >= h) {
+-                    this.safeSetBlock(worldGenLevel, blockPos3, geodeBlockSettings.outerLayerProvider.getState(randomSource, blockPos3), predicate);
+-                }
+-            }
+-        }
+-
+-        List<BlockState> list4 = geodeBlockSettings.innerPlacements;
+-
+-        for(BlockPos blockPos6 : list3) {
+-            BlockState blockState2 = Util.getRandom(list4, randomSource);
+-
+-            for(Direction direction2 : DIRECTIONS) {
+-                if (blockState2.hasProperty(BlockStateProperties.FACING)) {
+-                    blockState2 = blockState2.setValue(BlockStateProperties.FACING, direction2);
+-                }
+-
+-                BlockPos blockPos7 = blockPos6.relative(direction2);
+-                BlockState blockState3 = worldGenLevel.getBlockState(blockPos7);
+-                if (blockState2.hasProperty(BlockStateProperties.WATERLOGGED)) {
+-                    blockState2 = blockState2.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(blockState3.getFluidState().isSource()));
+-                }
+-
+-                if (BuddingAmethystBlock.canClusterGrowAtState(blockState3)) {
+-                    this.safeSetBlock(worldGenLevel, blockPos7, blockState2, predicate);
+-                    break;
+-                }
+-            }
+-        }
+-
+-        return true;
+-    }
++    public boolean place(FeaturePlaceContext<GeodeConfiguration> context) {return false;}
+ }
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java b/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java
+index 3c474c8fc937df5aebfb063be8109053a91e8bb4..2a36bba04d584fdccbb06dc4991064a245082991 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java
+@@ -30,103 +30,7 @@ public class MonsterRoomFeature extends Feature<NoneFeatureConfiguration> {
+     }
+ 
+     @Override
+-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+-        Predicate<BlockState> predicate = Feature.isReplaceable(BlockTags.FEATURES_CANNOT_REPLACE);
+-        BlockPos blockPos = context.origin();
+-        RandomSource randomSource = context.random();
+-        WorldGenLevel worldGenLevel = context.level();
+-        int i = 3;
+-        int j = randomSource.nextInt(2) + 2;
+-        int k = -j - 1;
+-        int l = j + 1;
+-        int m = -1;
+-        int n = 4;
+-        int o = randomSource.nextInt(2) + 2;
+-        int p = -o - 1;
+-        int q = o + 1;
+-        int r = 0;
+-
+-        for(int s = k; s <= l; ++s) {
+-            for(int t = -1; t <= 4; ++t) {
+-                for(int u = p; u <= q; ++u) {
+-                    BlockPos blockPos2 = blockPos.offset(s, t, u);
+-                    boolean bl = worldGenLevel.getBlockState(blockPos2).isSolid();
+-                    if (t == -1 && !bl) {
+-                        return false;
+-                    }
+-
+-                    if (t == 4 && !bl) {
+-                        return false;
+-                    }
+-
+-                    if ((s == k || s == l || u == p || u == q) && t == 0 && worldGenLevel.isEmptyBlock(blockPos2) && worldGenLevel.isEmptyBlock(blockPos2.above())) {
+-                        ++r;
+-                    }
+-                }
+-            }
+-        }
+-
+-        if (r >= 1 && r <= 5) {
+-            for(int v = k; v <= l; ++v) {
+-                for(int w = 3; w >= -1; --w) {
+-                    for(int x = p; x <= q; ++x) {
+-                        BlockPos blockPos3 = blockPos.offset(v, w, x);
+-                        BlockState blockState = worldGenLevel.getBlockState(blockPos3);
+-                        if (v != k && w != -1 && x != p && v != l && w != 4 && x != q) {
+-                            if (!blockState.is(Blocks.CHEST) && !blockState.is(Blocks.SPAWNER)) {
+-                                this.safeSetBlock(worldGenLevel, blockPos3, AIR, predicate);
+-                            }
+-                        } else if (blockPos3.getY() >= worldGenLevel.getMinBuildHeight() && !worldGenLevel.getBlockState(blockPos3.below()).isSolid()) {
+-                            worldGenLevel.setBlock(blockPos3, AIR, 2);
+-                        } else if (blockState.isSolid() && !blockState.is(Blocks.CHEST)) {
+-                            if (w == -1 && randomSource.nextInt(4) != 0) {
+-                                this.safeSetBlock(worldGenLevel, blockPos3, Blocks.MOSSY_COBBLESTONE.defaultBlockState(), predicate);
+-                            } else {
+-                                this.safeSetBlock(worldGenLevel, blockPos3, Blocks.COBBLESTONE.defaultBlockState(), predicate);
+-                            }
+-                        }
+-                    }
+-                }
+-            }
+-
+-            for(int y = 0; y < 2; ++y) {
+-                for(int z = 0; z < 3; ++z) {
+-                    int aa = blockPos.getX() + randomSource.nextInt(j * 2 + 1) - j;
+-                    int ab = blockPos.getY();
+-                    int ac = blockPos.getZ() + randomSource.nextInt(o * 2 + 1) - o;
+-                    BlockPos blockPos4 = new BlockPos(aa, ab, ac);
+-                    if (worldGenLevel.isEmptyBlock(blockPos4)) {
+-                        int ad = 0;
+-
+-                        for(Direction direction : Direction.Plane.HORIZONTAL) {
+-                            if (worldGenLevel.getBlockState(blockPos4.relative(direction)).isSolid()) {
+-                                ++ad;
+-                            }
+-                        }
+-
+-                        if (ad == 1) {
+-                            this.safeSetBlock(worldGenLevel, blockPos4, StructurePiece.reorient(worldGenLevel, blockPos4, Blocks.CHEST.defaultBlockState()), predicate);
+-                            RandomizableContainerBlockEntity.setLootTable(worldGenLevel, randomSource, blockPos4, BuiltInLootTables.SIMPLE_DUNGEON);
+-                            break;
+-                        }
+-                    }
+-                }
+-            }
+-
+-            this.safeSetBlock(worldGenLevel, blockPos, Blocks.SPAWNER.defaultBlockState(), predicate);
+-            BlockEntity blockEntity = worldGenLevel.getBlockEntity(blockPos);
+-            if (blockEntity instanceof SpawnerBlockEntity) {
+-                SpawnerBlockEntity spawnerBlockEntity = (SpawnerBlockEntity)blockEntity;
+-                spawnerBlockEntity.setEntityId(this.randomEntityId(randomSource), randomSource);
+-            } else {
+-                LOGGER.error("Failed to fetch mob spawner entity at ({}, {}, {})", blockPos.getX(), blockPos.getY(), blockPos.getZ());
+-            }
+-
+-            return true;
+-        } else {
+-            return false;
+-        }
+-    }
++    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {return false;}
+ 
+     private EntityType<?> randomEntityId(RandomSource random) {
+         return Util.getRandom(MOBS, random);
