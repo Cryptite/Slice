@@ -258,3 +258,57 @@ index 3c474c8fc937df5aebfb063be8109053a91e8bb4..2a36bba04d584fdccbb06dc4991064a2
  
      private EntityType<?> randomEntityId(RandomSource random) {
          return Util.getRandom(MOBS, random);
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/SculkPatchFeature.java b/src/main/java/net/minecraft/world/level/levelgen/feature/SculkPatchFeature.java
+index f5aea54f81dcd3072e36ddf3c4c6ded848c2c540..1539a644d89b2fee67a5534870ca177b4992409d 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/feature/SculkPatchFeature.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/feature/SculkPatchFeature.java
+@@ -19,48 +19,7 @@ public class SculkPatchFeature extends Feature<SculkPatchConfiguration> {
+     }
+ 
+     @Override
+-    public boolean place(FeaturePlaceContext<SculkPatchConfiguration> context) {
+-        WorldGenLevel worldGenLevel = context.level();
+-        BlockPos blockPos = context.origin();
+-        if (!this.canSpreadFrom(worldGenLevel, blockPos)) {
+-            return false;
+-        } else {
+-            SculkPatchConfiguration sculkPatchConfiguration = context.config();
+-            RandomSource randomSource = context.random();
+-            SculkSpreader sculkSpreader = SculkSpreader.createWorldGenSpreader();
+-            int i = sculkPatchConfiguration.spreadRounds() + sculkPatchConfiguration.growthRounds();
+-
+-            for(int j = 0; j < i; ++j) {
+-                for(int k = 0; k < sculkPatchConfiguration.chargeCount(); ++k) {
+-                    sculkSpreader.addCursors(blockPos, sculkPatchConfiguration.amountPerCharge());
+-                }
+-
+-                boolean bl = j < sculkPatchConfiguration.spreadRounds();
+-
+-                for(int l = 0; l < sculkPatchConfiguration.spreadAttempts(); ++l) {
+-                    sculkSpreader.updateCursors(worldGenLevel, blockPos, randomSource, bl);
+-                }
+-
+-                sculkSpreader.clear();
+-            }
+-
+-            BlockPos blockPos2 = blockPos.below();
+-            if (randomSource.nextFloat() <= sculkPatchConfiguration.catalystChance() && worldGenLevel.getBlockState(blockPos2).isCollisionShapeFullBlock(worldGenLevel, blockPos2)) {
+-                worldGenLevel.setBlock(blockPos, Blocks.SCULK_CATALYST.defaultBlockState(), 3);
+-            }
+-
+-            int m = sculkPatchConfiguration.extraRareGrowths().sample(randomSource);
+-
+-            for(int n = 0; n < m; ++n) {
+-                BlockPos blockPos3 = blockPos.offset(randomSource.nextInt(5) - 2, 0, randomSource.nextInt(5) - 2);
+-                if (worldGenLevel.getBlockState(blockPos3).isAir() && worldGenLevel.getBlockState(blockPos3.below()).isFaceSturdy(worldGenLevel, blockPos3.below(), Direction.UP)) {
+-                    worldGenLevel.setBlock(blockPos3, Blocks.SCULK_SHRIEKER.defaultBlockState().setValue(SculkShriekerBlock.CAN_SUMMON, Boolean.valueOf(true)), 3);
+-                }
+-            }
+-
+-            return true;
+-        }
+-    }
++    public boolean place(FeaturePlaceContext<SculkPatchConfiguration> context) { return false; }
+ 
+     private boolean canSpreadFrom(LevelAccessor world, BlockPos pos) {
+         BlockState blockState = world.getBlockState(pos);
