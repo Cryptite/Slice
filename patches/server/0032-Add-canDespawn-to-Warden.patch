@@ -13,7 +13,7 @@ index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..286e2ad0887379b5b16ca3ca89a8f0d6
              entity.load(nbt);
          }, () -> {
 -            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
-+            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.toString());
++            //EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.toString());
          });
      }
  
