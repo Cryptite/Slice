@@ -17,7 +17,7 @@ index e08b72010f22ce680e88f443782bdfe6a46285f9..3809b2125254424d4939794961a9f082
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 2b93a37ee1f711c14140eb96f29dfdd3290641ad..f301178c2d68400c73a50c298a6bb6fd0f40e8ad 100644
+index c610111cde3d1cecac661549511742231e1e47c3..069665c210f2c3f8aec8c13c1c0c2ab5c50d3e24 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -279,6 +279,7 @@ public class ServerPlayer extends Player {
@@ -28,7 +28,7 @@ index 2b93a37ee1f711c14140eb96f29dfdd3290641ad..f301178c2d68400c73a50c298a6bb6fd
  
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
      public io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.PlayerChunkLoaderData chunkLoader;
-@@ -2651,4 +2652,18 @@ public class ServerPlayer extends Player {
+@@ -2656,4 +2657,18 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
