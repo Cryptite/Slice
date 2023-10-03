@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 3 Oct 2023 09:18:59 -0500
+Subject: [PATCH] Change KeepAlive interval
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 42e61e55ef45935e1f690eefa56bc36842cdd974..049c1417968d89ba7b6208339e4a812bc72e007b 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -409,7 +409,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+                 this.disconnect(Component.translatable("disconnect.timeout", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
+             }
+         } else {
+-            if (elapsedTime >= 15000L) { // 15 seconds
++            if (elapsedTime >= 5000L) { // 15 seconds // Slice -> 5s
+                 this.keepAlivePending = true;
+                 this.keepAliveTime = currentTime;
+                 this.keepAliveChallenge = currentTime;

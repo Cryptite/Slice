@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 9a17193c9fe26c9c0390906b4c1f9d619ccba249..df2a4449bdc00eb936bf219807d401fc99663926 100644
+index 618ab9a2903f6d4139acd4aaa2e6db0a26e88ba9..ec94d787f227c373637e6bb5f38260d978fe14df 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -419,6 +419,7 @@ public class ServerPlayerGameMode {
@@ -37,7 +37,7 @@ index 879cc823d56625867eb73bb621db6a13f40ad81c..2b3b1c5ccdf58ee9b46d404cfa3790d0
              if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - capture block states for snow buckets
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 00c5dc8781bc9d893db8e180eb541108ae01c956..46cfd6deda1bb4c98987e79c27633c327d3b0227 100644
+index c7ee934d4f890bc86596d36079ffed5050133b47..1d17c6471449fe4f4fd2bae6bc8a9c500fb0c96f 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -184,6 +184,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -68,7 +68,7 @@ index 00c5dc8781bc9d893db8e180eb541108ae01c956..46cfd6deda1bb4c98987e79c27633c32
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -664,6 +685,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -748,6 +769,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index 00c5dc8781bc9d893db8e180eb541108ae01c956..46cfd6deda1bb4c98987e79c27633c32
              // CraftBukkit end
          }
      }
-@@ -685,6 +707,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -769,6 +791,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          if (iblockdata.isAir()) {
              return false;
          } else {

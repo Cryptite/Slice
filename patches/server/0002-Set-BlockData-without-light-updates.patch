@@ -27,10 +27,10 @@ index 877498729c66de9aa6a27c9148f7494d7895615c..63959d7f15c682c2935f872d50de03fd
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index f39ab10c5b0b8d86b579a5b683491204c51db70b..00c5dc8781bc9d893db8e180eb541108ae01c956 100644
+index 773bfdd3ed457a352b5329f280c0d10297d579ba..c7ee934d4f890bc86596d36079ffed5050133b47 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -514,12 +514,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -598,12 +598,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -46,7 +46,7 @@ index f39ab10c5b0b8d86b579a5b683491204c51db70b..00c5dc8781bc9d893db8e180eb541108
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start
-@@ -710,7 +710,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -794,7 +794,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  Block.dropResources(iblockdata, this, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  
@@ -90,7 +90,7 @@ index fdd9c61b7248e92dbcbec91cd6fe4c6310bba237..2f2197236d9ba64b62510df923378b02
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index e2a3510cb2208f9cd4fc92d022ff5055a4cced45..b0dc1e87e034f428bcce67e563db79a8d803fd04 100644
+index bf2cd1eb04c10b8422ddca8efd397290bf58ea4d..30dcafc3ebcb5ab230a5622a0108aa3d7e3c4ead 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 @@ -286,7 +286,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
@@ -103,7 +103,7 @@ index e2a3510cb2208f9cd4fc92d022ff5055a4cced45..b0dc1e87e034f428bcce67e563db79a8
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index 5401ab9f8f6ce12e1c5368dbc3acc78a250b3822..243b5823ea99eefd812134b5c80d4d3c9f008499 100644
+index f3ac362b7b65a5273ff5fdad1d8065c5f654a53a..2c60ae8b5adb60c49712327bda3c2666778fd729 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 @@ -187,15 +187,20 @@ public class CraftBlock implements Block {

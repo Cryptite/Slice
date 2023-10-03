@@ -5,14 +5,14 @@ Subject: [PATCH] Shared Data Storage
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 019d3bbd78fb0b06861979d223915fedb6c99442..89ec08d2550084c1456ce885c71d1e5d121df19d 100644
+index 3bc7230ca62ebe3426da293e436a962bb0134f85..a812bd61e0352023cfd44e62a9cf722616ba4358 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -316,6 +316,7 @@ public class GlobalConfiguration extends ConfigurationPart {
-         public boolean useAlternativeLuckFormula = false;
+@@ -318,6 +318,7 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
-+        public String sharedDataFolder = "";
+         public IntOr.Default compressionLevel = IntOr.Default.USE_DEFAULT;
++        public String sharedDataFolder = ""; // Slice
      }
  
      public BlockUpdates blockUpdates;
