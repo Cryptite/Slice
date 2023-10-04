@@ -4,12 +4,12 @@ Date: Tue, 3 Oct 2023 09:18:59 -0500
 Subject: [PATCH] Change KeepAlive interval
 
 
-diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 42e61e55ef45935e1f690eefa56bc36842cdd974..049c1417968d89ba7b6208339e4a812bc72e007b 100644
---- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-+++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -409,7 +409,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
-                 this.disconnect(Component.translatable("disconnect.timeout", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
+diff --git a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+index 231150bac0ae61e9722c2cdfd70d6f7d254681e4..75e9c680979d9e6e8605db800f2d5d35bf32f212 100644
+--- a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+@@ -210,7 +210,7 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+                 this.disconnect(ServerCommonPacketListenerImpl.TIMEOUT_DISCONNECTION_MESSAGE, org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
              }
          } else {
 -            if (elapsedTime >= 15000L) { // 15 seconds

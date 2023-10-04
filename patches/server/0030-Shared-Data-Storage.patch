@@ -5,10 +5,10 @@ Subject: [PATCH] Shared Data Storage
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index 3bc7230ca62ebe3426da293e436a962bb0134f85..a812bd61e0352023cfd44e62a9cf722616ba4358 100644
+index a6f58b3457b7477015c5c6d969e7d83017dd3fa1..7f2070bd2d7eb7f0256a96df00103d20c45e65a0 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -318,6 +318,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+@@ -331,6 +331,7 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
          public IntOr.Default compressionLevel = IntOr.Default.USE_DEFAULT;
@@ -17,7 +17,7 @@ index 3bc7230ca62ebe3426da293e436a962bb0134f85..a812bd61e0352023cfd44e62a9cf7226
  
      public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 915340fedc6c0b3d70ee065482dbe621b7c0b0a8..fc6fa65dae66d695b5fd732cc495d3649a28862c 100644
+index 6684f4f4b9aff1c2f3037feb7bcdee55a9d21f93..4ecd1f7d7c5889fb58553333d095716386448860 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -28,17 +28,17 @@ index 915340fedc6c0b3d70ee065482dbe621b7c0b0a8..fc6fa65dae66d695b5fd732cc495d364
  import com.google.common.collect.ImmutableList;
  import co.aikar.timings.Timings;
  import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-@@ -310,6 +311,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-     public volatile Thread shutdownThread; // Paper
-     public volatile boolean abnormalExit = false; // Paper
-     public boolean isIteratingOverLevels = false; // Paper
+@@ -308,6 +309,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+     // Paper start - lag compensation
+     public static final long SERVER_INIT = System.nanoTime();
+     // Paper end - lag compensation
 +    public @Nullable DimensionDataStorage sharedDataStorage; // Slice
  
      public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
          AtomicReference<S> atomicreference = new AtomicReference();
-@@ -410,6 +412,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -407,6 +409,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         this.paperConfigurations = services.paperConfigurations(); // Paper
      }
-     // CraftBukkit end
  
 +        // Slice start
 +    public DimensionDataStorage getMapDataStorage() {
@@ -47,9 +47,9 @@ index 915340fedc6c0b3d70ee065482dbe621b7c0b0a8..fc6fa65dae66d695b5fd732cc495d364
 +    // Slice end
 +
      private void readScoreboard(DimensionDataStorage persistentStateManager) {
-         ServerScoreboard scoreboardserver = this.getScoreboard();
- 
-@@ -885,6 +893,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         persistentStateManager.computeIfAbsent(this.getScoreboard().dataFactory(), "scoreboard");
+     }
+@@ -873,6 +881,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              this.isSaving = true;
              this.getPlayerList().saveAll(); // Diff on change
              flag3 = this.saveAllChunks(suppressLogs, flush, force);
@@ -57,7 +57,7 @@ index 915340fedc6c0b3d70ee065482dbe621b7c0b0a8..fc6fa65dae66d695b5fd732cc495d364
          } finally {
              this.isSaving = false;
          }
-@@ -1101,6 +1110,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1087,6 +1096,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  throw new IllegalStateException("Failed to initialize server");
              }
  
@@ -73,7 +73,7 @@ index 915340fedc6c0b3d70ee065482dbe621b7c0b0a8..fc6fa65dae66d695b5fd732cc495d364
              this.nextTickTime = Util.getMillis();
              this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
              this.status = this.buildServerStatus();
-@@ -1413,6 +1431,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1399,6 +1417,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                      level.saveIncrementally(fullSave);
                  }
              }
@@ -82,19 +82,19 @@ index 915340fedc6c0b3d70ee065482dbe621b7c0b0a8..fc6fa65dae66d695b5fd732cc495d364
              this.isSaving = false;
          }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index af0720fb8bd334aac5493121c6373d87421204b4..564591e9f18dd6bb0f76ae4f153adcc0a228d4fa 100644
+index 03e5981d62ff2e4bd81bccf0ab6d8373dfe661d2..7645eb4bfcee85331770c040477f47ea21a3ef95 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -2068,7 +2068,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2101,7 +2101,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
      @Override
      public MapItemSavedData getMapData(String id) {
-         // CraftBukkit start
--        return (MapItemSavedData) this.getServer().overworld().getDataStorage().get((nbttagcompound) -> {
-+        return (MapItemSavedData) this.getServer().getMapDataStorage().get((nbttagcompound) -> { // Slice
-             // We only get here when the data file exists, but is not a valid map
-             MapItemSavedData newMap = MapItemSavedData.load(nbttagcompound);
-             newMap.id = id;
-@@ -2082,12 +2082,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         // Paper start - Call missing map initialize event & set id
+-        final DimensionDataStorage storage = this.getServer().overworld().getDataStorage();
++        final DimensionDataStorage storage = this.getServer().getMapDataStorage();
+ 
+         final net.minecraft.world.level.saveddata.SavedData existing = storage.cache.get(id);
+         if (existing == null && !storage.cache.containsKey(id)) {
+@@ -2122,12 +2122,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
      @Override
      public void setMapData(String id, MapItemSavedData state) {
          state.id = id; // CraftBukkit
@@ -104,10 +104,10 @@ index af0720fb8bd334aac5493121c6373d87421204b4..564591e9f18dd6bb0f76ae4f153adcc0
  
      @Override
      public int getFreeMapId() {
--        return ((MapIndex) this.getServer().overworld().getDataStorage().computeIfAbsent(MapIndex::load, MapIndex::new, "idcounts")).getFreeAuxValueForMap();
+-        return ((MapIndex) this.getServer().overworld().getDataStorage().computeIfAbsent(MapIndex.factory(), "idcounts")).getFreeAuxValueForMap();
 +        // Slice start
 +        DimensionDataStorage storage = this.getServer().getMapDataStorage();
-+        MapIndex mapIndex = storage.readSavedData(MapIndex::load, "idcounts");
++        MapIndex mapIndex = storage.get(MapIndex.factory(), "idcounts");
 +        if (mapIndex == null) {
 +            mapIndex = new MapIndex();
 +        }
@@ -119,16 +119,3 @@ index af0720fb8bd334aac5493121c6373d87421204b4..564591e9f18dd6bb0f76ae4f153adcc0
      }
  
      // Paper start - helper function for configurable spawn radius
-diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-index defe31a5d3aa89a3d18b94f2ff005594e38754b3..637a86e74d633901fdd2f2f1ba6aa4ed49780ead 100644
---- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-+++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-@@ -58,7 +58,7 @@ public class DimensionDataStorage {
-     }
- 
-     @Nullable
--    private <T extends SavedData> T readSavedData(Function<CompoundTag, T> readFunction, String id) {
-+    public <T extends SavedData> T readSavedData(Function<CompoundTag, T> readFunction, String id) { // Slice private -> public
-         try {
-             File file = this.getDataFile(id);
-             if (file.exists()) {

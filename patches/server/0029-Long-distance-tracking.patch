@@ -5,30 +5,30 @@ Subject: [PATCH] Long distance tracking
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index e08b72010f22ce680e88f443782bdfe6a46285f9..3809b2125254424d4939794961a9f08254af54c8 100644
+index df414c88a73a5f4eb1c19924a600a21bb0fff7c8..48e25187e68b8b3099b514a224a552f130bd77e3 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1551,6 +1551,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
-                 // Paper end - remove allocation of Vec3D here
+@@ -1288,6 +1288,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
                  Vec3 vec3d = player.position().subtract(this.entity.position());
-                 double d0 = (double) Math.min(this.getEffectiveRange(), io.papermc.paper.chunk.system.ChunkSystem.getSendViewDistance(player) * 16); // Paper - per player view distance
+                 int i = ChunkMap.this.getPlayerViewDistance(player);
+                 double d0 = (double) Math.min(this.getEffectiveRange(), i * 16);
 +                if (this.entity instanceof ServerPlayer serverPlayer && player.canSeeFromLongDistance(serverPlayer)) d0 = Math.min(level.spigotConfig.flyingPlayerTrackingRange, d0); // Slice
-                 double d1 = vec3d_dx * vec3d_dx + vec3d_dz * vec3d_dz; // Paper
+                 double d1 = vec3d.x * vec3d.x + vec3d.z * vec3d.z;
                  double d2 = d0 * d0;
-                 boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player);
+                 boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player) && ChunkMap.this.isChunkTracked(player, this.entity.chunkPosition().x, this.entity.chunkPosition().z);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index c610111cde3d1cecac661549511742231e1e47c3..069665c210f2c3f8aec8c13c1c0c2ab5c50d3e24 100644
+index 4286c29a9b2a703f951159b1a407c3cd5bc4c5cc..8dce1a7868e2bd14b570823fbdcd9f71557c8b82 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -279,6 +279,7 @@ public class ServerPlayer extends Player {
+@@ -274,6 +274,7 @@ public class ServerPlayer extends Player {
      public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
      public boolean smoothWorldTeleport; // Slice
 +    public boolean hasLongDistanceTracking; // Slice
  
+     // Paper start - replace player chunk loader
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
-     public io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.PlayerChunkLoaderData chunkLoader;
-@@ -2656,4 +2657,18 @@ public class ServerPlayer extends Player {
+@@ -2648,4 +2649,18 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -68,7 +68,7 @@ index 5b5109e942b18418b3a3a0e2109fe4ef15045fe5..507519c75fabe8991cddbc1aa7813cec
          this.monsterTrackingRange = this.getInt( "entity-tracking-range.monsters", this.monsterTrackingRange );
          this.miscTrackingRange = this.getInt( "entity-tracking-range.misc", this.miscTrackingRange );
 diff --git a/src/main/java/org/spigotmc/TrackingRange.java b/src/main/java/org/spigotmc/TrackingRange.java
-index 8fca15099952626ee537f5ce3eefdfaa6518dc1b..1ddf149ce3d962905bec8c4562e4d86fbbe6e570 100644
+index 172d231adecf043f9f06b7f5e0365ae82327998d..e8a6c5f3f6208bc539e913eab47a14e2258817d7 100644
 --- a/src/main/java/org/spigotmc/TrackingRange.java
 +++ b/src/main/java/org/spigotmc/TrackingRange.java
 @@ -26,9 +26,9 @@ public class TrackingRange

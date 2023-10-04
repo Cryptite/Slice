@@ -4,15 +4,15 @@ Date: Tue, 22 Aug 2023 06:22:16 -0500
 Subject: [PATCH] Add reason to PlayerConnectionCloseEvent
 
 
-diff --git a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-index 2ff578e4a953ffcf5176815ba8e3f06f73499989..f9a1b0e3be862cc00370c130621a07be5deebf0c 100644
---- a/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-+++ b/src/main/java/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -193,6 +193,7 @@ public class ServerLoginPacketListenerImpl implements ServerLoginPacketListener,
- 
-                 this.connection.send(new ClientboundDisconnectPacket(ichatmutablecomponent));
-                 this.connection.disconnect(ichatmutablecomponent);
-+                new com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent(this.gameProfile.getId(), this.gameProfile.getName(), ((java.net.InetSocketAddress)this.connection.address).getAddress(), com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent.ConnectionCloseReason.INVALID_PLAYER_DATA, false).callEvent(); // Slice
-             }
+diff --git a/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
+index 8dbcc1b3a70b6bbea3bd2d15b6d66cc4f9cd53f8..9ae791c7a71c8ebfe9018c42d109c0f4a51a9dda 100644
+--- a/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
+@@ -138,6 +138,7 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis
+             // Paper end
+             this.connection.send(new ClientboundDisconnectPacket(ServerConfigurationPacketListenerImpl.DISCONNECT_REASON_INVALID_DATA));
+             this.connection.disconnect(ServerConfigurationPacketListenerImpl.DISCONNECT_REASON_INVALID_DATA);
++            new com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent(this.gameProfile.getId(), this.gameProfile.getName(), ((java.net.InetSocketAddress)this.connection.address).getAddress(), com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent.ConnectionCloseReason.INVALID_PLAYER_DATA, false).callEvent(); // Slice
          }
  
+     }

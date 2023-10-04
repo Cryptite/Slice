@@ -5,41 +5,39 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 161c40692e8d469fad4169908b9353be0f85d0d8..2b93a37ee1f711c14140eb96f29dfdd3290641ad 100644
+index d4aec99cac3f83d764e21946cc904c00e084704e..4286c29a9b2a703f951159b1a407c3cd5bc4c5cc 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -278,6 +278,7 @@ public class ServerPlayer extends Player {
+@@ -273,6 +273,7 @@ public class ServerPlayer extends Player {
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> cachedSingleHashSet; // Paper
      public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
 +    public boolean smoothWorldTeleport; // Slice
  
+     // Paper start - replace player chunk loader
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
-     public io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.PlayerChunkLoaderData chunkLoader;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 20a0b9835c47ca153a6f77dacf4b775de32e4ef2..97c6f1c622af02b3761b23a4d3a67b385e45ea84 100644
+index 1c2abe2fd63e535f8a8f73dfe4033dfdc7fabc1d..c09a652fdb2fd40935e03fb779652c57156cffee 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -935,12 +935,12 @@ public abstract class PlayerList {
-         int i = flag ? 1 : 0;
-         // CraftBukkit start
-         LevelData worlddata = worldserver1.getLevelData();
--        entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), (byte) i, entityplayer1.getLastDeathLocation(), entityplayer1.getPortalCooldown()));
-+        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(worldserver1.dimensionTypeId(), worldserver1.dimension(), BiomeManager.obfuscateSeed(worldserver1.getSeed()), entityplayer1.gameMode.getGameModeForPlayer(), entityplayer1.gameMode.getPreviousGameModeForPlayer(), worldserver1.isDebug(), worldserver1.isFlat(), (byte) i, entityplayer1.getLastDeathLocation(), entityplayer1.getPortalCooldown()));
+@@ -934,10 +934,10 @@ public abstract class PlayerList {
+         ServerLevel worldserver2 = entityplayer1.serverLevel();
+         LevelData worlddata = worldserver2.getLevelData();
+ 
+-        entityplayer1.connection.send(new ClientboundRespawnPacket(entityplayer1.createCommonSpawnInfo(worldserver2), (byte) i));
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.send(new ClientboundRespawnPacket(entityplayer1.createCommonSpawnInfo(worldserver2), (byte) i));
          entityplayer1.connection.send(new ClientboundSetChunkCacheRadiusPacket(worldserver1.getWorld().getSendViewDistance())); // Spigot // Paper - replace old player chunk management
          entityplayer1.connection.send(new ClientboundSetSimulationDistancePacket(worldserver1.getWorld().getSimulationDistance())); // Spigot // Paper - replace old player chunk management
-         entityplayer1.spawnIn(worldserver1);
-         entityplayer1.unsetRemoved();
--        entityplayer1.connection.teleport(CraftLocation.toBukkit(entityplayer1.position(), worldserver1.getWorld(), entityplayer1.getYRot(), entityplayer1.getXRot()));
-+        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.teleport(CraftLocation.toBukkit(entityplayer1.position(), worldserver1.getWorld(), entityplayer1.getYRot(), entityplayer1.getXRot()));
-         entityplayer1.setShiftKeyDown(false);
- 
-         // entityplayer1.connection.teleport(entityplayer1.getX(), entityplayer1.getY(), entityplayer1.getZ(), entityplayer1.getYRot(), entityplayer1.getXRot());
+-        entityplayer1.connection.teleport(CraftLocation.toBukkit(entityplayer1.position(), worldserver2.getWorld(), entityplayer1.getYRot(), entityplayer1.getXRot())); // CraftBukkit
++        if (!entityplayer.smoothWorldTeleport) entityplayer1.connection.teleport(CraftLocation.toBukkit(entityplayer1.position(), worldserver2.getWorld(), entityplayer1.getYRot(), entityplayer1.getXRot())); // CraftBukkit
+         entityplayer1.connection.send(new ClientboundSetDefaultSpawnPositionPacket(worldserver1.getSharedSpawnPos(), worldserver1.getSharedSpawnAngle()));
+         entityplayer1.connection.send(new ClientboundChangeDifficultyPacket(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
+         entityplayer1.connection.send(new ClientboundSetExperiencePacket(entityplayer1.experienceProgress, entityplayer1.totalExperience, entityplayer1.experienceLevel));
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 4e6fea7cf11b1e29ae7c7098a6f5d06bb5f93cc2..767a33cdce4b438164bf4101ff39cd7b1e8f929e 100644
+index e188bb3ba5d2ec28421947c0b66b25eecb569bfe..7e5b0c9b1518ff871b400b88f14de61180645ef1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1254,6 +1254,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1256,6 +1256,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          // Paper end
      }
  

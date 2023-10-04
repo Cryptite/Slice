@@ -5,10 +5,10 @@ Subject: [PATCH] Disable Azalea generation
 
 
 diff --git a/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java b/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java
-index 8f5178e934b5f9bc48beacd082e479fd9fb80fa6..d580238d733ba2dbbbbaa2659d1a7834c8cf7dac 100644
+index b9b7d2e668d9f7f36ac3cf1e1716460c4ad5ed3a..9fdd765b65777a1a82b54326bc7ad152416c617e 100644
 --- a/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java
 +++ b/src/main/java/net/minecraft/data/worldgen/BiomeDefaultFeatures.java
-@@ -161,7 +161,7 @@ public class BiomeDefaultFeatures {
+@@ -162,7 +162,7 @@ public class BiomeDefaultFeatures {
          builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.CAVE_VINES);
          builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.LUSH_CAVES_CLAY);
          builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, CavePlacements.LUSH_CAVES_VEGETATION);

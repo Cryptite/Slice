@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 618ab9a2903f6d4139acd4aaa2e6db0a26e88ba9..ec94d787f227c373637e6bb5f38260d978fe14df 100644
+index b2c2bd5ec0afd479973f7237a5c610f21231c505..1d32eb837517f2b949613498b1a68c8b1edf0b9a 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -419,6 +419,7 @@ public class ServerPlayerGameMode {
@@ -25,10 +25,10 @@ index 618ab9a2903f6d4139acd4aaa2e6db0a26e88ba9..ec94d787f227c373637e6bb5f38260d9
                      org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - use stored ref
                  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index 879cc823d56625867eb73bb621db6a13f40ad81c..2b3b1c5ccdf58ee9b46d404cfa3790d0fdc2df3d 100644
+index 4697df75fdee2023c41260bed211e3e3d90d2b9b..e30aaa502f5e98b5658a0dd78853e865cbf91f96 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -352,6 +352,7 @@ public final class ItemStack {
+@@ -357,6 +357,7 @@ public final class ItemStack {
              CompoundTag oldData = this.getTagClone();
              int oldCount = this.getCount();
              ServerLevel world = (ServerLevel) context.getLevel();
@@ -37,7 +37,7 @@ index 879cc823d56625867eb73bb621db6a13f40ad81c..2b3b1c5ccdf58ee9b46d404cfa3790d0
              if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - capture block states for snow buckets
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index c7ee934d4f890bc86596d36079ffed5050133b47..1d17c6471449fe4f4fd2bae6bc8a9c500fb0c96f 100644
+index d4af10645b74514a79cb41f428534cfe6d1e9058..bc8947b2f85a53e90ee84c3746be7183aa0503ee 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -184,6 +184,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -68,7 +68,7 @@ index c7ee934d4f890bc86596d36079ffed5050133b47..1d17c6471449fe4f4fd2bae6bc8a9c50
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -748,6 +769,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1053,6 +1074,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index c7ee934d4f890bc86596d36079ffed5050133b47..1d17c6471449fe4f4fd2bae6bc8a9c50
              // CraftBukkit end
          }
      }
-@@ -769,6 +791,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1074,6 +1096,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          if (iblockdata.isAir()) {
              return false;
          } else {
@@ -115,10 +115,10 @@ index 030b38d5d5d2578d6ef482a239ef58787efa3b08..329053cf5c342747985f9079e87edc6f
                  BlockState iblockdata2 = iblockdata1.getFluidState().is((Fluid) Fluids.WATER) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index de4c1e4701236e7d5ec77339c51ad6a9d8288bb6..4beb56de55d5584ce7f6e04ae30f7c3cffc1440e 100644
+index e6a4a5898ffdcb2aa2bc01371a6d7dbc06d610ce..204f0cd86a318efb3545a24c0e25a2f9cb7b9f58 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -1127,11 +1127,22 @@ public abstract class BlockBehaviour implements FeatureElement {
+@@ -1175,11 +1175,22 @@ public abstract class BlockBehaviour implements FeatureElement {
              BlockPos.MutableBlockPos blockposition_mutableblockposition = new BlockPos.MutableBlockPos();
              Direction[] aenumdirection = BlockBehaviour.UPDATE_SHAPE_ORDER;
              int k = aenumdirection.length;

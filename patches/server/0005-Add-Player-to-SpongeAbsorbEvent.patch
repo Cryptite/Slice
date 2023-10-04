@@ -5,10 +5,10 @@ Subject: [PATCH] Add Player to SpongeAbsorbEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/SpongeBlock.java b/src/main/java/net/minecraft/world/level/block/SpongeBlock.java
-index 4bce895268542531598a01a1bccd8ac1ed703b7d..8b552fc58a2909bced07eb743dd5d76c0357f9ab 100644
+index d810f6bf9a8a354e5b8994e51ec3672428277dde..b5eb4718a96ab9abf700a156a23ec3e19757c9aa 100644
 --- a/src/main/java/net/minecraft/world/level/block/SpongeBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/SpongeBlock.java
-@@ -104,7 +104,8 @@ public class SpongeBlock extends Block {
+@@ -107,7 +107,8 @@ public class SpongeBlock extends Block {
          if (!blocks.isEmpty()) {
              final org.bukkit.block.Block bblock = world.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
  

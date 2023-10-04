@@ -25,10 +25,10 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index a514a1f26e439b5959093488ec9905fec327a404..0ac580f3cf8f95025992420702d67ad56db2ba05 100644
+index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..248a4af1b9c6684502570c879efae20a36558414 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -328,27 +328,8 @@ public class ServerEntity {
+@@ -325,27 +325,8 @@ public class ServerEntity {
              sender.accept(new ClientboundSetEntityMotionPacket(this.entity.getId(), this.ap));
          }
  
@@ -52,14 +52,14 @@ index a514a1f26e439b5959093488ec9905fec327a404..0ac580f3cf8f95025992420702d67ad5
 -            if (!list.isEmpty()) {
 -                sender.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
 -            }
--            ((LivingEntity) this.entity).detectEquipmentUpdates(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
+-            ((LivingEntity) this.entity).detectEquipmentUpdatesPublic(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
 +        if (this.entity instanceof LivingEntity livingEntity) {
 +            livingEntity.sendEquipment(sender, player); // Slice
          }
  
-         // CraftBukkit start - MC-109346: Fix for nonsensical head yaw
+         if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 836c007db96b115a0f7a869649e9ed4738920093..b6c320554693d1b55a385c45784feb45d7cac757 100644
+index cad14a4e7e39982c0df779a67c2e735c0186678f..39a69334c9bea26228a428b3db7e7a2bd021e44b 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -263,6 +263,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -71,7 +71,7 @@ index 836c007db96b115a0f7a869649e9ed4738920093..b6c320554693d1b55a385c45784feb45
  
      @Override
      public float getBukkitYaw() {
-@@ -3071,6 +3073,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3108,6 +3110,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -79,7 +79,7 @@ index 836c007db96b115a0f7a869649e9ed4738920093..b6c320554693d1b55a385c45784feb45
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3163,7 +3166,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3200,7 +3203,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -106,7 +106,7 @@ index 836c007db96b115a0f7a869649e9ed4738920093..b6c320554693d1b55a385c45784feb45
      }
  
      // Paper start - hide unnecessary item meta
-@@ -4450,4 +4471,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4527,4 +4548,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -176,13 +176,13 @@ index 836c007db96b115a0f7a869649e9ed4738920093..b6c320554693d1b55a385c45784feb45
 +                consumer.accept(equipmentPacket);
 +            }
 +
-+            detectEquipmentUpdates(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
++            detectEquipmentUpdatesPublic(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
 +        }
 +    }
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index b25f5931f836fd4d8695120f0bcb7c52deff8583..68507518df679a354534a82f32a011727ae7cea0 100644
+index fe2124694eb080cab685a1ce1f6a66e2fcdf6a17..fa70fae582a9415322d967996458902f5aea3e01 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 @@ -1099,4 +1099,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {

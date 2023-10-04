@@ -5,10 +5,10 @@ Subject: [PATCH] Do not freeze MappedRegistry
 
 
 diff --git a/src/main/java/net/minecraft/core/MappedRegistry.java b/src/main/java/net/minecraft/core/MappedRegistry.java
-index 1e33434f9f361542e03da3e4812bc6d76768a202..828d9472bf90fe098825c15bc55949497a40ae39 100644
+index 26b92e27de1f079ab8440538c65377ed80e8b6ef..2a52ba73849b3f1f86ab4a5c41fcaf65ad452e41 100644
 --- a/src/main/java/net/minecraft/core/MappedRegistry.java
 +++ b/src/main/java/net/minecraft/core/MappedRegistry.java
-@@ -338,7 +338,7 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
+@@ -337,7 +337,7 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
          if (this.frozen) {
              return this;
          } else {
@@ -17,7 +17,7 @@ index 1e33434f9f361542e03da3e4812bc6d76768a202..828d9472bf90fe098825c15bc5594949
              this.byValue.forEach((value, entry) -> {
                  entry.bindValue(value);
              });
-@@ -365,14 +365,16 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
+@@ -364,14 +364,16 @@ public class MappedRegistry<T> implements WritableRegistry<T> {
  
      @Override
      public Holder.Reference<T> createIntrusiveHolder(T value) {

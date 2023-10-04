@@ -5,7 +5,7 @@ Subject: [PATCH] Save DimensionDataStorage async
 
 
 diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-index 637a86e74d633901fdd2f2f1ba6aa4ed49780ead..8cf3880d9168b5ba6b383ec921bfb490ea51ac38 100644
+index f921f55e815a4da01828e025881a7a03591c3978..f44dbf56062148ff442141bc0058accc275617b2 100644
 --- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
 @@ -9,6 +9,8 @@ import java.io.FileInputStream;
@@ -15,9 +15,9 @@ index 637a86e74d633901fdd2f2f1ba6aa4ed49780ead..8cf3880d9168b5ba6b383ec921bfb490
 +import java.util.concurrent.CompletableFuture;
 +import java.util.concurrent.ConcurrentHashMap;
  import java.util.function.Function;
- import java.util.function.Supplier;
  import javax.annotation.Nullable;
-@@ -18,11 +20,12 @@ import net.minecraft.nbt.NbtIo;
+ import net.minecraft.SharedConstants;
+@@ -17,11 +19,12 @@ import net.minecraft.nbt.NbtIo;
  import net.minecraft.nbt.NbtUtils;
  import net.minecraft.util.datafix.DataFixTypes;
  import net.minecraft.world.level.saveddata.SavedData;
@@ -31,16 +31,16 @@ index 637a86e74d633901fdd2f2f1ba6aa4ed49780ead..8cf3880d9168b5ba6b383ec921bfb490
      private final DataFixer fixerUpper;
      private final File dataFolder;
  
-@@ -51,7 +54,7 @@ public class DimensionDataStorage {
+@@ -50,7 +53,7 @@ public class DimensionDataStorage {
          SavedData savedData = this.cache.get(id);
          if (savedData == null && !this.cache.containsKey(id)) {
-             savedData = this.readSavedData(readFunction, id);
+             savedData = this.readSavedData(type.deserializer(), type.type(), id);
 -            this.cache.put(id, savedData);
 +            if (savedData != null) this.cache.put(id, savedData);
          }
  
          return (T)savedData;
-@@ -119,11 +122,12 @@ public class DimensionDataStorage {
+@@ -118,11 +121,12 @@ public class DimensionDataStorage {
      }
  
      public void save() {

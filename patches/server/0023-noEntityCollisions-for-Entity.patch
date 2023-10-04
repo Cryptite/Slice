@@ -5,23 +5,22 @@ Subject: [PATCH] noEntityCollisions for Entity
 
 
 diff --git a/src/main/java/io/papermc/paper/util/CollisionUtil.java b/src/main/java/io/papermc/paper/util/CollisionUtil.java
-index a87f6380b2c387fb0cdd40d5087b5c93492e3c88..cd35c2136a638c07fed683a2f92e70aa57bcfa8e 100644
+index bfb1de19f53d5d7c7b65e25a606fabfa416706b3..63262cc017b15b076f27143309b3e38c48289261 100644
 --- a/src/main/java/io/papermc/paper/util/CollisionUtil.java
 +++ b/src/main/java/io/papermc/paper/util/CollisionUtil.java
-@@ -809,7 +809,7 @@ public final class CollisionUtil {
+@@ -1777,6 +1777,7 @@ public final class CollisionUtil {
  
      public static boolean getEntityHardCollisions(final CollisionGetter getter, final Entity entity, AABB aabb,
-                                                   final List<AABB> into, final boolean checkOnly, final Predicate<Entity> predicate) {
--        if (isEmpty(aabb) || !(getter instanceof EntityGetter entityGetter)) {
-+        if ((entity != null && entity.noEntityCollisions) || isEmpty(aabb) || !(getter instanceof EntityGetter entityGetter)) { // Slice
+                                                   final List<AABB> into, final int collisionFlags, final Predicate<Entity> predicate) {
++        if (entity != null && entity.noEntityCollisions) return false; // Slice
+         final boolean checkOnly = (collisionFlags & COLLISION_FLAG_CHECK_ONLY) != 0;
+         if (!(getter instanceof EntityGetter entityGetter)) {
              return false;
-         }
- 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index a0f8740c93fe86d4c49b9e43f1044ef03d8e3de7..6d6baa82bb7a67c3f6de4bdb0987e4d1f68b6ec8 100644
+index 7960a2467cae9420f0da0eaad8dd428456362efe..383c40f6f7ea7cbf6f88347ccb559f4c458fcc40 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -453,6 +453,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -452,6 +452,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
       * Overriding this field will cause memory leaks.
       */
      private final boolean hardCollides;

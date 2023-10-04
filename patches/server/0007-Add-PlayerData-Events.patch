@@ -5,7 +5,7 @@ Subject: [PATCH] Add PlayerData Events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index df2a4449bdc00eb936bf219807d401fc99663926..939d29db3c535c45866fe67cabbe9304601230b0 100644
+index 1d32eb837517f2b949613498b1a68c8b1edf0b9a..a31ea11234da240e56bbfd14725dd76295c8f338 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -602,6 +602,8 @@ public class ServerPlayerGameMode {
@@ -18,10 +18,10 @@ index df2a4449bdc00eb936bf219807d401fc99663926..939d29db3c535c45866fe67cabbe9304
                      CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, blockposition, itemstack1);
                  }
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index 9501e5f25f5c4d3069e554d4dc82b0e094156682..8afd9b785fb8734255e3ea926b8375bb9cae60be 100644
+index 9bb8d4d7be6a937980aa653db82be084d066a563..9838435fbc31cfbba487d1e62ec5d2e70776517c 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-@@ -198,7 +198,12 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -199,7 +199,12 @@ public class ServerStatsCounter extends StatsCounter {
          return nbttagcompound;
      }
  
@@ -35,7 +35,7 @@ index 9501e5f25f5c4d3069e554d4dc82b0e094156682..8afd9b785fb8734255e3ea926b8375bb
          Map<StatType<?>, JsonObject> map = Maps.newHashMap();
          ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
  
-@@ -224,7 +229,7 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -225,7 +230,7 @@ public class ServerStatsCounter extends StatsCounter {
  
          jsonobject1.add("stats", jsonobject);
          jsonobject1.addProperty("DataVersion", SharedConstants.getCurrentVersion().getDataVersion().getVersion());

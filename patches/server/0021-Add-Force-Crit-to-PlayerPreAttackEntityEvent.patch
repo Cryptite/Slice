@@ -5,10 +5,10 @@ Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 58152160d609d0e9d105153aeb166a56a7955603..5d52d8821edc8dd2cac3391081a223811297faf8 100644
+index d58b4c0dbe651b5068212e5f14dce3164ee520f5..32d6615ea73c1c149049d16dfd1b395621ad634b 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -1277,10 +1277,11 @@ public abstract class Player extends LivingEntity {
+@@ -1283,10 +1283,11 @@ public abstract class Player extends LivingEntity {
                          flag1 = true;
                      }
  
@@ -23,7 +23,7 @@ index 58152160d609d0e9d105153aeb166a56a7955603..5d52d8821edc8dd2cac3391081a22381
                      if (flag2) {
                          f *= 1.5F;
                      }
-@@ -2411,27 +2412,6 @@ public abstract class Player extends LivingEntity {
+@@ -2413,27 +2414,6 @@ public abstract class Player extends LivingEntity {
          this.lastDeathLocation = lastDeathPos;
      }
  

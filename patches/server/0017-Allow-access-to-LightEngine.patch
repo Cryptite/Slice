@@ -5,11 +5,11 @@ Subject: [PATCH] Allow access to LightEngine
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 65d947df910d60f478e7a449eb161e5105e2c0c9..e08b72010f22ce680e88f443782bdfe6a46285f9 100644
+index 0c2617574e21037d94ac56ad08b490f9bca5c5af..df414c88a73a5f4eb1c19924a600a21bb0fff7c8 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -524,7 +524,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
-         return !ChunkMap.isChunkInRange(x1, z1, x2, z2, distance) ? false : !ChunkMap.isChunkInRange(x1 + 1, z1 + 1, x2, z2, distance) || !ChunkMap.isChunkInRange(x1 - 1, z1 + 1, x2, z2, distance) || !ChunkMap.isChunkInRange(x1 + 1, z1 - 1, x2, z2, distance) || !ChunkMap.isChunkInRange(x1 - 1, z1 - 1, x2, z2, distance);
+@@ -356,7 +356,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+         // Paper end - rewrite player chunk loader
      }
  
 -    protected ThreadedLevelLightEngine getLightEngine() {

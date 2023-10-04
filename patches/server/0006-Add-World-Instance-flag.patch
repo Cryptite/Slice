@@ -5,7 +5,7 @@ Subject: [PATCH] Add World Instance flag
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 18aac3da3c88f33b1a71a5920a8daa27e9723913..af0720fb8bd334aac5493121c6373d87421204b4 100644
+index 51d282b524b5249438f7744f7f0b1cc27b76470e..03e5981d62ff2e4bd81bccf0ab6d8373dfe661d2 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -222,6 +222,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -17,10 +17,10 @@ index 18aac3da3c88f33b1a71a5920a8daa27e9723913..af0720fb8bd334aac5493121c6373d87
      public static Throwable getAddToWorldStackTrace(Entity entity) {
          final Throwable thr = new Throwable(entity + " Added to world at " + new java.util.Date());
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 1a481fb4f4228f0fea8a7dc6132248c98b727c90..836bdbf4a4742f0cce0f9612d694db03305c7a00 100644
+index 0e670de77a7f9926e295e1dd63d909bed1a959ca..92c0b18e5020f5193e060fbc4a0ceb4b72d55dcf 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -1268,6 +1268,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1267,6 +1267,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          world.noSave = !value;
      }
  

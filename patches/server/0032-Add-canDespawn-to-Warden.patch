@@ -5,10 +5,10 @@ Subject: [PATCH] Add canDespawn to Warden
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..286e2ad0887379b5b16ca3ca89a8f0d62be258e7 100644
+index 73871f456a85bda1e51f54986d0e61fb629822e8..fb0079c527d91e6f6f0ad7ab926418e2fc90c984 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -588,7 +588,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -589,7 +589,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          }), (entity) -> {
              entity.load(nbt);
          }, () -> {
@@ -18,10 +18,10 @@ index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..286e2ad0887379b5b16ca3ca89a8f0d6
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
-index 97b763431bc5015448ee7a26a340635a932c950b..e8b748eb16d7409a69dbd364a59dcf217ce701ec 100644
+index b2bc3a832c310448046ccde37a04918aa6d63197..a4cef5d81b0eeef933440bc7f96a9a8ef3a5afdf 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
-@@ -110,6 +110,7 @@ public class Warden extends Monster implements VibrationSystem {
+@@ -111,6 +111,7 @@ public class Warden extends Monster implements VibrationSystem {
      private final VibrationSystem.User vibrationUser = new Warden.VibrationUser();
      private VibrationSystem.Data vibrationData = new VibrationSystem.Data();
      AngerManagement angerManagement = new AngerManagement(this::canTargetEntity, Collections.emptyList());

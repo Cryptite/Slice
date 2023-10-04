@@ -5,10 +5,10 @@ Subject: [PATCH] PlayerLoadStatsEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 97c6f1c622af02b3761b23a4d3a67b385e45ea84..7f059a71d25170e8e3215c7d91ab7927394cfeb5 100644
+index c09a652fdb2fd40935e03fb779652c57156cffee..c55a9a228fbb64680354b9ca308f973866bb53d5 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1474,7 +1474,7 @@ public abstract class PlayerList {
+@@ -1468,7 +1468,7 @@ public abstract class PlayerList {
                  }
              }
  
@@ -18,10 +18,10 @@ index 97c6f1c622af02b3761b23a4d3a67b385e45ea84..7f059a71d25170e8e3215c7d91ab7927
          }
  
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index 8afd9b785fb8734255e3ea926b8375bb9cae60be..9bd42eac43f068df8f7f49249bb47840d87d799a 100644
+index 9838435fbc31cfbba487d1e62ec5d2e70776517c..ef601d98e97a7e541cc855822ff46f9dd887435e 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-@@ -45,7 +45,7 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -45,10 +45,16 @@ public class ServerStatsCounter extends StatsCounter {
      private final File file;
      private final Set<Stat<?>> dirty = Sets.newHashSet();
  
@@ -29,11 +29,6 @@ index 8afd9b785fb8734255e3ea926b8375bb9cae60be..9bd42eac43f068df8f7f49249bb47840
 +    public ServerStatsCounter(MinecraftServer server, File file, java.util.UUID uuid) { // Slice
          this.server = server;
          this.file = file;
-         // Spigot start
-@@ -55,7 +55,13 @@ public class ServerStatsCounter extends StatsCounter {
-             this.stats.put( wrapper, entry.getValue().intValue() );
-         }
-         // Spigot end
 -        if (file.isFile()) {
 +        // Slice start - If event supplies stats, use it. Otherwise just load from disk as usual
 +        com.destroystokyo.paper.event.player.PlayerLoadStatsEvent event = new com.destroystokyo.paper.event.player.PlayerLoadStatsEvent(uuid);
@@ -45,7 +40,7 @@ index 8afd9b785fb8734255e3ea926b8375bb9cae60be..9bd42eac43f068df8f7f49249bb47840
              try {
                  this.parseLocal(server.getFixerUpper(), FileUtils.readFileToString(file));
              } catch (IOException ioexception) {
-@@ -103,46 +109,8 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -104,46 +110,8 @@ public class ServerStatsCounter extends StatsCounter {
  
                      if (!jsonelement.isJsonNull()) {
                          CompoundTag nbttagcompound = ServerStatsCounter.fromJson(jsonelement.getAsJsonObject());
@@ -94,7 +89,7 @@ index 8afd9b785fb8734255e3ea926b8375bb9cae60be..9bd42eac43f068df8f7f49249bb47840
                      }
  
                      ServerStatsCounter.LOGGER.error("Unable to parse Stat data from {}", this.file);
-@@ -167,6 +135,48 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -168,6 +136,48 @@ public class ServerStatsCounter extends StatsCounter {
  
      }
  
