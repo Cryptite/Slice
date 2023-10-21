@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 21 Oct 2023 11:27:52 -0500
+Subject: [PATCH] Non-saveable entities
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 119f839051d691ff09805d22b95186cdb38403af..1005d605f77a229665a73763522874161c5e3865 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -417,6 +417,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+     public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
+     public boolean collidingWithWorldBorder; // Paper
+     public boolean fixedPose = false; // Paper
++    public boolean saveable = true; // Slice
+ 
+     public void setOrigin(@javax.annotation.Nonnull Location location) {
+         this.origin = location.toVector();
+diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java b/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java
+index 060e064625969610539dbf969ce773b877a7c579..4bb962f90c80a2fa912e56193ba51b3d320b41d9 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java
++++ b/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java
+@@ -112,6 +112,8 @@ public class EntityStorage implements EntityPersistentStorage<Entity> {
+         ListTag listTag = new ListTag();
+         final java.util.Map<net.minecraft.world.entity.EntityType<?>, Integer> savedEntityCounts = new java.util.HashMap<>(); // Paper
+         entities.forEach((entity) -> { // diff here: use entities parameter
++            if (!entity.saveable) return; // Slice
++
+             // Paper start
+             final EntityType<?> entityType = entity.getType();
+             final int saveLimit = level.paperConfig().chunks.entityPerChunkSaveLimit.getOrDefault(entityType, -1);
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index 315d8260e196709ed9084272aa640f11e327c0a8..f31def9330245dbb54c246f8a013a3524af5b8e4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -1523,4 +1523,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         return this.getHandle().getScoreboardName();
+     }
+     // Paper end - entity scoreboard name
++
++    // Slice start
++    @Override
++    public boolean isSaveable() {
++        return this.entity.saveable;
++    }
++
++    @Override
++    public void setSaveable(boolean saveable) {
++        this.entity.saveable = saveable;
++    }
++    // Slice end
+ }
