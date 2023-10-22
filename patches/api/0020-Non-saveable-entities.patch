@@ -5,10 +5,10 @@ Subject: [PATCH] Non-saveable entities
 
 
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index d340ddcf6924cc834455de3acbbac91ab9c66e39..fdbbc12276d302f99cea81629b628b853d088ecf 100644
+index 762cb07861ca8ff058ce8d57ea6c15df1e588bf3..234ad94cf73caaac64d0917cf0d761c1d4c5d6b5 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
-@@ -1065,4 +1065,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+@@ -1049,4 +1049,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
       */
      @NotNull String getScoreboardEntryName();
      // Paper end - entity scoreboard name

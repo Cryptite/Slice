@@ -4,11 +4,24 @@ Date: Sat, 21 Oct 2023 11:27:52 -0500
 Subject: [PATCH] Non-saveable entities
 
 
+diff --git a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
+index 7e8dc9e8f381abfdcce2746edc93122d623622d1..303e5ed4d5cf2a64b998656bfd189f19f8c8fcde 100644
+--- a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
++++ b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
+@@ -118,7 +118,7 @@ public final class ChunkEntitySlices {
+                 // removed by us below
+                 continue;
+             }
+-            if (entity.shouldBeSaved()) {
++            if (entity.shouldBeSaved() || !entity.saveable) { // Slice
+                 entity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK);
+                 if (entity.isVehicle()) {
+                     // we cannot assume that these entities are contained within this chunk, because entities can
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 119f839051d691ff09805d22b95186cdb38403af..1005d605f77a229665a73763522874161c5e3865 100644
+index b23b6be85496d031b81b2d3abb9690322c340a80..eb2ef004860c89fba346c8025ae3c645106a21e6 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -417,6 +417,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -418,6 +418,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
      public boolean collidingWithWorldBorder; // Paper
      public boolean fixedPose = false; // Paper
@@ -16,24 +29,20 @@ index 119f839051d691ff09805d22b95186cdb38403af..1005d605f77a229665a7376352287416
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java b/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java
-index 060e064625969610539dbf969ce773b877a7c579..4bb962f90c80a2fa912e56193ba51b3d320b41d9 100644
---- a/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java
-+++ b/src/main/java/net/minecraft/world/level/chunk/storage/EntityStorage.java
-@@ -112,6 +112,8 @@ public class EntityStorage implements EntityPersistentStorage<Entity> {
-         ListTag listTag = new ListTag();
-         final java.util.Map<net.minecraft.world.entity.EntityType<?>, Integer> savedEntityCounts = new java.util.HashMap<>(); // Paper
-         entities.forEach((entity) -> { // diff here: use entities parameter
-+            if (!entity.saveable) return; // Slice
-+
-             // Paper start
-             final EntityType<?> entityType = entity.getType();
-             final int saveLimit = level.paperConfig().chunks.entityPerChunkSaveLimit.getOrDefault(entityType, -1);
+@@ -4703,7 +4704,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+     @Override
+     public boolean shouldBeSaved() {
+-        return this.removalReason != null && !this.removalReason.shouldSave() ? false : (this.isPassenger() ? false : !this.isVehicle() || !this.hasAnyPlayerPassengers()); // Paper - rewrite chunk system - it should check if the entity has ANY player passengers
++        return this.saveable && this.removalReason != null && !this.removalReason.shouldSave() ? false : (this.isPassenger() ? false : !this.isVehicle() || !this.hasAnyPlayerPassengers()); // Paper - rewrite chunk system - it should check if the entity has ANY player passengers // Slice - add saveable check
+     }
+ 
+     @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-index 315d8260e196709ed9084272aa640f11e327c0a8..f31def9330245dbb54c246f8a013a3524af5b8e4 100644
+index 2dbe8b870fd39b4d22e9725912f443757ae70761..0cc2d78c68c87c7dce3fbd40f5ba946d7776daa0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-@@ -1523,4 +1523,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -1507,4 +1507,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
          return this.getHandle().getScoreboardName();
      }
      // Paper end - entity scoreboard name
