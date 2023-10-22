@@ -6,7 +6,7 @@ Subject: [PATCH] ChunkStatusChangeEvent
 
 diff --git a/src/main/java/com/destroystokyo/paper/event/chunk/ChunkStatusChangeEvent.java b/src/main/java/com/destroystokyo/paper/event/chunk/ChunkStatusChangeEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..824b84b87450bf00c79b5fd7a27f44c9f0518aa0
+index 0000000000000000000000000000000000000000..512664d4a7a6821b8d79d0aabf5c31a61fcae6b9
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/event/chunk/ChunkStatusChangeEvent.java
 @@ -0,0 +1,58 @@
@@ -47,7 +47,7 @@ index 0000000000000000000000000000000000000000..824b84b87450bf00c79b5fd7a27f44c9
 +    }
 +
 +    public boolean isUpgrade() {
-+        return currentState.ordinal() > newState.ordinal();
++        return newState.ordinal() > currentState.ordinal();
 +    }
 +
 +    @Override
