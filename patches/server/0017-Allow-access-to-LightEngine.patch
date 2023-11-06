@@ -5,10 +5,10 @@ Subject: [PATCH] Allow access to LightEngine
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 0c2617574e21037d94ac56ad08b490f9bca5c5af..df414c88a73a5f4eb1c19924a600a21bb0fff7c8 100644
+index caa73632aee15583c6b6ed12a668c8f49b794708..f4b82c5506308aacba10a421afc284913a04099b 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -356,7 +356,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -436,7 +436,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          // Paper end - rewrite player chunk loader
      }
  

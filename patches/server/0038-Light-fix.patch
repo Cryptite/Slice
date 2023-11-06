@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 6 Nov 2023 08:13:50 -0600
+Subject: [PATCH] Light fix
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
+index cbedb6f002bc01daa16d349421c4ef04d4bcbcb2..b332eb3e9daf9d04cc2e03979dff9074438d7b0f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
+@@ -800,9 +800,8 @@ public abstract class DelegatedGeneratorAccess implements WorldGenLevel {
+         return this.handle.setBlock(pos, state, flags);
+     }
+ 
+-    @Override
+     public boolean setBlock(BlockPos pos, BlockState state, int flags, int maxUpdateDepth) {
+-        return this.handle.setBlock(pos, state, flags, maxUpdateDepth);
++        return this.handle.setBlock(pos, state, flags, maxUpdateDepth, true);
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
+index b4b297945fb601701aac845d09e88fb74b09c3fa..26aba6fc86f66b38f6b2349df74d9c988a3fed57 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
+@@ -89,6 +89,11 @@ public class TransformerGeneratorAccess extends DelegatedGeneratorAccess {
+         return this.setCraftBlock(pos, (CraftBlockState) CraftBlockStates.getBlockState(pos, state, null), flags, maxUpdateDepth);
+     }
+ 
++    @Override
++    public boolean setBlock(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, boolean checkLight) {
++        return false;
++    }
++
+     @Override
+     public boolean setBlock(BlockPos pos, BlockState state, int flags) {
+         return this.setBlock(pos, state, flags, 512);

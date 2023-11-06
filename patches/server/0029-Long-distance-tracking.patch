@@ -5,10 +5,10 @@ Subject: [PATCH] Long distance tracking
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index df414c88a73a5f4eb1c19924a600a21bb0fff7c8..48e25187e68b8b3099b514a224a552f130bd77e3 100644
+index f4b82c5506308aacba10a421afc284913a04099b..3ad804d7f5b018757a218547e25b9bf53ecfa78d 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1288,6 +1288,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1422,6 +1422,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
                  Vec3 vec3d = player.position().subtract(this.entity.position());
                  int i = ChunkMap.this.getPlayerViewDistance(player);
                  double d0 = (double) Math.min(this.getEffectiveRange(), i * 16);
@@ -17,18 +17,18 @@ index df414c88a73a5f4eb1c19924a600a21bb0fff7c8..48e25187e68b8b3099b514a224a552f1
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player) && ChunkMap.this.isChunkTracked(player, this.entity.chunkPosition().x, this.entity.chunkPosition().z);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 4286c29a9b2a703f951159b1a407c3cd5bc4c5cc..8dce1a7868e2bd14b570823fbdcd9f71557c8b82 100644
+index 7f09801b4afd426d75c16dee88c31e1a16108fc1..702ca0b220e5f81702c3cc8e7b4797be22de9235 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -274,6 +274,7 @@ public class ServerPlayer extends Player {
-     public PlayerNaturallySpawnCreaturesEvent playerNaturallySpawnedEvent; // Paper
+@@ -275,6 +275,7 @@ public class ServerPlayer extends Player {
+     public @Nullable String clientBrandName = null; // Paper - Brand name
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
      public boolean smoothWorldTeleport; // Slice
 +    public boolean hasLongDistanceTracking; // Slice
  
      // Paper start - replace player chunk loader
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
-@@ -2648,4 +2649,18 @@ public class ServerPlayer extends Player {
+@@ -2657,4 +2658,18 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -48,7 +48,7 @@ index 4286c29a9b2a703f951159b1a407c3cd5bc4c5cc..8dce1a7868e2bd14b570823fbdcd9f71
 +    // Slice end
  }
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index 5b5109e942b18418b3a3a0e2109fe4ef15045fe5..507519c75fabe8991cddbc1aa7813cec25dee01b 100644
+index f9b8e2bc039f1a37e47f84909c8785f3ef530284..bfa02a3698a347c55f0fff351ac24e831403cb56 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -271,6 +271,7 @@ public class SpigotWorldConfig
@@ -68,7 +68,7 @@ index 5b5109e942b18418b3a3a0e2109fe4ef15045fe5..507519c75fabe8991cddbc1aa7813cec
          this.monsterTrackingRange = this.getInt( "entity-tracking-range.monsters", this.monsterTrackingRange );
          this.miscTrackingRange = this.getInt( "entity-tracking-range.misc", this.miscTrackingRange );
 diff --git a/src/main/java/org/spigotmc/TrackingRange.java b/src/main/java/org/spigotmc/TrackingRange.java
-index 172d231adecf043f9f06b7f5e0365ae82327998d..e8a6c5f3f6208bc539e913eab47a14e2258817d7 100644
+index ed8378ad022c375b0d18172aeccf65cb026d9d68..f5acd0f9ed0a4936257a96971b995ec62ec2906d 100644
 --- a/src/main/java/org/spigotmc/TrackingRange.java
 +++ b/src/main/java/org/spigotmc/TrackingRange.java
 @@ -26,9 +26,9 @@ public class TrackingRange

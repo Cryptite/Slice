@@ -17,10 +17,10 @@ index bfb1de19f53d5d7c7b65e25a606fabfa416706b3..63262cc017b15b076f27143309b3e38c
          if (!(getter instanceof EntityGetter entityGetter)) {
              return false;
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 7960a2467cae9420f0da0eaad8dd428456362efe..383c40f6f7ea7cbf6f88347ccb559f4c458fcc40 100644
+index 067bfc5414ad69916624aa635e475b6cac8517df..c2e0a83819a0ea553f1206d364a111c7c127bc18 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -452,6 +452,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -453,6 +453,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
       * Overriding this field will cause memory leaks.
       */
      private final boolean hardCollides;

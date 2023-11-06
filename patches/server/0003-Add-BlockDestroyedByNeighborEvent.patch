@@ -5,12 +5,12 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index b2c2bd5ec0afd479973f7237a5c610f21231c505..1d32eb837517f2b949613498b1a68c8b1edf0b9a 100644
+index 106a312aba249d1e83e4b535fc6e741e04ccfd14..d8aa37f24a58b1772ba9ec0ddd2ade15ac796f44 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -419,6 +419,7 @@ public class ServerPlayerGameMode {
                  org.bukkit.block.BlockState state = bblock.getState();
-                 level.captureDrops = new ArrayList<>();
+                 this.level.captureDrops = new ArrayList<>();
                  // CraftBukkit end
 +                level.pendingPlayerBlockEvents.put(pos, new Level.PendingBlockEvent(pos, this.player)); // Paper
                  block.playerWillDestroy(this.level, pos, iblockdata, this.player);
@@ -18,9 +18,9 @@ index b2c2bd5ec0afd479973f7237a5c610f21231c505..1d32eb837517f2b949613498b1a68c8b
  
 @@ -447,6 +448,7 @@ public class ServerPlayerGameMode {
                  // CraftBukkit start
-                 java.util.List<net.minecraft.world.entity.item.ItemEntity> itemsToDrop = level.captureDrops; // Paper - store current list
-                 level.captureDrops = null; // Paper - Remove this earlier so that we can actually drop stuff
-+                level.pendingPlayerBlockEvents.remove(pos); // Paper
+                 java.util.List<net.minecraft.world.entity.item.ItemEntity> itemsToDrop = this.level.captureDrops; // Paper - store current list
+                 this.level.captureDrops = null; // Paper - Remove this earlier so that we can actually drop stuff
++                this.level.pendingPlayerBlockEvents.remove(pos); // Paper
                  if (event.isDropItems()) {
                      org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - use stored ref
                  }
@@ -37,7 +37,7 @@ index 4697df75fdee2023c41260bed211e3e3d90d2b9b..e30aaa502f5e98b5658a0dd78853e865
              if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - capture block states for snow buckets
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index d4af10645b74514a79cb41f428534cfe6d1e9058..bc8947b2f85a53e90ee84c3746be7183aa0503ee 100644
+index 763165618a47d9841bb8fc70651a4e80a2bbd67f..7c332c004f469fb47598121c3b828a484634b526 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -184,6 +184,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

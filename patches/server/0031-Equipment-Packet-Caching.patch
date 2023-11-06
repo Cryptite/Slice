@@ -59,7 +59,7 @@ index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..248a4af1b9c6684502570c879efae20a
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index cad14a4e7e39982c0df779a67c2e735c0186678f..39a69334c9bea26228a428b3db7e7a2bd021e44b 100644
+index 1625dea60a5880b04b34d36732370e65ab86e528..e7d7d2db99cac771ebf20755911ed8e78df93af1 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -263,6 +263,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -71,7 +71,7 @@ index cad14a4e7e39982c0df779a67c2e735c0186678f..39a69334c9bea26228a428b3db7e7a2b
  
      @Override
      public float getBukkitYaw() {
-@@ -3108,6 +3110,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3105,6 +3107,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -79,7 +79,7 @@ index cad14a4e7e39982c0df779a67c2e735c0186678f..39a69334c9bea26228a428b3db7e7a2b
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3200,7 +3203,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3197,7 +3200,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -106,7 +106,7 @@ index cad14a4e7e39982c0df779a67c2e735c0186678f..39a69334c9bea26228a428b3db7e7a2b
      }
  
      // Paper start - hide unnecessary item meta
-@@ -4527,4 +4548,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4531,4 +4552,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -182,7 +182,7 @@ index cad14a4e7e39982c0df779a67c2e735c0186678f..39a69334c9bea26228a428b3db7e7a2b
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index fe2124694eb080cab685a1ce1f6a66e2fcdf6a17..fa70fae582a9415322d967996458902f5aea3e01 100644
+index 030fd330b13197d752a2d4c48628b9efd2c2c776..ecb39b5d3b8c96bb019fdd5b4977f7e22a8ebdcc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 @@ -1099,4 +1099,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {

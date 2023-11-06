@@ -5,10 +5,10 @@ Subject: [PATCH] Set multiple team settings at once
 
 
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index 8424fdac153f6dea76acce89f4726408d9726c41..6effaeaf885d70f8aeb11b5c44e7f3ab42cf2a90 100644
+index cacb58d25c249e2ecd6083ed0f30d5ffb345220a..188949e51d2f32357d35baa04b8b17bc9b753bc7 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
-@@ -514,6 +514,24 @@ public interface Team {
+@@ -514,6 +514,24 @@ public interface Team extends net.kyori.adventure.audience.ForwardingAudience {
      boolean hasEntity(@NotNull org.bukkit.entity.Entity entity) throws IllegalStateException, IllegalArgumentException;
      // Paper end - improve scoreboard entries
  

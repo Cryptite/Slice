@@ -17,7 +17,7 @@ index a6f58b3457b7477015c5c6d969e7d83017dd3fa1..7f2070bd2d7eb7f0256a96df00103d20
  
      public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6684f4f4b9aff1c2f3037feb7bcdee55a9d21f93..4ecd1f7d7c5889fb58553333d095716386448860 100644
+index d91ad3622592ece58877f975cdcbf984e61219d7..67a16d32e73099b5b6e1e406341fc6b982cceaa6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -82,10 +82,10 @@ index 6684f4f4b9aff1c2f3037feb7bcdee55a9d21f93..4ecd1f7d7c5889fb58553333d0957163
              this.isSaving = false;
          }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 03e5981d62ff2e4bd81bccf0ab6d8373dfe661d2..7645eb4bfcee85331770c040477f47ea21a3ef95 100644
+index aad0d7662d530eaa9256de635401bbcde3263286..dae340cdc03bc48de22944675edb443d00a4e807 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -2101,7 +2101,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2102,7 +2102,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
      @Override
      public MapItemSavedData getMapData(String id) {
          // Paper start - Call missing map initialize event & set id
@@ -94,7 +94,7 @@ index 03e5981d62ff2e4bd81bccf0ab6d8373dfe661d2..7645eb4bfcee85331770c040477f47ea
  
          final net.minecraft.world.level.saveddata.SavedData existing = storage.cache.get(id);
          if (existing == null && !storage.cache.containsKey(id)) {
-@@ -2122,12 +2122,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2123,12 +2123,22 @@ public class ServerLevel extends Level implements WorldGenLevel {
      @Override
      public void setMapData(String id, MapItemSavedData state) {
          state.id = id; // CraftBukkit

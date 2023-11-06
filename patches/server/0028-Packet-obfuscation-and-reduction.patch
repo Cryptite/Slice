@@ -5,7 +5,7 @@ Subject: [PATCH] Packet obfuscation and reduction
 
 
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index 5dfb35117c285e0b202dc9c088ad5848beb8d054..b3d2cbf9f60c4a4b34df20bfe45a80ac23f4570f 100644
+index a043c382c37058032548a5192e17f5f816abe5a6..ee38f646f66fd69cd64ad6b74c6b76e42792cf39 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 @@ -165,15 +165,29 @@ public class SynchedEntityData {
@@ -66,7 +66,7 @@ index 5dfb35117c285e0b202dc9c088ad5848beb8d054..b3d2cbf9f60c4a4b34df20bfe45a80ac
      @Nullable
      public List<SynchedEntityData.DataValue<?>> getNonDefaultValues() {
          List<SynchedEntityData.DataValue<?>> list = null;
-@@ -336,11 +370,14 @@ public class SynchedEntityData {
+@@ -339,11 +373,14 @@ public class SynchedEntityData {
          T value;
          private final T initialValue;
          private boolean dirty;
@@ -81,7 +81,7 @@ index 5dfb35117c285e0b202dc9c088ad5848beb8d054..b3d2cbf9f60c4a4b34df20bfe45a80ac
          }
  
          public EntityDataAccessor<T> getAccessor() {
-@@ -370,6 +407,35 @@ public class SynchedEntityData {
+@@ -373,6 +410,35 @@ public class SynchedEntityData {
          public SynchedEntityData.DataValue<T> value() {
              return SynchedEntityData.DataValue.create(this.accessor, this.value);
          }
@@ -144,10 +144,10 @@ index 35674f92a67f93382103c2766df4b678ba5c862f..97dbcb6f527bd5c567e77200d7f6cbc1
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 383c40f6f7ea7cbf6f88347ccb559f4c458fcc40..119f839051d691ff09805d22b95186cdb38403af 100644
+index c2e0a83819a0ea553f1206d364a111c7c127bc18..6f60cadb034de8bbe52351a100916879ca98d977 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3322,7 +3322,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3334,7 +3334,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }
@@ -157,10 +157,10 @@ index 383c40f6f7ea7cbf6f88347ccb559f4c458fcc40..119f839051d691ff09805d22b95186cd
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 3ac315b664b36bf0a3934e6f944e8dd4e0e545cb..cad14a4e7e39982c0df779a67c2e735c0186678f 100644
+index d5fe77692292055f71766546d2f283440cccd7d6..1625dea60a5880b04b34d36732370e65ab86e528 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3164,7 +3164,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3161,7 +3161,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
      }
  
      public boolean equipmentHasChanged(ItemStack stack, ItemStack stack2) {
@@ -170,7 +170,7 @@ index 3ac315b664b36bf0a3934e6f944e8dd4e0e545cb..cad14a4e7e39982c0df779a67c2e735c
  
      private void handleHandSwap(Map<EquipmentSlot, ItemStack> equipmentChanges) {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 0325086157b846da7da0ca291fd33c55fc91f229..22a74eb4946b0b92da922227326d972e91a1c4b7 100644
+index a969ced38fb6cdc4e27f5a4430a4ec98279d9525..69968dff14c08a37a723ecd39c75f6981353df09 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -649,7 +649,7 @@ public abstract class Player extends LivingEntity {
@@ -183,15 +183,15 @@ index 0325086157b846da7da0ca291fd33c55fc91f229..22a74eb4946b0b92da922227326d972e
  
      public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 1b0b09a7507bd26254e7ac469829698ca7894070..225e7663a9ad7b9924db777bb9741a93e31c567d 100644
+index 4e4b77587aaa19d69fad9d15e97330b55ea97a8e..3634519803bb755fa0fde91500223c365a1b8ca1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2609,7 +2609,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2599,7 +2599,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }
 -        this.getHandle().getEntityData().set(net.minecraft.world.entity.LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth());
 +        this.getHandle().getEntityData().set(net.minecraft.world.entity.LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth(), isDead() ? 0f : 20f); // Slice
  
-         this.getHandle().maxHealthCache = getMaxHealth();
+         this.getHandle().maxHealthCache = this.getMaxHealth();
      }
