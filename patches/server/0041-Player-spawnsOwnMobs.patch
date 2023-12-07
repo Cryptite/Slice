@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Thu, 7 Dec 2023 08:48:41 -0600
+Subject: [PATCH] Player spawnsOwnMobs
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index acbcdc8cb1523044b1657e03a141fae6389a3686..000a2c8d30d7d72a460e2fc6205088b81a8bfe3a 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -521,7 +521,7 @@ public class ServerChunkCache extends ChunkSource {
+             // Paper start - optimize isOutisdeRange
+             ChunkMap playerChunkMap = this.chunkMap;
+             for (ServerPlayer player : this.level.players) {
+-                if (!player.affectsSpawning || player.isSpectator()) {
++                if (!player.affectsSpawning || player.isSpectator() || player.spawnsOwnMobs) { // Slice
+                     playerChunkMap.playerMobSpawnMap.remove(player);
+                     continue;
+                 }
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index 564591e9f18dd6bb0f76ae4f153adcc0a228d4fa..578535732d442b524536bdd76d6a4badeed84fbd 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -770,7 +770,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         // Paper start - optimise checkDespawn
+         this.playersAffectingSpawning.clear();
+         for (ServerPlayer player : this.players) {
+-            if (net.minecraft.world.entity.EntitySelector.PLAYER_AFFECTS_SPAWNING.test(player)) {
++            if (!player.spawnsOwnMobs && net.minecraft.world.entity.EntitySelector.PLAYER_AFFECTS_SPAWNING.test(player)) { // Slice
+                 this.playersAffectingSpawning.add(player);
+             }
+         }
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 15515e871c89498ec936ab24871741f883f18a3b..16fbdbe12d54fbc8d54403979ee2a89322a14dd2 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -188,6 +188,8 @@ public abstract class Player extends LivingEntity {
+     public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET;
+     // Paper end
+ 
++    public boolean spawnsOwnMobs = false; // Slice
++
+     // CraftBukkit start
+     public boolean fauxSleeping;
+     public int oldLevel = -1;
