@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerData Events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 1d32eb837517f2b949613498b1a68c8b1edf0b9a..a31ea11234da240e56bbfd14725dd76295c8f338 100644
+index 4f00c2e8d6ff3a03a334542f699c5e35bfd03ce8..f31fc572413c2e1350adca3691316ac6b0d66fef 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-@@ -602,6 +602,8 @@ public class ServerPlayerGameMode {
+@@ -603,6 +603,8 @@ public class ServerPlayerGameMode {
                      enuminteractionresult1 = stack.useOn(itemactioncontext);
                  }
  
@@ -45,18 +45,18 @@ index 9bb8d4d7be6a937980aa653db82be084d066a563..9838435fbc31cfbba487d1e62ec5d2e7
  
      private static <T> ResourceLocation getKey(Stat<T> stat) {
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index 36af81f0957d17e170d229059c66f4eb4539dfeb..e8d324a32838b69255ce48b1c03e47cd9e201da6 100644
+index b3a90d6ef0e17c236e0b3c46e2d0012671afdaa7..bb22635a8dc7d4e2030f50da62983119520a0b91 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-@@ -33,6 +33,7 @@ public class PlayerDataStorage {
+@@ -36,6 +36,7 @@ public class PlayerDataStorage {
  
      public void save(Player player) {
          if (org.spigotmc.SpigotConfig.disablePlayerDataSaving) return; // Spigot
 +        if (!new com.destroystokyo.paper.event.player.PlayerSaveDataEvent((org.bukkit.entity.Player) player.getBukkitEntity()).callEvent()) return; // Slice
          try {
              CompoundTag nbttagcompound = player.saveWithoutId(new CompoundTag());
-             File file = File.createTempFile(player.getStringUUID() + "-", ".dat", this.playerDir);
-@@ -52,32 +53,40 @@ public class PlayerDataStorage {
+             Path path = this.playerDir.toPath();
+@@ -56,33 +57,41 @@ public class PlayerDataStorage {
      public CompoundTag load(Player player) {
          CompoundTag nbttagcompound = null;
  
@@ -95,14 +95,14 @@ index 36af81f0957d17e170d229059c66f4eb4539dfeb..e8d324a32838b69255ce48b1c03e47cd
 +                // Spigot End
  
 -            if (file.exists() && file.isFile()) {
--                nbttagcompound = NbtIo.readCompressed(file);
+-                nbttagcompound = NbtIo.readCompressed(file.toPath(), NbtAccounter.unlimitedHeap());
 -            }
 -            // Spigot Start
 -            if ( usingWrongFile )
 -            {
 -                file.renameTo( new File( file.getPath() + ".offline-read" ) );
 +                if (file.exists() && file.isFile()) {
-+                    nbttagcompound = NbtIo.readCompressed(file);
++                    nbttagcompound = NbtIo.readCompressed(file.toPath(), NbtAccounter.unlimitedHeap());
 +                }
 +                // Spigot Start
 +                if (usingWrongFile) {
@@ -115,7 +115,9 @@ index 36af81f0957d17e170d229059c66f4eb4539dfeb..e8d324a32838b69255ce48b1c03e47cd
 -            // Spigot End
 -        } catch (Exception exception) {
 -            PlayerDataStorage.LOGGER.warn("Failed to load player data for {}", player.getName().getString());
-+            // Slice end
-         }
+-        }
++        } // Slice end
++
  
          if (nbttagcompound != null) {
+             // CraftBukkit start

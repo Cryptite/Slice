@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 21 Oct 2023 11:27:52 -0500
+Subject: [PATCH] Non-saveable entities
+
+
+diff --git a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
+index 7e8dc9e8f381abfdcce2746edc93122d623622d1..303e5ed4d5cf2a64b998656bfd189f19f8c8fcde 100644
+--- a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
++++ b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
+@@ -118,7 +118,7 @@ public final class ChunkEntitySlices {
+                 // removed by us below
+                 continue;
+             }
+-            if (entity.shouldBeSaved()) {
++            if (entity.shouldBeSaved() || !entity.saveable) { // Slice
+                 entity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK);
+                 if (entity.isVehicle()) {
+                     // we cannot assume that these entities are contained within this chunk, because entities can
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 34f3ddb22febc0aea7d3059b2cbbd84554fd03b4..a6db17c51d6b8e58936e52e7f6cbe07dcebd5418 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -422,6 +422,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+     private UUID originWorld;
+     public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
+     public boolean fixedPose = false; // Paper
++    public boolean saveable = true; // Slice
+ 
+     public void setOrigin(@javax.annotation.Nonnull Location location) {
+         this.origin = location.toVector();
+@@ -4819,7 +4820,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+ 
+     @Override
+     public boolean shouldBeSaved() {
+-        return this.removalReason != null && !this.removalReason.shouldSave() ? false : (this.isPassenger() ? false : !this.isVehicle() || !this.hasAnyPlayerPassengers()); // Paper - rewrite chunk system - it should check if the entity has ANY player passengers
++        return this.saveable && this.removalReason != null && !this.removalReason.shouldSave() ? false : (this.isPassenger() ? false : !this.isVehicle() || !this.hasAnyPlayerPassengers()); // Paper - rewrite chunk system - it should check if the entity has ANY player passengers // Slice - add saveable check
+     }
+ 
+     @Override
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index 1c3e1153d08b59d29b3613fc3b50a4780aa7a3ac..19c56ef79cacfb6d65dea5741d9ce71998c1eacc 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -1227,4 +1227,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         return this.getHandle().getScoreboardName();
+     }
+     // Paper end - entity scoreboard name
++
++    // Slice start
++    @Override
++    public boolean isSaveable() {
++        return this.entity.saveable;
++    }
++
++    @Override
++    public void setSaveable(boolean saveable) {
++        this.entity.saveable = saveable;
++    }
++    // Slice end
+ }

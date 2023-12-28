@@ -5,10 +5,10 @@ Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index d58b4c0dbe651b5068212e5f14dce3164ee520f5..32d6615ea73c1c149049d16dfd1b395621ad634b 100644
+index 3e597833b57377b855505b8a0f2744801c791f90..04a68a4f0c642984bd2b95bfb0d7d2bd887d18f0 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -1283,10 +1283,11 @@ public abstract class Player extends LivingEntity {
+@@ -1278,10 +1278,11 @@ public abstract class Player extends LivingEntity {
                          flag1 = true;
                      }
  
@@ -23,31 +23,3 @@ index d58b4c0dbe651b5068212e5f14dce3164ee520f5..32d6615ea73c1c149049d16dfd1b3956
                      if (flag2) {
                          f *= 1.5F;
                      }
-@@ -2413,27 +2414,6 @@ public abstract class Player extends LivingEntity {
-         this.lastDeathLocation = lastDeathPos;
-     }
- 
--    @Override
--    public float getHurtDir() {
--        return this.hurtDir;
--    }
--
--    @Override
--    public void animateHurt(float yaw) {
--        super.animateHurt(yaw);
--        this.hurtDir = yaw;
--    }
--
--    @Override
--    public boolean canSprint() {
--        return true;
--    }
--
--    @Override
--    protected float getFlyingSpeed() {
--        return this.abilities.flying && !this.isPassenger() ? (this.isSprinting() ? this.abilities.getFlyingSpeed() * 2.0F : this.abilities.getFlyingSpeed()) : (this.isSprinting() ? 0.025999999F : 0.02F);
--    }
--
-     public static enum BedSleepingProblem {
- 
-         NOT_POSSIBLE_HERE, NOT_POSSIBLE_NOW(Component.translatable("block.minecraft.bed.no_sleep")), TOO_FAR_AWAY(Component.translatable("block.minecraft.bed.too_far_away")), OBSTRUCTED(Component.translatable("block.minecraft.bed.obstructed")), OTHER_PROBLEM, NOT_SAFE(Component.translatable("block.minecraft.bed.not_safe"));

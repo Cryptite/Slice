@@ -5,10 +5,10 @@ Subject: [PATCH] Maybe can't tostring?
 
 
 diff --git a/src/main/java/net/minecraft/nbt/CompoundTag.java b/src/main/java/net/minecraft/nbt/CompoundTag.java
-index 84fc2adf591f02a14862f7c1cd645c2efde55c3d..f088d316aac7626204cff330f90468d89ac3581b 100644
+index e464ada187fd1f15efef29a0e5033aeb0c688059..b2e800c653ba423e40de734218a8e4a020069076 100644
 --- a/src/main/java/net/minecraft/nbt/CompoundTag.java
 +++ b/src/main/java/net/minecraft/nbt/CompoundTag.java
-@@ -503,6 +503,9 @@ public class CompoundTag implements Tag {
+@@ -507,6 +507,9 @@ public class CompoundTag implements Tag {
      @Override
      public CompoundTag copy() {
          // Paper start - reduce memory footprint of NBTTagCompound
@@ -19,10 +19,10 @@ index 84fc2adf591f02a14862f7c1cd645c2efde55c3d..f088d316aac7626204cff330f90468d8
          java.util.Iterator<java.util.Map.Entry<String, Tag>> iterator = (this.tags instanceof it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap) ? ((it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap)this.tags).object2ObjectEntrySet().fastIterator() : this.tags.entrySet().iterator();
          while (iterator.hasNext()) {
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index e30aaa502f5e98b5658a0dd78853e865cbf91f96..c9cd6d3a3678ec38fbfb9ca3975d2ddbe2ce2881 100644
+index 625a852db818d95365ad7ae56e6b1de541bbdada..f721dd923711d65338820642dfca89ab8022e9a5 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -742,7 +742,11 @@ public final class ItemStack {
+@@ -765,7 +765,11 @@ public final class ItemStack {
  
              itemstack.setPopTime(this.getPopTime());
              if (this.tag != null) {

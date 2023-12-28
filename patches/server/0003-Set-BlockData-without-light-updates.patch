@@ -5,7 +5,7 @@ Subject: [PATCH] Set BlockData without light updates
 
 
 diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-index 50ed7cfe1ecef6d075ba484804827cec83ba2bf2..6fefbd2ba0fb7aab592cb3ed00828cce942a4792 100644
+index 14a5492428eac823a295ef3746d0aca6fbdab4ec..46051d555432aeedba3a4b38f4f72b8a924c93a3 100644
 --- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 +++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 @@ -256,7 +256,7 @@ public class WorldGenRegion implements WorldGenLevel {
@@ -27,10 +27,10 @@ index 50ed7cfe1ecef6d075ba484804827cec83ba2bf2..6fefbd2ba0fb7aab592cb3ed00828cce
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 2354a0e5d15e9be633d9fe3a1a9feefe7b9b7782..763165618a47d9841bb8fc70651a4e80a2bbd67f 100644
+index 8848eeda7a89d445e370626182f9bb4710e5edd4..fe62e872f0c989f612dcbfc58894bd1787345d25 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -903,12 +903,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -906,12 +906,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -46,16 +46,7 @@ index 2354a0e5d15e9be633d9fe3a1a9feefe7b9b7782..763165618a47d9841bb8fc70651a4e80
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start
-@@ -943,7 +943,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
-             }
-             // CraftBukkit end
- 
--            BlockState iblockdata1 = chunk.setBlockState(pos, state, (flags & 64) != 0, (flags & 1024) == 0); // CraftBukkit custom NO_PLACE flag
-+            BlockState iblockdata1 = chunk.setBlockState(pos, state, (flags & 64) != 0, (flags & 1024) == 0, checkLight); // CraftBukkit custom NO_PLACE flag // Slice
-             this.chunkPacketBlockController.onBlockChange(this, pos, state, iblockdata1, flags, maxUpdateDepth); // Paper - Anti-Xray
- 
-             if (iblockdata1 == null) {
-@@ -1099,7 +1099,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1102,7 +1102,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  Block.dropResources(iblockdata, this, pos, tileentity, breakingEntity, ItemStack.EMPTY);
              }
  
@@ -86,10 +77,10 @@ index 134e5ec79bf2dddd4e31930f8a7cb2c02fa29518..fd72d278a2719911a46b6bc9e7da2dc2
  
      boolean removeBlock(BlockPos pos, boolean move);
 diff --git a/src/main/java/net/minecraft/world/level/block/Block.java b/src/main/java/net/minecraft/world/level/block/Block.java
-index d4cbff18adb62073a1dceb189043789620af6877..413eb8d315f5da04c69e082654e74054055705d6 100644
+index 4d50dd92a7f3187ee1d8edb926e7c273c8156549..4dc96e83f14a1b31d720f9915f7541d4d86e5c30 100644
 --- a/src/main/java/net/minecraft/world/level/block/Block.java
 +++ b/src/main/java/net/minecraft/world/level/block/Block.java
-@@ -194,7 +194,7 @@ public class Block extends BlockBehaviour implements ItemLike {
+@@ -201,7 +201,7 @@ public class Block extends BlockBehaviour implements ItemLike {
                      world.destroyBlock(pos, (flags & 32) == 0, (Entity) null, maxUpdateDepth);
                  }
              } else {
@@ -98,98 +89,11 @@ index d4cbff18adb62073a1dceb189043789620af6877..413eb8d315f5da04c69e082654e74054
              }
          }
  
-diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
-index f7e5e016a7028a9196e689e950805b0d5b31fe38..10f8b1bfaca8cf607d895412417ad5f5e8d06df1 100644
---- a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
-+++ b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
-@@ -175,7 +175,6 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
-     public abstract BlockState getBlockState(final int x, final int y, final int z); // Paper
-     @Nullable
-     public abstract BlockState setBlockState(BlockPos pos, BlockState state, boolean moved);
--
-     public abstract void setBlockEntity(BlockEntity blockEntity);
- 
-     public abstract void addEntity(Entity entity);
-diff --git a/src/main/java/net/minecraft/world/level/chunk/ImposterProtoChunk.java b/src/main/java/net/minecraft/world/level/chunk/ImposterProtoChunk.java
-index 4a3ac7dedf5cb1e76f16ec4f18e82afc717d0ced..7eb5d6bc790717aef2b22453f5c16644fa128b7c 100644
---- a/src/main/java/net/minecraft/world/level/chunk/ImposterProtoChunk.java
-+++ b/src/main/java/net/minecraft/world/level/chunk/ImposterProtoChunk.java
-@@ -116,7 +116,13 @@ public class ImposterProtoChunk extends ProtoChunk {
-     @Nullable
-     @Override
-     public BlockState setBlockState(BlockPos pos, BlockState state, boolean moved) {
--        return this.allowWrites ? this.wrapped.setBlockState(pos, state, moved) : null;
-+        return setBlockState(pos, state, moved, true);
-+    }
-+
-+    @Nullable
-+    @Override
-+    public BlockState setBlockState(BlockPos pos, BlockState state, boolean moved, boolean checkLight) {
-+        return this.allowWrites ? this.wrapped.setBlockState(pos, state, moved, checkLight) : null;
-     }
- 
-     @Override
-diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index fa170cc1ce7011d201295b89718292d696c7fc24..55ac6607b3c0f31a478122e84ed97d85da80dcac 100644
---- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-+++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-@@ -407,11 +407,15 @@ public class LevelChunk extends ChunkAccess {
-     @Nullable
-     @Override
-     public BlockState setBlockState(BlockPos pos, BlockState state, boolean moved) {
--        return this.setBlockState(pos, state, moved, true);
-+        return this.setBlockState(pos, state, moved, true, true);
-+    }
-+    @Nullable
-+    public BlockState setBlockState(BlockPos pos, BlockState state, boolean moved, boolean doPlace) {
-+        return this.setBlockState(pos, state, moved, doPlace, true);
-     }
- 
-     @Nullable
--    public BlockState setBlockState(BlockPos blockposition, BlockState iblockdata, boolean flag, boolean doPlace) {
-+    public BlockState setBlockState(BlockPos blockposition, BlockState iblockdata, boolean flag, boolean doPlace, boolean checkLight) {
-         // CraftBukkit end
-         int i = blockposition.getY();
-         LevelChunkSection chunksection = this.getSection(this.getSectionIndex(i));
-@@ -440,7 +444,7 @@ public class LevelChunk extends ChunkAccess {
-                     this.level.getChunkSource().getLightEngine().updateSectionStatus(blockposition, flag2);
-                 }
- 
--                if (LightEngine.hasDifferentLightProperties(this, blockposition, iblockdata1, iblockdata)) {
-+                if (checkLight && LightEngine.hasDifferentLightProperties(this, blockposition, iblockdata1, iblockdata)) { // Slice
-                     ProfilerFiller gameprofilerfiller = this.level.getProfiler();
- 
-                     gameprofilerfiller.push("updateSkyLightSources");
-diff --git a/src/main/java/net/minecraft/world/level/chunk/ProtoChunk.java b/src/main/java/net/minecraft/world/level/chunk/ProtoChunk.java
-index 7aa585875dad5296526bb5d67fc5ea0f8875e452..82432ef8b9d50ba96363b8db48150a4a52142a1d 100644
---- a/src/main/java/net/minecraft/world/level/chunk/ProtoChunk.java
-+++ b/src/main/java/net/minecraft/world/level/chunk/ProtoChunk.java
-@@ -113,6 +113,11 @@ public class ProtoChunk extends ChunkAccess {
-     @Nullable
-     @Override
-     public BlockState setBlockState(BlockPos pos, BlockState state, boolean moved) {
-+        return setBlockState(pos, state, moved, true);
-+    }
-+
-+    @Nullable
-+    public BlockState setBlockState(BlockPos pos, BlockState state, boolean moved, boolean checkLight) { // Slice
-         int i = pos.getX();
-         int j = pos.getY();
-         int k = pos.getZ();
-@@ -133,7 +138,7 @@ public class ProtoChunk extends ChunkAccess {
-                         this.lightEngine.updateSectionStatus(pos, bl2);
-                     }
- 
--                    if (LightEngine.hasDifferentLightProperties(this, pos, blockState, state)) {
-+                    if (checkLight && LightEngine.hasDifferentLightProperties(this, pos, blockState, state)) { // Slice
-                         // Paper - starlight - remove skyLightSources
-                         this.lightEngine.checkBlock(pos);
-                     }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index 1a17875426468b287c8ea3f559ea516d0218f7a0..84a1150438dc8cdd8a6d3ad92e6bf2c4ad5f7cf0 100644
+index 45fd28f26aa2e53785919abbfe42bb237131e453..150b649c457ab4a17e9d72a21f7d06b8f74435a2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-@@ -287,7 +287,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
+@@ -142,7 +142,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
          BlockPos pos = new BlockPos(x, y, z);
          net.minecraft.world.level.block.state.BlockState old = this.getHandle().getBlockState(pos);
  
@@ -199,10 +103,10 @@ index 1a17875426468b287c8ea3f559ea516d0218f7a0..84a1150438dc8cdd8a6d3ad92e6bf2c4
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index bec8e6b62dba2bd0e4e85a7d1fb51287384f1290..db565a24591748f66e01b9972796415ba2bf0f70 100644
+index e5506a7d074a9f89d41f4d5d7549a458779bef20..5b0a5c6ba424eeeb071f362f4ffc856b50dd7b2f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-@@ -182,15 +182,20 @@ public class CraftBlock implements Block {
+@@ -183,15 +183,20 @@ public class CraftBlock implements Block {
  
      @Override
      public void setBlockData(BlockData data, boolean applyPhysics) {
@@ -227,7 +131,7 @@ index bec8e6b62dba2bd0e4e85a7d1fb51287384f1290..db565a24591748f66e01b9972796415b
          // SPIGOT-611: need to do this to prevent glitchiness. Easier to handle this here (like /setblock) than to fix weirdness in tile entity cleanup
          if (old.hasBlockEntity() && blockData.getBlock() != old.getBlock()) { // SPIGOT-3725 remove old tile entity if block changes
              // SPIGOT-4612: faster - just clear tile
-@@ -204,7 +209,7 @@ public class CraftBlock implements Block {
+@@ -205,7 +210,7 @@ public class CraftBlock implements Block {
          if (applyPhysics) {
              return world.setBlock(position, blockData, 3);
          } else {
@@ -249,8 +153,23 @@ index 390e1b7fd2721b99cb3ce268c6bc1bf0a38e08a3..f3c42e65c6c731e1f0f3d36f16c35b7d
          if (access instanceof net.minecraft.world.level.Level) {
              this.world.getHandle().sendBlockUpdated(
                      this.position,
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
+index a650411e3fa7e2a045ac55502c77028be348acf1..715fd6cfb8f5c4c3dbb39e0de9b43faad2add9ba 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
+@@ -801,8 +801,8 @@ public abstract class DelegatedGeneratorAccess implements WorldGenLevel {
+     }
+ 
+     @Override
+-    public boolean setBlock(BlockPos pos, BlockState state, int flags, int maxUpdateDepth) {
+-        return this.handle.setBlock(pos, state, flags, maxUpdateDepth);
++    public boolean setBlock(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, boolean checkLight) {
++        return this.handle.setBlock(pos, state, flags, maxUpdateDepth, checkLight);
+     }
+ 
+     @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java
-index 23ee60e8843a6a05e7ae6512248a57ec2a08321b..c5e1afb7d5fa630ed85a739d5aada79297257d72 100644
+index a5e34c25e00e7f770bcb6e15ed0bbfe8f369a68a..572e52c494ead11d0fa84cf324f2c86215cc3adb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/DummyGeneratorAccess.java
 @@ -245,7 +245,7 @@ public class DummyGeneratorAccess implements WorldGenLevel {
@@ -262,3 +181,50 @@ index 23ee60e8843a6a05e7ae6512248a57ec2a08321b..c5e1afb7d5fa630ed85a739d5aada792
          return false;
      }
  
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
+index b4b297945fb601701aac845d09e88fb74b09c3fa..1a7d90c36c203d0ff6fc67f6ce59a746010952d4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
+@@ -55,14 +55,14 @@ public class TransformerGeneratorAccess extends DelegatedGeneratorAccess {
+         super.addFreshEntityWithPassengers(arg0, arg1);
+     }
+ 
+-    public boolean setCraftBlock(BlockPos position, CraftBlockState craftBlockState, int i, int j) {
++    public boolean setCraftBlock(BlockPos position, CraftBlockState craftBlockState, int i, int j, boolean checkLight) {
+         if (this.structureTransformer != null) {
+             craftBlockState = this.structureTransformer.transformCraftState(craftBlockState);
+         }
+         // This code is based on the method 'net.minecraft.world.level.levelgen.structure.StructurePiece#placeBlock'
+         // It ensures that any kind of block is updated correctly upon placing it
+         BlockState iblockdata = craftBlockState.getHandle();
+-        boolean result = super.setBlock(position, iblockdata, i, j);
++        boolean result = super.setBlock(position, iblockdata, i, j, checkLight);
+         FluidState fluid = this.getFluidState(position);
+         if (!fluid.isEmpty()) {
+             this.scheduleTick(position, fluid.getType(), 0);
+@@ -78,19 +78,19 @@ public class TransformerGeneratorAccess extends DelegatedGeneratorAccess {
+     }
+ 
+     public boolean setCraftBlock(BlockPos position, CraftBlockState craftBlockState, int i) {
+-        return this.setCraftBlock(position, craftBlockState, i, 512);
++        return this.setCraftBlock(position, craftBlockState, i, 512, true);
+     }
+ 
+     @Override
+-    public boolean setBlock(BlockPos pos, BlockState state, int flags, int maxUpdateDepth) {
++    public boolean setBlock(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, boolean checkLight) {
+         if (this.structureTransformer == null || !this.structureTransformer.canTransformBlocks()) {
+-            return super.setBlock(pos, state, flags, maxUpdateDepth);
++            return super.setBlock(pos, state, flags, maxUpdateDepth, checkLight);
+         }
+-        return this.setCraftBlock(pos, (CraftBlockState) CraftBlockStates.getBlockState(pos, state, null), flags, maxUpdateDepth);
++        return this.setCraftBlock(pos, (CraftBlockState) CraftBlockStates.getBlockState(pos, state, null), flags, maxUpdateDepth, checkLight);
+     }
+ 
+     @Override
+-    public boolean setBlock(BlockPos pos, BlockState state, int flags) {
+-        return this.setBlock(pos, state, flags, 512);
++    public boolean setBlock(BlockPos pos, BlockState state, int flags, boolean checkLight) {
++        return this.setBlock(pos, state, flags, 512, checkLight);
+     }
+ }

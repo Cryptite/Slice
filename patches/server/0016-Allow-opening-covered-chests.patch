@@ -5,10 +5,10 @@ Subject: [PATCH] Allow opening covered chests
 
 
 diff --git a/src/main/java/net/minecraft/world/level/block/ChestBlock.java b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
-index 5e22d175b1048a58802cdf64ac70a8b56329e915..0f15e574b5c0cc8648bc1c0a12f1c72aa8653724 100644
+index 9804ee2020e5cef23d3f5174d153fc149e611503..8baeb4cb4a6e24e8099a0a98779dc50073d5d0b4 100644
 --- a/src/main/java/net/minecraft/world/level/block/ChestBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
-@@ -355,9 +355,10 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
+@@ -358,9 +358,10 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
      }
  
      private static boolean isBlockedChestByBlock(BlockGetter world, BlockPos pos) {
@@ -23,10 +23,10 @@ index 5e22d175b1048a58802cdf64ac70a8b56329e915..0f15e574b5c0cc8648bc1c0a12f1c72a
  
      private static boolean isCatSittingOnChest(LevelAccessor world, BlockPos pos) {
 diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
-index 7385e91f32f070e86a4e0fd3d214f55d832c7979..4911b099f865b9202286f51087e5c00ffeaa95a5 100644
+index ddca14f1224327a738415fb8b37398d8df0aa9c8..cfd9bfd30d4b1787dacc95215e823603537131fd 100644
 --- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
-@@ -76,10 +76,10 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
+@@ -83,10 +83,10 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
          PlayerEnderChestContainer playerEnderChestContainer = player.getEnderChestInventory();
          BlockEntity blockEntity = world.getBlockEntity(pos);
          if (playerEnderChestContainer != null && blockEntity instanceof EnderChestBlockEntity) {

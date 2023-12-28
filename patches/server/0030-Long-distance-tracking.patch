@@ -5,10 +5,10 @@ Subject: [PATCH] Long distance tracking
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index f4b82c5506308aacba10a421afc284913a04099b..3ad804d7f5b018757a218547e25b9bf53ecfa78d 100644
+index 4407f04904af9b17987ce595cc8b6e9e129ccec7..2d97c4445bd172a901c8dcf144b03081e0679468 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1422,6 +1422,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1421,6 +1421,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
                  Vec3 vec3d = player.position().subtract(this.entity.position());
                  int i = ChunkMap.this.getPlayerViewDistance(player);
                  double d0 = (double) Math.min(this.getEffectiveRange(), i * 16);
@@ -17,10 +17,10 @@ index f4b82c5506308aacba10a421afc284913a04099b..3ad804d7f5b018757a218547e25b9bf5
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player) && ChunkMap.this.isChunkTracked(player, this.entity.chunkPosition().x, this.entity.chunkPosition().z);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 7f09801b4afd426d75c16dee88c31e1a16108fc1..702ca0b220e5f81702c3cc8e7b4797be22de9235 100644
+index 1c3e41c9c849c6ba9fa4a8cd6950f99c28ceff92..7a9805d6c4335092bbabb68b3678a8e78b7d406f 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -275,6 +275,7 @@ public class ServerPlayer extends Player {
+@@ -282,6 +282,7 @@ public class ServerPlayer extends Player {
      public @Nullable String clientBrandName = null; // Paper - Brand name
      public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
      public boolean smoothWorldTeleport; // Slice
@@ -28,7 +28,7 @@ index 7f09801b4afd426d75c16dee88c31e1a16108fc1..702ca0b220e5f81702c3cc8e7b4797be
  
      // Paper start - replace player chunk loader
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
-@@ -2657,4 +2658,18 @@ public class ServerPlayer extends Player {
+@@ -2757,4 +2758,18 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end
@@ -48,7 +48,7 @@ index 7f09801b4afd426d75c16dee88c31e1a16108fc1..702ca0b220e5f81702c3cc8e7b4797be
 +    // Slice end
  }
 diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
-index f9b8e2bc039f1a37e47f84909c8785f3ef530284..bfa02a3698a347c55f0fff351ac24e831403cb56 100644
+index 1cf6d4f854d89c515e48e1fb365eb95ff9340765..6dab8b76bef3c97936fc337e813bcb60c7f2026d 100644
 --- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
 +++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
 @@ -271,6 +271,7 @@ public class SpigotWorldConfig

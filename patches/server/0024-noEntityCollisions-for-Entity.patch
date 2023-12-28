@@ -5,22 +5,23 @@ Subject: [PATCH] noEntityCollisions for Entity
 
 
 diff --git a/src/main/java/io/papermc/paper/util/CollisionUtil.java b/src/main/java/io/papermc/paper/util/CollisionUtil.java
-index bfb1de19f53d5d7c7b65e25a606fabfa416706b3..63262cc017b15b076f27143309b3e38c48289261 100644
+index ee0331a6bc40cdde08d926fd8eb1dc642630c2e5..d1094f6a61976a81f400ab5b2b604f9608209b28 100644
 --- a/src/main/java/io/papermc/paper/util/CollisionUtil.java
 +++ b/src/main/java/io/papermc/paper/util/CollisionUtil.java
-@@ -1777,6 +1777,7 @@ public final class CollisionUtil {
- 
+@@ -1753,7 +1753,7 @@ public final class CollisionUtil {
      public static boolean getEntityHardCollisions(final CollisionGetter getter, final Entity entity, AABB aabb,
                                                    final List<AABB> into, final int collisionFlags, final Predicate<Entity> predicate) {
-+        if (entity != null && entity.noEntityCollisions) return false; // Slice
          final boolean checkOnly = (collisionFlags & COLLISION_FLAG_CHECK_ONLY) != 0;
-         if (!(getter instanceof EntityGetter entityGetter)) {
+-        if (!(getter instanceof EntityGetter entityGetter)) {
++        if ((entity != null && entity.noEntityCollisions) || !(getter instanceof EntityGetter entityGetter)) {
              return false;
+         }
+ 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 067bfc5414ad69916624aa635e475b6cac8517df..c2e0a83819a0ea553f1206d364a111c7c127bc18 100644
+index 91fc0da2cc01c24f9d69ef008a8f6a79c6eaaa5e..25c28dd37e729627739c91e929c208f6aa2539c0 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -453,6 +453,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -457,6 +457,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
       * Overriding this field will cause memory leaks.
       */
      private final boolean hardCollides;

@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 11 Dec 2023 11:09:16 -0600
+Subject: [PATCH] Affinity Test
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 1d78ff5def3357c4b4fed3e6b66f092c237c1a0b..aff13fbe60cc6970227f86a1d451d88f71f1b346 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -26,6 +26,9 @@ dependencies {
+     implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.0")
+     // Slice end
+ 
++    // https://mvnrepository.com/artifact/net.openhft/Java-Thread-Affinity
++    implementation("net.openhft:affinity:3.23.3")
++
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")

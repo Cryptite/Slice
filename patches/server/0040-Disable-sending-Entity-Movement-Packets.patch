@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 25 Oct 2023 17:05:29 -0500
+Subject: [PATCH] Disable sending Entity Movement Packets
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..fa4e0bcf752693c34aff8b53aea3eeaa65834fc1 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -151,7 +151,7 @@ public class ServerEntity {
+                 boolean flag = Math.abs(i - this.yRotp) >= 1 || Math.abs(j - this.xRotp) >= 1;
+ 
+                 if (flag) {
+-                    this.broadcast.accept(new ClientboundMoveEntityPacket.Rot(this.entity.getId(), (byte) i, (byte) j, this.entity.onGround()));
++                    if (entity.sendMovementPackets) this.broadcast.accept(new ClientboundMoveEntityPacket.Rot(this.entity.getId(), (byte) i, (byte) j, this.entity.onGround())); // Slice
+                     this.yRotp = i;
+                     this.xRotp = j;
+                 }
+@@ -180,14 +180,14 @@ public class ServerEntity {
+                     if (!flag6 && this.teleportDelay <= 400 && !this.wasRiding && this.wasOnGround == this.entity.onGround()&& !(io.papermc.paper.configuration.GlobalConfiguration.get().collisions.sendFullPosForHardCollidingEntities && this.entity.hardCollides())) { // Paper - send full pos for hard colliding entities to prevent collision problems due to desync
+                         if ((!flag2 || !flag3) && !(this.entity instanceof AbstractArrow)) {
+                             if (flag2) {
+-                                packet1 = new ClientboundMoveEntityPacket.Pos(this.entity.getId(), (short) ((int) k), (short) ((int) l), (short) ((int) i1), this.entity.onGround());
++                                if (entity.sendMovementPackets) packet1 = new ClientboundMoveEntityPacket.Pos(this.entity.getId(), (short) ((int) k), (short) ((int) l), (short) ((int) i1), this.entity.onGround()); // Slice
+                                 flag4 = true;
+                             } else if (flag3) {
+-                                packet1 = new ClientboundMoveEntityPacket.Rot(this.entity.getId(), (byte) i, (byte) j, this.entity.onGround());
++                                if (entity.sendMovementPackets) packet1 = new ClientboundMoveEntityPacket.Rot(this.entity.getId(), (byte) i, (byte) j, this.entity.onGround()); // Slice
+                                 flag5 = true;
+                             }
+                         } else {
+-                            packet1 = new ClientboundMoveEntityPacket.PosRot(this.entity.getId(), (short) ((int) k), (short) ((int) l), (short) ((int) i1), (byte) i, (byte) j, this.entity.onGround());
++                            if (entity.sendMovementPackets) packet1 = new ClientboundMoveEntityPacket.PosRot(this.entity.getId(), (short) ((int) k), (short) ((int) l), (short) ((int) i1), (byte) i, (byte) j, this.entity.onGround()); // Slice
+                             flag4 = true;
+                             flag5 = true;
+                         }
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index a6db17c51d6b8e58936e52e7f6cbe07dcebd5418..1c75f943055b27d435ba36275fa7cd704e7a7b1a 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -423,6 +423,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+     public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
+     public boolean fixedPose = false; // Paper
+     public boolean saveable = true; // Slice
++    public boolean sendMovementPackets = true; // Slice
+ 
+     public void setOrigin(@javax.annotation.Nonnull Location location) {
+         this.origin = location.toVector();

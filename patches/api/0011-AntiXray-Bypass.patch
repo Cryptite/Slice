@@ -5,17 +5,17 @@ Subject: [PATCH] AntiXray Bypass
 
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index d422017c54d49a5a6aaa5226162cb152c20183a9..702a1b611bb107ea134830446ee748ebf6328bca 100644
+index 3a7d0900e7802c40377086ba8acec5a3f90a340d..cd21d9a16b8d50d2cc3b13fa3621a6aa3a859955 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2952,6 +2952,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2949,6 +2949,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
       */
-     boolean hasResourcePack();
+     public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra);
  
 +    // Slice start
 +    void toggleAntiXrayBypass(boolean bypass);
 +    // Slice end
 +
      /**
-      * Gets a copy of this players profile
-      * @return The players profile object
+      * Spawns the particle (the number of times specified by count)
+      * at the target location. The position of each particle will be
