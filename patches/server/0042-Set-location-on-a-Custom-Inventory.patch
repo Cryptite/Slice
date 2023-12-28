@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 8 Dec 2023 08:02:07 -0600
+Subject: [PATCH] Set location on a Custom Inventory
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java
+index da1c1fe0faf6819b15a81d6ad53370948e5f984f..84eff85e98484c9701e203bb1fa61435ee88bab4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java
+@@ -69,6 +69,14 @@ public class CraftInventoryCustom extends CraftInventory {
+     }
+     // Paper end
+ 
++    // Slice start
++    public void setLocation(Location location) {
++        if (this.inventory instanceof MinecraftInventory minecraftInventory) {
++            minecraftInventory.location = location;
++        }
++    }
++    // Slice end
++
+     static class MinecraftInventory implements Container {
+         private final NonNullList<ItemStack> items;
+         private int maxStack = MAX_STACK;
+@@ -77,6 +85,7 @@ public class CraftInventoryCustom extends CraftInventory {
+         private final net.kyori.adventure.text.Component adventure$title; // Paper
+         private InventoryType type;
+         private final InventoryHolder owner;
++        private Location location; // Slice
+ 
+         // Paper start
+         public MinecraftInventory(InventoryHolder owner, InventoryType type, net.kyori.adventure.text.Component title) {
+@@ -239,7 +248,7 @@ public class CraftInventoryCustom extends CraftInventory {
+ 
+         @Override
+         public Location getLocation() {
+-            return null;
++            return location;
+         }
+ 
+         // Paper start
