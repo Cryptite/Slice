@@ -24,45 +24,11 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
      public ClientboundSetEquipmentPacket(FriendlyByteBuf buf) {
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
-diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..248a4af1b9c6684502570c879efae20a36558414 100644
---- a/src/main/java/net/minecraft/server/level/ServerEntity.java
-+++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -325,27 +325,8 @@ public class ServerEntity {
-             sender.accept(new ClientboundSetEntityMotionPacket(this.entity.getId(), this.ap));
-         }
- 
--        if (this.entity instanceof LivingEntity) {
--            List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
--            EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
--            int i = aenumitemslot.length;
--
--            for (int j = 0; j < i; ++j) {
--                EquipmentSlot enumitemslot = aenumitemslot[j];
--                ItemStack itemstack = ((LivingEntity) this.entity).getItemBySlot(enumitemslot);
--
--                if (!itemstack.isEmpty()) {
--                    // Paper start - prevent oversized data
--                    final ItemStack sanitized = LivingEntity.sanitizeItemStack(itemstack.copy(), false);
--                    list.add(Pair.of(enumitemslot, ((LivingEntity) this.entity).stripMeta(sanitized, false))); // Paper - remove unnecessary item meta
--                    // Paper end
--                }
--            }
--
--            if (!list.isEmpty()) {
--                sender.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
--            }
--            ((LivingEntity) this.entity).detectEquipmentUpdatesPublic(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
-+        if (this.entity instanceof LivingEntity livingEntity) {
-+            livingEntity.sendEquipment(sender, player); // Slice
-         }
- 
-         if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 1625dea60a5880b04b34d36732370e65ab86e528..e7d7d2db99cac771ebf20755911ed8e78df93af1 100644
+index 3c453de303422f96abf3aa67fa23523dd71327cb..416d71d91addc7b59c292377459f04512c5d9db7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -263,6 +263,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -262,6 +262,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper
@@ -71,7 +37,7 @@ index 1625dea60a5880b04b34d36732370e65ab86e528..e7d7d2db99cac771ebf20755911ed8e7
  
      @Override
      public float getBukkitYaw() {
-@@ -3105,6 +3107,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3110,6 +3112,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -79,7 +45,7 @@ index 1625dea60a5880b04b34d36732370e65ab86e528..e7d7d2db99cac771ebf20755911ed8e7
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3197,7 +3200,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3202,7 +3205,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -106,7 +72,7 @@ index 1625dea60a5880b04b34d36732370e65ab86e528..e7d7d2db99cac771ebf20755911ed8e7
      }
  
      // Paper start - hide unnecessary item meta
-@@ -4531,4 +4552,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4543,4 +4564,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -182,10 +148,10 @@ index 1625dea60a5880b04b34d36732370e65ab86e528..e7d7d2db99cac771ebf20755911ed8e7
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 030fd330b13197d752a2d4c48628b9efd2c2c776..ecb39b5d3b8c96bb019fdd5b4977f7e22a8ebdcc 100644
+index 1f1ef68a9a449a4a90c284f34a397ab4b6d905f6..3efaa46456a38eac7431552f92761ed1c9b76f5f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -1099,4 +1099,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -1118,4 +1118,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          getHandle().knockback(strength, directionX, directionZ);
      };
      // Paper end

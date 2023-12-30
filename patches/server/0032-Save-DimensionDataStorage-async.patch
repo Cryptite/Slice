@@ -4,8 +4,22 @@ Date: Mon, 26 Jun 2023 16:45:00 -0500
 Subject: [PATCH] Save DimensionDataStorage async
 
 
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index a530dd1b15093803ffb87848f4c28dcf5da6476c..cd6c890c1f1084759d4e75f9c2d869541b974435 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -2137,8 +2137,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
+         if (existing == null && !storage.cache.containsKey(id)) {
+             final net.minecraft.world.level.saveddata.SavedData.Factory<MapItemSavedData> factory = MapItemSavedData.factory();
+             final MapItemSavedData map = storage.readSavedData(factory.deserializer(), factory.type(), id);
+-            storage.cache.put(id, map);
+             if (map != null) {
++                storage.cache.put(id, map);
+                 map.id = id;
+                 new MapInitializeEvent(map.mapView).callEvent();
+                 return map;
 diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-index f921f55e815a4da01828e025881a7a03591c3978..f44dbf56062148ff442141bc0058accc275617b2 100644
+index d051e8c1db6b5c42b8df0be54d9d48ba0e7b0077..f90f7fc66396091bdeb98bc3271b68bca693ee15 100644
 --- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
 @@ -9,6 +9,8 @@ import java.io.FileInputStream;
@@ -17,7 +31,7 @@ index f921f55e815a4da01828e025881a7a03591c3978..f44dbf56062148ff442141bc0058accc
  import java.util.function.Function;
  import javax.annotation.Nullable;
  import net.minecraft.SharedConstants;
-@@ -17,11 +19,12 @@ import net.minecraft.nbt.NbtIo;
+@@ -18,11 +20,12 @@ import net.minecraft.nbt.NbtIo;
  import net.minecraft.nbt.NbtUtils;
  import net.minecraft.util.datafix.DataFixTypes;
  import net.minecraft.world.level.saveddata.SavedData;
@@ -31,7 +45,7 @@ index f921f55e815a4da01828e025881a7a03591c3978..f44dbf56062148ff442141bc0058accc
      private final DataFixer fixerUpper;
      private final File dataFolder;
  
-@@ -50,7 +53,7 @@ public class DimensionDataStorage {
+@@ -51,7 +54,7 @@ public class DimensionDataStorage {
          SavedData savedData = this.cache.get(id);
          if (savedData == null && !this.cache.containsKey(id)) {
              savedData = this.readSavedData(type.deserializer(), type.type(), id);
@@ -40,7 +54,7 @@ index f921f55e815a4da01828e025881a7a03591c3978..f44dbf56062148ff442141bc0058accc
          }
  
          return (T)savedData;
-@@ -118,11 +121,12 @@ public class DimensionDataStorage {
+@@ -119,11 +122,12 @@ public class DimensionDataStorage {
      }
  
      public void save() {

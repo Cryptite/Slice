@@ -150,7 +150,7 @@ index f945fae50983424091b58f83ed14f2e8f2621619..b4c16e355ebadf06b9405c06e2b598e7
 +    public boolean place(FeaturePlaceContext<GeodeConfiguration> context) {return false;}
  }
 diff --git a/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java b/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java
-index 3c474c8fc937df5aebfb063be8109053a91e8bb4..2a36bba04d584fdccbb06dc4991064a245082991 100644
+index 7c252dd2bd314f06703ac9356410c52b21198d12..7a34e16db1b51f4283112c8c99a84322213823fa 100644
 --- a/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java
 +++ b/src/main/java/net/minecraft/world/level/levelgen/feature/MonsterRoomFeature.java
 @@ -30,103 +30,7 @@ public class MonsterRoomFeature extends Feature<NoneFeatureConfiguration> {
@@ -233,7 +233,7 @@ index 3c474c8fc937df5aebfb063be8109053a91e8bb4..2a36bba04d584fdccbb06dc4991064a2
 -
 -                        if (ad == 1) {
 -                            this.safeSetBlock(worldGenLevel, blockPos4, StructurePiece.reorient(worldGenLevel, blockPos4, Blocks.CHEST.defaultBlockState()), predicate);
--                            RandomizableContainerBlockEntity.setLootTable(worldGenLevel, randomSource, blockPos4, BuiltInLootTables.SIMPLE_DUNGEON);
+-                            RandomizableContainer.setBlockEntityLootTable(worldGenLevel, randomSource, blockPos4, BuiltInLootTables.SIMPLE_DUNGEON);
 -                            break;
 -                        }
 -                    }

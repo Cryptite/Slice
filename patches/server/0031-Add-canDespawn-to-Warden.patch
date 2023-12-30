@@ -5,10 +5,10 @@ Subject: [PATCH] Add canDespawn to Warden
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 73871f456a85bda1e51f54986d0e61fb629822e8..fb0079c527d91e6f6f0ad7ab926418e2fc90c984 100644
+index 940b8d0b89d7e55c938aefbe80ee71b0db3dacb8..ed5521bda42708b22e1128069d7b47d051c3358c 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -589,7 +589,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -593,7 +593,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          }), (entity) -> {
              entity.load(nbt);
          }, () -> {
@@ -18,10 +18,10 @@ index 73871f456a85bda1e51f54986d0e61fb629822e8..fb0079c527d91e6f6f0ad7ab926418e2
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
-index b2bc3a832c310448046ccde37a04918aa6d63197..a4cef5d81b0eeef933440bc7f96a9a8ef3a5afdf 100644
+index 9f1b7c629644931074293151ed58a523ca6d488c..175d019f65499cf7a5743914d2c0b06f3c081eda 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
-@@ -111,6 +111,7 @@ public class Warden extends Monster implements VibrationSystem {
+@@ -112,6 +112,7 @@ public class Warden extends Monster implements VibrationSystem {
      private final VibrationSystem.User vibrationUser = new Warden.VibrationUser();
      private VibrationSystem.Data vibrationData = new VibrationSystem.Data();
      AngerManagement angerManagement = new AngerManagement(this::canTargetEntity, Collections.emptyList());
@@ -49,7 +49,7 @@ index 03f16a5541de6bc95407aaa24741570c1993dc9e..07600fdd32a058d0e3f9828efdc18f5e
  
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
-index 46e3cc146a4b109c4baaf94f42d825646abade68..b248150c047890f45fae75716e40e495752f3732 100644
+index c284eb96a1e330078076cbe61f0f6e2ff4ed89bd..b9ffe3d49f0253353fb2b726f974effe18e521ec 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftWarden.java
 @@ -86,4 +86,11 @@ public class CraftWarden extends CraftMonster implements org.bukkit.entity.Warde

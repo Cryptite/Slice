@@ -5,10 +5,10 @@ Subject: [PATCH] Change KeepAlive interval
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
-index 598f807f0d0caac98b81e0e2991f1bd497c4534e..8530ab430704243caafe3ca311e05597f20f5167 100644
+index d28d0ef6105ddeb562ddf31ae9088739856941fc..6a9bbe6b9efd068e4c7a2aec5baa0cb7d481a027 100644
 --- a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
-@@ -202,7 +202,7 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+@@ -215,7 +215,7 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
                  this.disconnect(ServerCommonPacketListenerImpl.TIMEOUT_DISCONNECTION_MESSAGE, org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
              }
          } else {
