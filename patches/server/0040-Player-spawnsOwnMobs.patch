@@ -18,7 +18,7 @@ index 44ada45d9bf2d9b48e5de1c3cb1a855902f3884b..9c5be1f0fd4d6cb62e7bc7faa8fa4c4e
                          player.playerNaturallySpawnedEvent = null;
                          player.lastEntitySpawnRadiusSquared = -1.0;
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 88873231244f3d6e36a3e0aae957cb3af2048b8d..a0b6df7d86345f8a7269ca9cfcec6717b213adfd 100644
+index 6a642996eb149a71585ef8f6b74b567a245fe635..a4b476149ca2baa2df87a37a86d082a2875f45d6 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -184,6 +184,8 @@ public abstract class Player extends LivingEntity {

@@ -17,7 +17,7 @@ index 4407f04904af9b17987ce595cc8b6e9e129ccec7..2d97c4445bd172a901c8dcf144b03081
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player) && ChunkMap.this.isChunkTracked(player, this.entity.chunkPosition().x, this.entity.chunkPosition().z);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 1c3e41c9c849c6ba9fa4a8cd6950f99c28ceff92..7a9805d6c4335092bbabb68b3678a8e78b7d406f 100644
+index 6fbd96970505ffcc75331584cac96bbdf2bde658..3e618dd6bf02b51dd267b903ffa54b3a1c180c4d 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -282,6 +282,7 @@ public class ServerPlayer extends Player {
@@ -28,7 +28,7 @@ index 1c3e41c9c849c6ba9fa4a8cd6950f99c28ceff92..7a9805d6c4335092bbabb68b3678a8e7
  
      // Paper start - replace player chunk loader
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
-@@ -2757,4 +2758,18 @@ public class ServerPlayer extends Player {
+@@ -2758,4 +2759,18 @@ public class ServerPlayer extends Player {
          return (CraftPlayer) super.getBukkitEntity();
      }
      // CraftBukkit end

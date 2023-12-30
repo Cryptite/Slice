@@ -5,7 +5,7 @@ Subject: [PATCH] Set BlockData without light updates
 
 
 diff --git a/src/main/java/org/bukkit/block/Block.java b/src/main/java/org/bukkit/block/Block.java
-index 390a2a2611df35a9ea6f1eb996b47e2aa4597ff0..384e5700b6899850d91a34e1d13d1ca0678cfaaa 100644
+index 49974558799830d827f9ccd65a8bafee3fb0376b..93fcb1562e58a3a613eccd28cae1e87e26a158c9 100644
 --- a/src/main/java/org/bukkit/block/Block.java
 +++ b/src/main/java/org/bukkit/block/Block.java
 @@ -298,6 +298,28 @@ public interface Block extends Metadatable, Translatable, net.kyori.adventure.tr

@@ -5,7 +5,7 @@ Subject: [PATCH] Add reason to PlayerConnectionCloseEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
-index 8dbcc1b3a70b6bbea3bd2d15b6d66cc4f9cd53f8..9ae791c7a71c8ebfe9018c42d109c0f4a51a9dda 100644
+index cae10b963d153fb1777b18054796a45b2809342b..45a50cf9b7ceba080b6de70eee03bab854652905 100644
 --- a/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
 @@ -138,6 +138,7 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis

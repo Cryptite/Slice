@@ -5,7 +5,7 @@ Subject: [PATCH] Biome freeze override
 
 
 diff --git a/src/main/java/net/minecraft/world/level/biome/Biome.java b/src/main/java/net/minecraft/world/level/biome/Biome.java
-index 65012a12e1430956ef55ced56773e6354ac26444..0178017cb2d871dd344e3da910ee724cac05d7e5 100644
+index 4f9187d9d640618c40a2fa528f36b845017b4777..86372a10ab41bf0f5b7b88dc4d71c6802cd93b7d 100644
 --- a/src/main/java/net/minecraft/world/level/biome/Biome.java
 +++ b/src/main/java/net/minecraft/world/level/biome/Biome.java
 @@ -76,6 +76,7 @@ public final class Biome {

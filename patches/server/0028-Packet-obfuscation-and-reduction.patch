@@ -170,7 +170,7 @@ index edfd68dd73deb703efc6e7164a2af0cb8744a0bd..3c453de303422f96abf3aa67fa23523d
  
      private void handleHandSwap(Map<EquipmentSlot, ItemStack> equipmentChanges) {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index c12b9b70d093217c9c796663341edcfa7fd29932..88873231244f3d6e36a3e0aae957cb3af2048b8d 100644
+index 64df32011e94cb68cfa32a3a236a70cfc1da7c05..6a642996eb149a71585ef8f6b74b567a245fe635 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -644,7 +644,7 @@ public abstract class Player extends LivingEntity {

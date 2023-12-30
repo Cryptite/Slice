@@ -5,7 +5,7 @@ Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 3e597833b57377b855505b8a0f2744801c791f90..04a68a4f0c642984bd2b95bfb0d7d2bd887d18f0 100644
+index ccc1caafb0ada52c7b99b7358253826f5390843e..58b59a76db1acbbc7977abc53b2c8b2e5475eda2 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -1278,10 +1278,11 @@ public abstract class Player extends LivingEntity {
