@@ -65,6 +65,15 @@ paperweight {
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
             serverOutputDir.set(layout.projectDirectory.dir("slice-server"))
         }
+
+        patchTasks {
+            register("generatedApi") {
+                isBareDirectory.set(true)
+                upstreamDirPath.set("paper-api-generator/generated")
+                patchDir.set(layout.projectDirectory.dir("patches/generatedApi"))
+                outputDir.set(layout.projectDirectory.dir("paper-api-generator/generated"))
+            }
+        }
     }
 }
 

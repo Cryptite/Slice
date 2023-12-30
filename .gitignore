@@ -4,6 +4,7 @@
 run
 slice-api
 slice-server
+paper-api-generator
 
 # Ignore Gradle GUI config
 gradle-app.setting
