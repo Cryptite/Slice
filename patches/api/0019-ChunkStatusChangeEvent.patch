@@ -6,10 +6,10 @@ Subject: [PATCH] ChunkStatusChangeEvent
 
 diff --git a/src/main/java/com/destroystokyo/paper/event/chunk/ChunkStatusChangeEvent.java b/src/main/java/com/destroystokyo/paper/event/chunk/ChunkStatusChangeEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..512664d4a7a6821b8d79d0aabf5c31a61fcae6b9
+index 0000000000000000000000000000000000000000..9154bc8a072d8e5f3fd9790606508af048a612eb
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/event/chunk/ChunkStatusChangeEvent.java
-@@ -0,0 +1,58 @@
+@@ -0,0 +1,61 @@
 +package com.destroystokyo.paper.event.chunk;
 +
 +import org.bukkit.Chunk;
@@ -27,21 +27,24 @@ index 0000000000000000000000000000000000000000..512664d4a7a6821b8d79d0aabf5c31a6
 +    private final ChunkStatus currentState;
 +    private final ChunkStatus newState;
 +
-+    public ChunkStatusChangeEvent(Chunk chunk, ChunkStatus currentState, ChunkStatus newState) {
++    public ChunkStatusChangeEvent(@NotNull Chunk chunk, @NotNull ChunkStatus currentState, @NotNull ChunkStatus newState) {
 +        super();
 +        this.chunk = chunk;
 +        this.currentState = currentState;
 +        this.newState = newState;
 +    }
 +
++    @NotNull
 +    public Chunk getChunk() {
 +        return chunk;
 +    }
 +
++    @NotNull
 +    public ChunkStatus getCurrentState() {
 +        return currentState;
 +    }
 +
++    @NotNull
 +    public ChunkStatus getNewState() {
 +        return newState;
 +    }

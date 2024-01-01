@@ -5,7 +5,7 @@ Subject: [PATCH] Equipment Packet Caching
 
 
 diff --git a/src/main/java/org/bukkit/entity/LivingEntity.java b/src/main/java/org/bukkit/entity/LivingEntity.java
-index 47b0154928b3d36e2602da202df07defbcf82108..27c57d2e0c67f2bf753505a2ae1ccd5451241df8 100644
+index 47b0154928b3d36e2602da202df07defbcf82108..53f46bc741a2bc0dcb9ebe74079fae6f5f2dc15a 100644
 --- a/src/main/java/org/bukkit/entity/LivingEntity.java
 +++ b/src/main/java/org/bukkit/entity/LivingEntity.java
 @@ -1276,4 +1276,11 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
@@ -17,12 +17,12 @@ index 47b0154928b3d36e2602da202df07defbcf82108..27c57d2e0c67f2bf753505a2ae1ccd54
 +    /**
 +     * @param p The player to send this entity's equipment packet to
 +     */
-+    void sendEquipment(Player p);
++    void sendEquipment(@NotNull Player p);
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/event/entity/EntityEquipmentItemLookup.java b/src/main/java/org/bukkit/event/entity/EntityEquipmentItemLookup.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6c329ca3c22d1fd712041334c5c1e7bd7e7201ac
+index 0000000000000000000000000000000000000000..48d2eb3bbb8dbcb6714ee47c4159c0604657a78c
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/entity/EntityEquipmentItemLookup.java
 @@ -0,0 +1,54 @@
@@ -55,7 +55,7 @@ index 0000000000000000000000000000000000000000..6c329ca3c22d1fd712041334c5c1e7bd
 +        return itemStack;
 +    }
 +
-+    public void setItemStack(ItemStack itemStack) {
++    public void setItemStack(@NotNull ItemStack itemStack) {
 +        this.itemStack = itemStack;
 +    }
 +
@@ -82,10 +82,10 @@ index 0000000000000000000000000000000000000000..6c329ca3c22d1fd712041334c5c1e7bd
 +}
 diff --git a/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java b/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..513d62342d8e29e8d3c92fe932d0d77f659cf2f1
+index 0000000000000000000000000000000000000000..a8f83d19341c2f3024ba8113478ed482657b8589
 --- /dev/null
 +++ b/src/main/java/org/bukkit/event/player/PlayerReceiveEquipmentEvent.java
-@@ -0,0 +1,61 @@
+@@ -0,0 +1,63 @@
 +package org.bukkit.event.player;
 +
 +import org.bukkit.entity.Entity;
@@ -93,6 +93,7 @@ index 0000000000000000000000000000000000000000..513d62342d8e29e8d3c92fe932d0d77f
 +import org.bukkit.event.Cancellable;
 +import org.bukkit.event.HandlerList;
 +import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
 +
 +/**
 + * Called when a player is about to receive an equipment packet about another player
@@ -118,11 +119,12 @@ index 0000000000000000000000000000000000000000..513d62342d8e29e8d3c92fe932d0d77f
 +        return tracked;
 +    }
 +
++    @Nullable
 +    public String getTag() {
 +        return tag;
 +    }
 +
-+    public void setTag(String tag) {
++    public void setTag(@Nullable String tag) {
 +        this.tag = tag;
 +    }
 +

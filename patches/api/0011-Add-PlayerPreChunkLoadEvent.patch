@@ -6,10 +6,10 @@ Subject: [PATCH] Add PlayerPreChunkLoadEvent
 
 diff --git a/src/main/java/io/papermc/paper/event/packet/PlayerPreChunkLoadEvent.java b/src/main/java/io/papermc/paper/event/packet/PlayerPreChunkLoadEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b5cc9538a70c7ce0b494d4878d51b52134c2fd75
+index 0000000000000000000000000000000000000000..946af80dd54f602b5ceb61365ca98b06411f8177
 --- /dev/null
 +++ b/src/main/java/io/papermc/paper/event/packet/PlayerPreChunkLoadEvent.java
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,70 @@
 +package io.papermc.paper.event.packet;
 +
 +import org.bukkit.Chunk;
@@ -34,7 +34,7 @@ index 0000000000000000000000000000000000000000..b5cc9538a70c7ce0b494d4878d51b521
 +    private final Player player;
 +    private boolean cancel;
 +
-+    public PlayerPreChunkLoadEvent(World world, int chunkX, int chunkZ, @NotNull Player player) {
++    public PlayerPreChunkLoadEvent(@NotNull World world, int chunkX, int chunkZ, @NotNull Player player) {
 +        this.world = world;
 +        this.chunkX = chunkX;
 +        this.chunkZ = chunkZ;
@@ -47,6 +47,7 @@ index 0000000000000000000000000000000000000000..b5cc9538a70c7ce0b494d4878d51b521
 +        return handlers;
 +    }
 +
++    @NotNull
 +    public World getWorld() {
 +        return world;
 +    }
@@ -81,14 +82,15 @@ index 0000000000000000000000000000000000000000..b5cc9538a70c7ce0b494d4878d51b521
 +}
 \ No newline at end of file
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index 415a137775f072d1aefa841b01b6bf7a5f97b6a3..ffd89e5e2039c0f1662236db112bbf25eabb0a17 100644
+index 415a137775f072d1aefa841b01b6bf7a5f97b6a3..0a9f6c7dd69acc7bf87af87b397c34b80871033b 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -525,6 +525,8 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+@@ -525,6 +525,9 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      //@Deprecated // Paper
      public boolean refreshChunk(int x, int z);
  
-+    it.unimi.dsi.fastutil.longs.LongOpenHashSet getSentChunks(Player p); // Slice
++    @NotNull
++    it.unimi.dsi.fastutil.longs.LongOpenHashSet getSentChunks(@NotNull Player p); // Slice
 +
      /**
       * Gets whether the chunk at the specified chunk coordinates is force

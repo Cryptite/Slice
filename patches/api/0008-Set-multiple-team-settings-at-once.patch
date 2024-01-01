@@ -5,7 +5,7 @@ Subject: [PATCH] Set multiple team settings at once
 
 
 diff --git a/src/main/java/org/bukkit/scoreboard/Team.java b/src/main/java/org/bukkit/scoreboard/Team.java
-index cacb58d25c249e2ecd6083ed0f30d5ffb345220a..188949e51d2f32357d35baa04b8b17bc9b753bc7 100644
+index cacb58d25c249e2ecd6083ed0f30d5ffb345220a..b0ed2c57321dae0d00b47dd23e67866592249993 100644
 --- a/src/main/java/org/bukkit/scoreboard/Team.java
 +++ b/src/main/java/org/bukkit/scoreboard/Team.java
 @@ -514,6 +514,24 @@ public interface Team extends net.kyori.adventure.audience.ForwardingAudience {
@@ -23,11 +23,11 @@ index cacb58d25c249e2ecd6083ed0f30d5ffb345220a..188949e51d2f32357d35baa04b8b17bc
 +     * @param options A Paired list of options
 +     * @throws IllegalStateException
 +     */
-+    void teamOptions(net.kyori.adventure.text.Component displayName,
-+                     net.kyori.adventure.text.Component prefix,
-+                     net.kyori.adventure.text.Component suffix,
-+                     net.kyori.adventure.text.format.NamedTextColor color,
-+                     java.util.List<org.apache.commons.lang3.tuple.Pair<Option, OptionStatus>> options) throws IllegalStateException;
++    void teamOptions(@Nullable net.kyori.adventure.text.Component displayName,
++                     @Nullable net.kyori.adventure.text.Component prefix,
++                     @Nullable net.kyori.adventure.text.Component suffix,
++                     @Nullable net.kyori.adventure.text.format.NamedTextColor color,
++                     @Nullable java.util.List<org.apache.commons.lang3.tuple.Pair<Option, OptionStatus>> options) throws IllegalStateException;
 +    //Slice end
 +
      /**

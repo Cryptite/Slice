@@ -5,7 +5,7 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index ae61a39b25267b84fe0b8766e4b12d9b24b44ded..3a7d0900e7802c40377086ba8acec5a3f90a340d 100644
+index ae61a39b25267b84fe0b8766e4b12d9b24b44ded..36ae75f004f6eb1031e9b414526bea9cd48d11d0 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
 @@ -3437,6 +3437,19 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
@@ -22,7 +22,7 @@ index ae61a39b25267b84fe0b8766e4b12d9b24b44ded..3a7d0900e7802c40377086ba8acec5a3
 +     */
 +    // Slice start
 +    @org.jetbrains.annotations.ApiStatus.Experimental
-+    void teleportWithoutRespawn(Location location);
++    void teleportWithoutRespawn(@NotNull Location location);
 +    // Slice end
 +
      // Paper start - Teleport API
