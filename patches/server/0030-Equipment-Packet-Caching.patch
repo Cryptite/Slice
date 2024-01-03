@@ -24,6 +24,40 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
      public ClientboundSetEquipmentPacket(FriendlyByteBuf buf) {
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..248a4af1b9c6684502570c879efae20a36558414 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -325,27 +325,8 @@ public class ServerEntity {
+             sender.accept(new ClientboundSetEntityMotionPacket(this.entity.getId(), this.ap));
+         }
+ 
+-        if (this.entity instanceof LivingEntity) {
+-            List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
+-            EquipmentSlot[] aenumitemslot = EquipmentSlot.values();
+-            int i = aenumitemslot.length;
+-
+-            for (int j = 0; j < i; ++j) {
+-                EquipmentSlot enumitemslot = aenumitemslot[j];
+-                ItemStack itemstack = ((LivingEntity) this.entity).getItemBySlot(enumitemslot);
+-
+-                if (!itemstack.isEmpty()) {
+-                    // Paper start - prevent oversized data
+-                    final ItemStack sanitized = LivingEntity.sanitizeItemStack(itemstack.copy(), false);
+-                    list.add(Pair.of(enumitemslot, ((LivingEntity) this.entity).stripMeta(sanitized, false))); // Paper - remove unnecessary item meta
+-                    // Paper end
+-                }
+-            }
+-
+-            if (!list.isEmpty()) {
+-                sender.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list));
+-            }
+-            ((LivingEntity) this.entity).detectEquipmentUpdatesPublic(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
++        if (this.entity instanceof LivingEntity livingEntity) {
++            livingEntity.sendEquipment(sender, player); // Slice
+         }
+ 
+         if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 index 3c453de303422f96abf3aa67fa23523dd71327cb..416d71d91addc7b59c292377459f04512c5d9db7 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
