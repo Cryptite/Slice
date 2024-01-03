@@ -5,10 +5,10 @@ Subject: [PATCH] Save DimensionDataStorage async
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index a530dd1b15093803ffb87848f4c28dcf5da6476c..cd6c890c1f1084759d4e75f9c2d869541b974435 100644
+index ad868de68ecc5eee9701f8fe3d48e9fb3ed422d8..ef2d88765dbcc36ca3a1f36101e389799241bcde 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -2137,8 +2137,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2142,8 +2142,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
          if (existing == null && !storage.cache.containsKey(id)) {
              final net.minecraft.world.level.saveddata.SavedData.Factory<MapItemSavedData> factory = MapItemSavedData.factory();
              final MapItemSavedData map = storage.readSavedData(factory.deserializer(), factory.type(), id);
