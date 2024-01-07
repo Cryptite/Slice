@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sun, 7 Jan 2024 08:27:00 -0600
+Subject: [PATCH] Vanish
+
+
+diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
+index 0b057d6be0d55c275867bd1cb98387bc3237d881..2f1c4ecb27d47745fa9bad3a36f006103aaf79b2 100644
+--- a/src/main/java/org/bukkit/entity/Entity.java
++++ b/src/main/java/org/bukkit/entity/Entity.java
+@@ -1122,4 +1122,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+      */
+     void setSaveable(boolean saveable);
+     // Slice end
++
++    // Slice start
++    /**
++     * Returns true if the entity is vanished and cannot emit sounds, effects, etc.
++     */
++    boolean isVanished();
++
++    /**
++     * Sets whether the entity is vanished and cannot emit sounds, effects, etc.
++     *
++     * @param vanished the saveable status
++     * @see #isVanished()
++     */
++    void setVanished(boolean vanished);
++    // Slice end
+ }

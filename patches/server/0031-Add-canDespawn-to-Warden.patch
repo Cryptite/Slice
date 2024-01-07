@@ -5,11 +5,11 @@ Subject: [PATCH] Add canDespawn to Warden
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 940b8d0b89d7e55c938aefbe80ee71b0db3dacb8..ed5521bda42708b22e1128069d7b47d051c3358c 100644
+index 00389d7ec3e8b059d5591a2019ba240fda2901fe..f7530dd768353921465a887d161845c1a943e527 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -593,7 +593,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
-         }), (entity) -> {
+@@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+             if (generation) entity.generation = true; // Paper - add generation bool param
              entity.load(nbt);
          }, () -> {
 -            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));

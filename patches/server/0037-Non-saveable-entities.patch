@@ -18,7 +18,7 @@ index 7e8dc9e8f381abfdcce2746edc93122d623622d1..303e5ed4d5cf2a64b998656bfd189f19
                  if (entity.isVehicle()) {
                      // we cannot assume that these entities are contained within this chunk, because entities can
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 34f3ddb22febc0aea7d3059b2cbbd84554fd03b4..a6db17c51d6b8e58936e52e7f6cbe07dcebd5418 100644
+index 35fa9a43154b08bccc50d7c626c4b10289ef61da..3179abc5b548cc203bd68aeb77fdd558c2df3c4a 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -422,6 +422,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
@@ -29,7 +29,7 @@ index 34f3ddb22febc0aea7d3059b2cbbd84554fd03b4..a6db17c51d6b8e58936e52e7f6cbe07d
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-@@ -4819,7 +4820,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4830,7 +4831,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
  
      @Override
      public boolean shouldBeSaved() {
