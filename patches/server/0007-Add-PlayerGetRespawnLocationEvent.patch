@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerGetRespawnLocationEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index e2eb3feb786d6348b6d45dd9babb7b36eebccd6e..5c7721aa768ec3b2ad659b7242681b4a04153db9 100644
+index e2eb3feb786d6348b6d45dd9babb7b36eebccd6e..f54e00f11e92d63aa241a3b8693afa5f1797d1ab 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -867,16 +867,24 @@ public abstract class PlayerList {
+@@ -867,49 +867,57 @@ public abstract class PlayerList {
  
          // CraftBukkit start - fire PlayerRespawnEvent
          if (location == null) {
@@ -40,11 +40,18 @@ index e2eb3feb786d6348b6d45dd9babb7b36eebccd6e..5c7721aa768ec3b2ad659b7242681b4a
 +                        optional = Optional.empty();
 +                    }
  
-                 if (optional.isPresent()) {
-                     BlockState iblockdata = worldserver1.getBlockState(blockposition);
-@@ -885,13 +893,13 @@ public abstract class PlayerList {
-                     Vec3 vec3d = (Vec3) optional.get();
-                     float f1;
+-                if (optional.isPresent()) {
+-                    BlockState iblockdata = worldserver1.getBlockState(blockposition);
+-                    boolean flag3 = iblockdata.is(Blocks.RESPAWN_ANCHOR);
+-                    isAnchorSpawn = flag3; // Paper - Fix PlayerRespawnEvent
+-                    Vec3 vec3d = (Vec3) optional.get();
+-                    float f1;
++                    if (optional.isPresent()) {
++                        BlockState iblockdata = worldserver1.getBlockState(blockposition);
++                        boolean flag3 = iblockdata.is(Blocks.RESPAWN_ANCHOR);
++                        isAnchorSpawn = flag3; // Paper - Fix PlayerRespawnEvent
++                        Vec3 vec3d = (Vec3) optional.get();
++                        float f1;
  
 -                    if (!iblockdata.is(BlockTags.BEDS) && !flag3) {
 -                        f1 = f;
@@ -60,5 +67,36 @@ index e2eb3feb786d6348b6d45dd9babb7b36eebccd6e..5c7721aa768ec3b2ad659b7242681b4a
 +                            f1 = (float) Mth.wrapDegrees(Mth.atan2(vec3d1.z, vec3d1.x) * 57.2957763671875D - 90.0D);
 +                        }
  
-                     // entityplayer1.setRespawnPosition(worldserver1.dimension(), blockposition, f, flag1, false); // CraftBukkit - not required, just copies old location into reused entity
-                     flag2 = !flag && flag3;
+-                    // entityplayer1.setRespawnPosition(worldserver1.dimension(), blockposition, f, flag1, false); // CraftBukkit - not required, just copies old location into reused entity
+-                    flag2 = !flag && flag3;
+-                    isBedSpawn = true;
+-                    location = CraftLocation.toBukkit(vec3d, worldserver1.getWorld(), f1, 0.0F);
+-                } else if (blockposition != null) {
+-                    entityplayer1.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
+-                    entityplayer1.setRespawnPosition(null, null, 0f, false, false, com.destroystokyo.paper.event.player.PlayerSetSpawnEvent.Cause.PLAYER_RESPAWN); // CraftBukkit - SPIGOT-5988: Clear respawn location when obstructed // Paper - Add PlayerSetSpawnEvent
++                        // entityplayer1.setRespawnPosition(worldserver1.dimension(), blockposition, f, flag1, false); // CraftBukkit - not required, just copies old location into reused entity
++                        flag2 = !flag && flag3;
++                        isBedSpawn = true;
++                        location = CraftLocation.toBukkit(vec3d, worldserver1.getWorld(), f1, 0.0F);
++                    } else if (blockposition != null) {
++                        entityplayer1.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
++                        entityplayer1.setRespawnPosition(null, null, 0f, false, false, com.destroystokyo.paper.event.player.PlayerSetSpawnEvent.Cause.PLAYER_RESPAWN); // CraftBukkit - SPIGOT-5988: Clear respawn location when obstructed // Paper - Add PlayerSetSpawnEvent
++                    }
+                 }
+-            }
+ 
+-            if (location == null) {
+-                worldserver1 = this.server.getLevel(Level.OVERWORLD);
+-                blockposition = entityplayer1.getSpawnPoint(worldserver1);
+-                location = CraftLocation.toBukkit(blockposition, worldserver1.getWorld(), worldserver1.levelData.getSpawnAngle(), 0.0F).add(0.5F, 0.1F, 0.5F); // Paper - Expose world spawn angle
++                if (location == null) {
++                    worldserver1 = this.server.getLevel(Level.OVERWORLD);
++                    blockposition = entityplayer1.getSpawnPoint(worldserver1);
++                    location = CraftLocation.toBukkit(blockposition, worldserver1.getWorld(), worldserver1.levelData.getSpawnAngle(), 0.0F).add(0.5F, 0.1F, 0.5F); // Paper - Expose world spawn angle
++                }
+             }
+ 
+-            Player respawnPlayer = entityplayer1.getBukkitEntity();
+             PlayerRespawnEvent respawnEvent = new PlayerRespawnEvent(respawnPlayer, location, isBedSpawn && !isAnchorSpawn, isAnchorSpawn, reason, com.google.common.collect.ImmutableSet.<org.bukkit.event.player.PlayerRespawnEvent.RespawnFlag>builder().add(respawnFlags)); // Paper - PlayerRespawnEvent changes
+             this.cserver.getPluginManager().callEvent(respawnEvent);
+             // Spigot Start
