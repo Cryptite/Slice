@@ -1,0 +1,64 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 10 Apr 2023 07:46:18 -0500
+Subject: [PATCH] Add PlayerGetRespawnLocationEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index e2eb3feb786d6348b6d45dd9babb7b36eebccd6e..5c7721aa768ec3b2ad659b7242681b4a04153db9 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -867,16 +867,24 @@ public abstract class PlayerList {
+ 
+         // CraftBukkit start - fire PlayerRespawnEvent
+         if (location == null) {
+-            // boolean isBedSpawn = false; // Paper - moved up
+-            ServerLevel worldserver1 = this.server.getLevel(entityplayer.getRespawnDimension());
+-            if (worldserver1 != null) {
+-                Optional optional;
++            // Slice start
++            Player respawnPlayer = entityplayer1.getBukkitEntity();
++            org.bukkit.event.player.PlayerGetRespawnLocationEvent preRespawnEvent = new org.bukkit.event.player.PlayerGetRespawnLocationEvent(respawnPlayer);
++            preRespawnEvent.callEvent();
++            location = preRespawnEvent.getRespawnLocation();
+ 
+-                if (blockposition != null) {
+-                    optional = net.minecraft.world.entity.player.Player.findRespawnPositionAndUseSpawnBlock(worldserver1, blockposition, f, flag1, true); // Paper - Fix SPIGOT-5989
+-                } else {
+-                    optional = Optional.empty();
+-                }
++            if (location == null) {
++                // Slice end
++                // boolean isBedSpawn = false; // Paper - moved up
++                ServerLevel worldserver1 = this.server.getLevel(entityplayer.getRespawnDimension());
++                if (worldserver1 != null) {
++                    Optional optional;
++
++                    if (blockposition != null) {
++                        optional = net.minecraft.world.entity.player.Player.findRespawnPositionAndUseSpawnBlock(worldserver1, blockposition, f, flag1, true); // Paper - Fix SPIGOT-5989
++                    } else {
++                        optional = Optional.empty();
++                    }
+ 
+                 if (optional.isPresent()) {
+                     BlockState iblockdata = worldserver1.getBlockState(blockposition);
+@@ -885,13 +893,13 @@ public abstract class PlayerList {
+                     Vec3 vec3d = (Vec3) optional.get();
+                     float f1;
+ 
+-                    if (!iblockdata.is(BlockTags.BEDS) && !flag3) {
+-                        f1 = f;
+-                    } else {
+-                        Vec3 vec3d1 = Vec3.atBottomCenterOf(blockposition).subtract(vec3d).normalize();
++                        if (!iblockdata.is(BlockTags.BEDS) && !flag3) {
++                            f1 = f;
++                        } else {
++                            Vec3 vec3d1 = Vec3.atBottomCenterOf(blockposition).subtract(vec3d).normalize();
+ 
+-                        f1 = (float) Mth.wrapDegrees(Mth.atan2(vec3d1.z, vec3d1.x) * 57.2957763671875D - 90.0D);
+-                    }
++                            f1 = (float) Mth.wrapDegrees(Mth.atan2(vec3d1.z, vec3d1.x) * 57.2957763671875D - 90.0D);
++                        }
+ 
+                     // entityplayer1.setRespawnPosition(worldserver1.dimension(), blockposition, f, flag1, false); // CraftBukkit - not required, just copies old location into reused entity
+                     flag2 = !flag && flag3;

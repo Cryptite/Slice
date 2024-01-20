@@ -5,16 +5,16 @@ Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index ccc1caafb0ada52c7b99b7358253826f5390843e..58b59a76db1acbbc7977abc53b2c8b2e5475eda2 100644
+index 9044458491fc9a33923852e324a15ac59d6660b2..433cca813b5c56aadc6c4b44ff5eb19b4d1f67a6 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -1278,10 +1278,11 @@ public abstract class Player extends LivingEntity {
                          flag1 = true;
                      }
  
--                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity; // Paper - Add critical damage API - conflict on change
+-                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity; // Paper - Add critical damage API; diff on change
 +                    boolean forceCrit = playerAttackEntityEvent.isForceCrit();
-+                    boolean flag2 = forceCrit || (flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity); // Paper - Add critical damage API - conflict on change // Slice
++                    boolean flag2 = forceCrit || (flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity); // Paper - Add critical damage API; diff on change
  
 -                    flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper
 -                    flag2 = flag2 && !this.isSprinting();

@@ -5,7 +5,7 @@ Subject: [PATCH] Set BlockData without light updates
 
 
 diff --git a/src/main/java/net/minecraft/server/level/WorldGenRegion.java b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
-index 14a5492428eac823a295ef3746d0aca6fbdab4ec..46051d555432aeedba3a4b38f4f72b8a924c93a3 100644
+index 5ece375eaf6bcc61864997a389bb5e24625e4505..2d61315c9ab87a216e235f1586618b11511b2620 100644
 --- a/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 +++ b/src/main/java/net/minecraft/server/level/WorldGenRegion.java
 @@ -256,7 +256,7 @@ public class WorldGenRegion implements WorldGenLevel {
@@ -27,7 +27,7 @@ index 14a5492428eac823a295ef3746d0aca6fbdab4ec..46051d555432aeedba3a4b38f4f72b8a
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 6403341f2e9d7ac4251336cb0bcc5d79dbb7bb0e..9141d18b8e592f926356705cd9369226d89cddf9 100644
+index 0c1d7265dee638642f7c868e2f988af7b59e6d7e..e6690b38eb09cd925f9cc2a9b431745e95160fa5 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -906,12 +906,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -47,7 +47,7 @@ index 6403341f2e9d7ac4251336cb0bcc5d79dbb7bb0e..9141d18b8e592f926356705cd9369226
          if (this.captureTreeGeneration) {
              // Paper start
 @@ -1107,7 +1107,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
-                 iblockdata.getBlock().popExperience((ServerLevel) this, pos, xp, breakingEntity); // Paper - handle drop experience logic, custom amount
+                 iblockdata.getBlock().popExperience((ServerLevel) this, pos, xp, breakingEntity); // Paper - Properly handle xp dropping; custom amount
              }
  
 -            boolean flag1 = this.setBlock(pos, fluid.createLegacyBlock(), 3, maxUpdateDepth);
@@ -77,7 +77,7 @@ index 134e5ec79bf2dddd4e31930f8a7cb2c02fa29518..fd72d278a2719911a46b6bc9e7da2dc2
  
      boolean removeBlock(BlockPos pos, boolean move);
 diff --git a/src/main/java/net/minecraft/world/level/block/Block.java b/src/main/java/net/minecraft/world/level/block/Block.java
-index e21867d3956078bb0db4ceed45e5811e9acd7377..4b2d6aa89678d60f362015497bda83b255ce9c57 100644
+index 73d6f881a7d4d8ff96040d34ac502e5b0937d577..f9f147861359258c02fd5f99008a3ab8a6e466c0 100644
 --- a/src/main/java/net/minecraft/world/level/block/Block.java
 +++ b/src/main/java/net/minecraft/world/level/block/Block.java
 @@ -201,7 +201,7 @@ public class Block extends BlockBehaviour implements ItemLike {
@@ -90,7 +90,7 @@ index e21867d3956078bb0db4ceed45e5811e9acd7377..4b2d6aa89678d60f362015497bda83b2
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index 45fd28f26aa2e53785919abbfe42bb237131e453..150b649c457ab4a17e9d72a21f7d06b8f74435a2 100644
+index 99b890e8650356fc059a89a4164ca3f9a80f9d1f..3b42df7ee3abeb2f06446cc1eb9fe80cf50f3508 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 @@ -142,7 +142,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
@@ -103,7 +103,7 @@ index 45fd28f26aa2e53785919abbfe42bb237131e453..150b649c457ab4a17e9d72a21f7d06b8
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
-index 520b53bc604e6755251f0b14e91dce56bc5501ce..aba4f2a089faa94ffe63841b23b0ae977d85bb51 100644
+index 4b42ef2a876ea210d948238e63fd7a2b7035bb5b..7cdd76f87a10529df5b9476bd2728eb8db9448b1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlock.java
 @@ -183,15 +183,20 @@ public class CraftBlock implements Block {
@@ -141,7 +141,7 @@ index 520b53bc604e6755251f0b14e91dce56bc5501ce..aba4f2a089faa94ffe63841b23b0ae97
                  world.getMinecraftWorld().sendBlockUpdated(
                          position,
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
-index 390e1b7fd2721b99cb3ce268c6bc1bf0a38e08a3..f3c42e65c6c731e1f0f3d36f16c35b7d538604a0 100644
+index d11d854ae90b99aa2ce227994d07fe1fe9b4a60a..1989d8755b422095b3d1ff9a07adf1bc582d5abf 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/CraftBlockState.java
 @@ -217,7 +217,7 @@ public class CraftBlockState implements BlockState {
@@ -154,7 +154,7 @@ index 390e1b7fd2721b99cb3ce268c6bc1bf0a38e08a3..f3c42e65c6c731e1f0f3d36f16c35b7d
              this.world.getHandle().sendBlockUpdated(
                      this.position,
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
-index 0f115d555cbc9fed224c9e8b0fab5fae6b0e7ff2..4b38672b5c772df4997120b71c87940eede5193f 100644
+index 86a20c91beff6b27e6ec886e49ba902b216106f2..42cd06f0166755cbce19d2dd2d8dcbf297cbcfb1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/DelegatedGeneratorAccess.java
 @@ -803,8 +803,8 @@ public abstract class DelegatedGeneratorAccess implements WorldGenLevel {
@@ -182,12 +182,12 @@ index a5e34c25e00e7f770bcb6e15ed0bbfe8f369a68a..572e52c494ead11d0fa84cf324f2c862
      }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java b/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
-index 0762140eb66e9d4dedeb6d12270bdca4c88558f5..0bdedeeb46c6a8ee0689dba4786b105bf0edba2d 100644
+index 7482dfe64458320d44089c0778591694202e9f70..2f4cde7a89fd47d5f4739bfda9b3033a57898928 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/TransformerGeneratorAccess.java
 @@ -57,14 +57,14 @@ public class TransformerGeneratorAccess extends DelegatedGeneratorAccess {
      // }
-     // Paper end - don't override these methods
+     // Paper end - Don't fire sync event during generation; don't override these methods
  
 -    public boolean setCraftBlock(BlockPos position, CraftBlockState craftBlockState, int i, int j) {
 +    public boolean setCraftBlock(BlockPos position, CraftBlockState craftBlockState, int i, int j, boolean checkLight) {

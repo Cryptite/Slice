@@ -5,18 +5,18 @@ Subject: [PATCH] Vanish
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index cb10e801216d89041c38798be0a2b7f59b73d2fb..91285d21c0f3398a3841d1e17b377845feebd78a 100644
+index b405ef4ba9343e9dcd7d3b136899bff879e82362..52466d82e07e8c49e462f7b908d6b87cc1ed1dbf 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -424,6 +424,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
-     public boolean fixedPose = false; // Paper
+@@ -426,6 +426,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+     public boolean fixedPose = false; // Paper - Expand Pose API
      public boolean saveable = true; // Slice
      public boolean sendMovementPackets = true; // Slice
 +    public boolean vanished; // Slice
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-@@ -1311,7 +1312,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -1313,7 +1314,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      }
  
      private boolean vibrationAndSoundEffectsFromBlock(BlockPos pos, BlockState state, boolean playSound, boolean emitEvent, Vec3 movement) {
@@ -26,7 +26,7 @@ index cb10e801216d89041c38798be0a2b7f59b73d2fb..91285d21c0f3398a3841d1e17b377845
          } else {
              boolean flag2 = this.isStateClimbable(state);
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-index 19c56ef79cacfb6d65dea5741d9ce71998c1eacc..c8939926605d6500076c9eae0f0cc008a095ab68 100644
+index 3e1c22cd06ecaa26b0c36563a4d0c44ee7e91b1d..df8a79df81afa447121931cd817cff2723e98dcf 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 @@ -1239,4 +1239,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {

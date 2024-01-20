@@ -5,24 +5,24 @@ Subject: [PATCH] Long distance tracking
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 4407f04904af9b17987ce595cc8b6e9e129ccec7..2d97c4445bd172a901c8dcf144b03081e0679468 100644
+index bccd73960976be2838ccc803a4a9574437689f98..0d36816f679f08c81aecf683584ecd932bfcf8f7 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1421,6 +1421,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
-                 Vec3 vec3d = player.position().subtract(this.entity.position());
+@@ -1425,6 +1425,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+                 // Paper end - remove allocation of Vec3D here
                  int i = ChunkMap.this.getPlayerViewDistance(player);
                  double d0 = (double) Math.min(this.getEffectiveRange(), i * 16);
 +                if (this.entity instanceof ServerPlayer serverPlayer && player.canSeeFromLongDistance(serverPlayer)) d0 = Math.min(level.spigotConfig.flyingPlayerTrackingRange, d0); // Slice
-                 double d1 = vec3d.x * vec3d.x + vec3d.z * vec3d.z;
+                 double d1 = vec3d_dx * vec3d_dx + vec3d_dz * vec3d_dz; // Paper
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player) && ChunkMap.this.isChunkTracked(player, this.entity.chunkPosition().x, this.entity.chunkPosition().z);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 6fbd96970505ffcc75331584cac96bbdf2bde658..3e618dd6bf02b51dd267b903ffa54b3a1c180c4d 100644
+index 260bcff54607b61db8f2bb5d4ee7c468b80c900a..466a4eed74729e7ff8a3d634ad4ca5f2befcca25 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -282,6 +282,7 @@ public class ServerPlayer extends Player {
-     public @Nullable String clientBrandName = null; // Paper - Brand name
-     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - there are a lot of changes to do if we change all methods leading to the event
+     public @Nullable String clientBrandName = null; // Paper - Brand support
+     public org.bukkit.event.player.PlayerQuitEvent.QuitReason quitReason = null; // Paper - Add API for quit reason; there are a lot of changes to do if we change all methods leading to the event
      public boolean smoothWorldTeleport; // Slice
 +    public boolean hasLongDistanceTracking; // Slice
  

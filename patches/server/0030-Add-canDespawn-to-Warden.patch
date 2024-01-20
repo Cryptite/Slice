@@ -5,11 +5,11 @@ Subject: [PATCH] Add canDespawn to Warden
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 00389d7ec3e8b059d5591a2019ba240fda2901fe..f7530dd768353921465a887d161845c1a943e527 100644
+index e52f3da3b63cc3dba59d3e874a8420dd312b5e96..1cd7075feb2aeb61dfb9d8665d07ed82fc14ba3a 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
-             if (generation) entity.generation = true; // Paper - add generation bool param
+             if (generation) entity.generation = true; // Paper - Don't fire sync event during generation
              entity.load(nbt);
          }, () -> {
 -            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
@@ -18,7 +18,7 @@ index 00389d7ec3e8b059d5591a2019ba240fda2901fe..f7530dd768353921465a887d161845c1
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
-index 9f1b7c629644931074293151ed58a523ca6d488c..175d019f65499cf7a5743914d2c0b06f3c081eda 100644
+index 937f81a859953498abe73bea560c86e6560e1c33..b925176496639524d80de33c2b4e7a42877c4bca 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/warden/Warden.java
 @@ -112,6 +112,7 @@ public class Warden extends Monster implements VibrationSystem {

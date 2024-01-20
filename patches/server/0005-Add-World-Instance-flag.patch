@@ -5,19 +5,19 @@ Subject: [PATCH] Add World Instance flag
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 6041f1f5151f26d389f946d70f16e1de76db496b..a530dd1b15093803ffb87848f4c28dcf5da6476c 100644
+index fb3f71f9824e522df22c50f55b4d41e70a1d1c63..7f81f3c3339ee1858013a2e1b18c457d9f3eaf03 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -224,6 +224,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -223,6 +223,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
      public final UUID uuid;
      public boolean hasPhysicsEvent = true; // Paper
-     public boolean hasEntityMoveEvent = false; // Paper
+     public boolean hasEntityMoveEvent = false; // Paper - Add EntityMoveEvent
 +    public boolean instance; // Slice
      private final alternate.current.wire.WireHandler wireHandler = new alternate.current.wire.WireHandler(this); // Paper - optimize redstone (Alternate Current)
      public static Throwable getAddToWorldStackTrace(Entity entity) {
          final Throwable thr = new Throwable(entity + " Added to world at " + new java.util.Date());
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 38d842bc0fb7d9c39a3673983a643248e9563fe2..7727a4322155c9b208f097bec751368c01671a07 100644
+index ec61ed7da1531b26e372a72e824c72d5b314524c..2f7ca95e8ac48ea63a2ee28afc50521d8d71accb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -1301,6 +1301,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
@@ -38,4 +38,4 @@ index 38d842bc0fb7d9c39a3673983a643248e9563fe2..7727a4322155c9b208f097bec751368c
 +
      @Override
      public void setDifficulty(Difficulty difficulty) {
-         this.getHandle().getServer().setDifficulty(this.getHandle(), net.minecraft.world.Difficulty.byId(difficulty.getValue()), true); // Paper - don't skip other difficulty-changing logic
+         this.getHandle().getServer().setDifficulty(this.getHandle(), net.minecraft.world.Difficulty.byId(difficulty.getValue()), true); // Paper - per level difficulty; don't skip other difficulty-changing logic

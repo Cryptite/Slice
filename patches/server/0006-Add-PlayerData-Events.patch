@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerData Events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 4f00c2e8d6ff3a03a334542f699c5e35bfd03ce8..f31fc572413c2e1350adca3691316ac6b0d66fef 100644
+index a9126548672522eb2b824221783453f707c5dd40..cbb044a168c96cd62660a24cb44c7e860bb85609 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-@@ -603,6 +603,8 @@ public class ServerPlayerGameMode {
+@@ -601,6 +601,8 @@ public class ServerPlayerGameMode {
                      enuminteractionresult1 = stack.useOn(itemactioncontext);
                  }
  
@@ -18,10 +18,10 @@ index 4f00c2e8d6ff3a03a334542f699c5e35bfd03ce8..f31fc572413c2e1350adca3691316ac6
                      CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, blockposition, itemstack1);
                  }
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index 9bb8d4d7be6a937980aa653db82be084d066a563..9838435fbc31cfbba487d1e62ec5d2e70776517c 100644
+index f890738d3bb9fb5e70a9d323c6cec97f9948f9cf..0e02785ec35e635bef33cc89c54b146c8e7dac99 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-@@ -199,7 +199,12 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -204,7 +204,12 @@ public class ServerStatsCounter extends StatsCounter {
          return nbttagcompound;
      }
  
@@ -35,7 +35,7 @@ index 9bb8d4d7be6a937980aa653db82be084d066a563..9838435fbc31cfbba487d1e62ec5d2e7
          Map<StatType<?>, JsonObject> map = Maps.newHashMap();
          ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
  
-@@ -225,7 +230,7 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -230,7 +235,7 @@ public class ServerStatsCounter extends StatsCounter {
  
          jsonobject1.add("stats", jsonobject);
          jsonobject1.addProperty("DataVersion", SharedConstants.getCurrentVersion().getDataVersion().getVersion());

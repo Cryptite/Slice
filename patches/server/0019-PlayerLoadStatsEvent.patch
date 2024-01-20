@@ -5,7 +5,7 @@ Subject: [PATCH] PlayerLoadStatsEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 2d6a0e30e47e4df22fd9aba1aca0f1f0d03740d2..f2658cb7540a4e2a575bf935de278dd06a820f59 100644
+index eca931c9915dc6fa702f6178e720fe47658fa046..96c8f9952b86129ddda6063c4129e4b971d10211 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1495,7 +1495,7 @@ public abstract class PlayerList {
@@ -18,7 +18,7 @@ index 2d6a0e30e47e4df22fd9aba1aca0f1f0d03740d2..f2658cb7540a4e2a575bf935de278dd0
          }
  
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index 9838435fbc31cfbba487d1e62ec5d2e70776517c..ef601d98e97a7e541cc855822ff46f9dd887435e 100644
+index 0e02785ec35e635bef33cc89c54b146c8e7dac99..5f13740dbf354291bca33fe91ba581562531f6fe 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 @@ -45,10 +45,16 @@ public class ServerStatsCounter extends StatsCounter {
@@ -40,7 +40,7 @@ index 9838435fbc31cfbba487d1e62ec5d2e70776517c..ef601d98e97a7e541cc855822ff46f9d
              try {
                  this.parseLocal(server.getFixerUpper(), FileUtils.readFileToString(file));
              } catch (IOException ioexception) {
-@@ -104,46 +110,8 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -109,46 +115,8 @@ public class ServerStatsCounter extends StatsCounter {
  
                      if (!jsonelement.isJsonNull()) {
                          CompoundTag nbttagcompound = ServerStatsCounter.fromJson(jsonelement.getAsJsonObject());
@@ -89,7 +89,7 @@ index 9838435fbc31cfbba487d1e62ec5d2e70776517c..ef601d98e97a7e541cc855822ff46f9d
                      }
  
                      ServerStatsCounter.LOGGER.error("Unable to parse Stat data from {}", this.file);
-@@ -168,6 +136,48 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -173,6 +141,48 @@ public class ServerStatsCounter extends StatsCounter {
  
      }
  

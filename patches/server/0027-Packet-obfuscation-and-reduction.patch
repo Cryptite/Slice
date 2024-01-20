@@ -5,7 +5,7 @@ Subject: [PATCH] Packet obfuscation and reduction
 
 
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index a043c382c37058032548a5192e17f5f816abe5a6..ee38f646f66fd69cd64ad6b74c6b76e42792cf39 100644
+index 58b602e550258c1062ee940bc46538dac95d8979..3ad5950d05fed7ff8810a8a7969fcb58547b1021 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 @@ -165,15 +165,29 @@ public class SynchedEntityData {
@@ -118,10 +118,10 @@ index a043c382c37058032548a5192e17f5f816abe5a6..ee38f646f66fd69cd64ad6b74c6b76e4
  
      public static record DataValue<T>(int id, EntityDataSerializer<T> serializer, T value) { // CraftBukkit - decompile error
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 35674f92a67f93382103c2766df4b678ba5c862f..97dbcb6f527bd5c567e77200d7f6cbc1abb15792 100644
+index ae188ae314336d971303023c7b7b8ecf32bae253..506e4d80e47723a0764703578370a45ad2f126fd 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -374,7 +374,20 @@ public class ServerEntity {
+@@ -380,7 +380,20 @@ public class ServerEntity {
  
          if (list != null) {
              this.trackedDataValues = datawatcher.getNonDefaultValues();
@@ -144,7 +144,7 @@ index 35674f92a67f93382103c2766df4b678ba5c862f..97dbcb6f527bd5c567e77200d7f6cbc1
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 84d88e71a187e74a40faa1aa9a6a300cdeb8fd60..35fa9a43154b08bccc50d7c626c4b10289ef61da 100644
+index bee42880274cf36c57abc5f633e6f14f41a0ea2b..12fa631aa176e67dcda522dca6376a69ca5b34d8 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -3388,7 +3388,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
@@ -157,10 +157,10 @@ index 84d88e71a187e74a40faa1aa9a6a300cdeb8fd60..35fa9a43154b08bccc50d7c626c4b102
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index edfd68dd73deb703efc6e7164a2af0cb8744a0bd..3c453de303422f96abf3aa67fa23523dd71327cb 100644
+index f1459e5929f178cdab864506d1a485df61fde035..6e7a3acb40ef3ed062c3e6cc2c5bf5cd35f2d2d6 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -3166,7 +3166,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3167,7 +3167,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
      }
  
      public boolean equipmentHasChanged(ItemStack stack, ItemStack stack2) {
@@ -170,7 +170,7 @@ index edfd68dd73deb703efc6e7164a2af0cb8744a0bd..3c453de303422f96abf3aa67fa23523d
  
      private void handleHandSwap(Map<EquipmentSlot, ItemStack> equipmentChanges) {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 64df32011e94cb68cfa32a3a236a70cfc1da7c05..6a642996eb149a71585ef8f6b74b567a245fe635 100644
+index 2a6a85519c63bd3f879a8dbe146a9d05310cee3c..d6cdb7c3314004ee25cbed96eb289d420999c01c 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -644,7 +644,7 @@ public abstract class Player extends LivingEntity {
@@ -183,7 +183,7 @@ index 64df32011e94cb68cfa32a3a236a70cfc1da7c05..6a642996eb149a71585ef8f6b74b567a
  
      public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 2d52154d6e6ac586f4d38186347958e0f6d35361..6cbfbd81d93d7db8798b3eb3849fe2de07913992 100644
+index 82eb22d1539951cd04267d7269b1447ebc4ee2c6..d95d08fd519ca633c1c126982f3720e7c3aabe28 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -2733,7 +2733,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

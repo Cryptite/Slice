@@ -5,10 +5,10 @@ Subject: [PATCH] Player spawnsOwnMobs
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index 44ada45d9bf2d9b48e5de1c3cb1a855902f3884b..9c5be1f0fd4d6cb62e7bc7faa8fa4c4e5879ab4e 100644
+index 7b3dc5ba8ce6fb5c7091f82c2eea1cb63eb07149..b1bc5a645385a931d56699e852c398e22e04100a 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-@@ -557,7 +557,7 @@ public class ServerChunkCache extends ChunkSource {
+@@ -564,7 +564,7 @@ public class ServerChunkCache extends ChunkSource {
                  // Paper start - optimise chunk tick iteration
                  ChunkMap playerChunkMap = this.chunkMap;
                  for (ServerPlayer player : this.level.players) {
@@ -18,11 +18,11 @@ index 44ada45d9bf2d9b48e5de1c3cb1a855902f3884b..9c5be1f0fd4d6cb62e7bc7faa8fa4c4e
                          player.playerNaturallySpawnedEvent = null;
                          player.lastEntitySpawnRadiusSquared = -1.0;
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 6a642996eb149a71585ef8f6b74b567a245fe635..a4b476149ca2baa2df87a37a86d082a2875f45d6 100644
+index d6cdb7c3314004ee25cbed96eb289d420999c01c..3bc1c402aadd5af534fc343f2d90a20a602e82d1 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -184,6 +184,8 @@ public abstract class Player extends LivingEntity {
-     public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET;
+     public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET; // Paper - flying fall damage
      // Paper end
  
 +    public boolean spawnsOwnMobs = false; // Slice

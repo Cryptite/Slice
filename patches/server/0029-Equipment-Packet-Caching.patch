@@ -25,10 +25,10 @@ index 5a8f850b447fc3a4bd0eb0c505bbdfc8be7115e8..34d74735b7a7d258c6bd14bb7e540693
          this.entity = buf.readVarInt();
          EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..248a4af1b9c6684502570c879efae20a36558414 100644
+index 506e4d80e47723a0764703578370a45ad2f126fd..a1d03e7d4f0a73930e932fffc870723859ca5e43 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -325,27 +325,8 @@ public class ServerEntity {
+@@ -331,27 +331,8 @@ public class ServerEntity {
              sender.accept(new ClientboundSetEntityMotionPacket(this.entity.getId(), this.ap));
          }
  
@@ -44,8 +44,8 @@ index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..248a4af1b9c6684502570c879efae20a
 -                if (!itemstack.isEmpty()) {
 -                    // Paper start - prevent oversized data
 -                    final ItemStack sanitized = LivingEntity.sanitizeItemStack(itemstack.copy(), false);
--                    list.add(Pair.of(enumitemslot, ((LivingEntity) this.entity).stripMeta(sanitized, false))); // Paper - remove unnecessary item meta
--                    // Paper end
+-                    list.add(Pair.of(enumitemslot, ((LivingEntity) this.entity).stripMeta(sanitized, false))); // Paper - Hide unnecessary item meta
+-                    // Paper end - prevent oversized data
 -                }
 -            }
 -
@@ -59,19 +59,19 @@ index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..248a4af1b9c6684502570c879efae20a
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 3c453de303422f96abf3aa67fa23523dd71327cb..416d71d91addc7b59c292377459f04512c5d9db7 100644
+index 6e7a3acb40ef3ed062c3e6cc2c5bf5cd35f2d2d6..5e5450aeb355ad396ac369816050f297ca0f309f 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -262,6 +262,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
-     public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper
+     public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper - Friction API
 +    private final com.google.common.collect.Table<String, ItemStack, ItemStack> equipmentPacketCache = com.google.common.collect.HashBasedTable.create(); // Slice
 +    public java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentMap = new java.util.HashMap<>(); // Slice
  
      @Override
      public float getBukkitYaw() {
-@@ -3110,6 +3112,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3111,6 +3113,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -79,7 +79,7 @@ index 3c453de303422f96abf3aa67fa23523dd71327cb..416d71d91addc7b59c292377459f0451
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3202,7 +3205,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3203,7 +3206,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -105,8 +105,8 @@ index 3c453de303422f96abf3aa67fa23523dd71327cb..416d71d91addc7b59c292377459f0451
 +        // Slice end
      }
  
-     // Paper start - hide unnecessary item meta
-@@ -4543,4 +4564,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+     // Paper start - Hide unnecessary item meta
+@@ -4544,4 +4565,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -164,7 +164,7 @@ index 3c453de303422f96abf3aa67fa23523dd71327cb..416d71d91addc7b59c292377459f0451
 +                    }
 +
 +                    list.add(Pair.of(enumitemslot, strippedItem)); // Paper - remove unnecessary item meta
-+                    // Paper end
++                    // Paper end - prevent oversized data
 +                }
 +            }
 +
@@ -182,7 +182,7 @@ index 3c453de303422f96abf3aa67fa23523dd71327cb..416d71d91addc7b59c292377459f0451
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 1f1ef68a9a449a4a90c284f34a397ab4b6d905f6..3efaa46456a38eac7431552f92761ed1c9b76f5f 100644
+index 4afc1c9d2a7638e84a55fe30932dc36db465c31a..c8ed26388e7becf0b4426735068dc1f5b7b3dc34 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 @@ -1118,4 +1118,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {

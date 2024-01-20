@@ -5,7 +5,7 @@ Subject: [PATCH] Disable sending Entity Movement Packets
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..fa4e0bcf752693c34aff8b53aea3eeaa65834fc1 100644
+index a1d03e7d4f0a73930e932fffc870723859ca5e43..2718501470b958daa581c4cb169fe9561f21ea54 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -151,7 +151,7 @@ public class ServerEntity {
@@ -17,7 +17,7 @@ index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..fa4e0bcf752693c34aff8b53aea3eeaa
                      this.yRotp = i;
                      this.xRotp = j;
                  }
-@@ -180,14 +180,14 @@ public class ServerEntity {
+@@ -186,14 +186,14 @@ public class ServerEntity {
                      if (!flag6 && this.teleportDelay <= 400 && !this.wasRiding && this.wasOnGround == this.entity.onGround()&& !(io.papermc.paper.configuration.GlobalConfiguration.get().collisions.sendFullPosForHardCollidingEntities && this.entity.hardCollides())) { // Paper - send full pos for hard colliding entities to prevent collision problems due to desync
                          if ((!flag2 || !flag3) && !(this.entity instanceof AbstractArrow)) {
                              if (flag2) {
@@ -36,12 +36,12 @@ index 97dbcb6f527bd5c567e77200d7f6cbc1abb15792..fa4e0bcf752693c34aff8b53aea3eeaa
                              flag5 = true;
                          }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index a6db17c51d6b8e58936e52e7f6cbe07dcebd5418..1c75f943055b27d435ba36275fa7cd704e7a7b1a 100644
+index f62b6e4777486721a1f9d3b5a80591c26b50bd66..b405ef4ba9343e9dcd7d3b136899bff879e82362 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -423,6 +423,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -425,6 +425,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
-     public boolean fixedPose = false; // Paper
+     public boolean fixedPose = false; // Paper - Expand Pose API
      public boolean saveable = true; // Slice
 +    public boolean sendMovementPackets = true; // Slice
  
