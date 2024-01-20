@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index 58f972832c39a27a8ccd606f9144e1c54adbf6f3..4f00c2e8d6ff3a03a334542f699c5e35bfd03ce8 100644
+index a9126548672522eb2b824221783453f707c5dd40..f47a1767fe5c1454fd9d52660e4d3ead42f38e25 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -419,6 +419,7 @@ public class ServerPlayerGameMode {
@@ -18,14 +18,14 @@ index 58f972832c39a27a8ccd606f9144e1c54adbf6f3..4f00c2e8d6ff3a03a334542f699c5e35
                  if (flag) {
 @@ -446,6 +447,7 @@ public class ServerPlayerGameMode {
                  // CraftBukkit start
-                 java.util.List<net.minecraft.world.entity.item.ItemEntity> itemsToDrop = this.level.captureDrops; // Paper - store current list
-                 this.level.captureDrops = null; // Paper - Remove this earlier so that we can actually drop stuff
+                 java.util.List<net.minecraft.world.entity.item.ItemEntity> itemsToDrop = this.level.captureDrops; // Paper - capture all item additions to the world
+                 this.level.captureDrops = null; // Paper - capture all item additions to the world; Remove this earlier so that we can actually drop stuff
 +                level.pendingPlayerBlockEvents.remove(pos); // Paper
                  if (event.isDropItems()) {
-                     org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - use stored ref
+                     org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - capture all item additions to the world
                  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index de277d61b718fe07a87d75a2547bb1c7f8553aa1..625a852db818d95365ad7ae56e6b1de541bbdada 100644
+index d7d51f16396ad5539d39b7914125b559bd7dd2b4..6bf4548902316b18e14821767868a9dce36c6d89 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -378,6 +378,7 @@ public final class ItemStack {
@@ -34,10 +34,10 @@ index de277d61b718fe07a87d75a2547bb1c7f8553aa1..625a852db818d95365ad7ae56e6b1de5
              ServerLevel world = (ServerLevel) context.getLevel();
 +            if (entityhuman != null) world.pendingPlayerBlockEvents.put(blockposition, new Level.PendingBlockEvent(blockposition, entityhuman)); // Paper
  
-             if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - capture block states for snow buckets
+             if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - Fix cancelled powdered snow bucket placement
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index fe62e872f0c989f612dcbfc58894bd1787345d25..465bbaeff36f4d03db40fcaf9b6ab98550316afb 100644
+index e6690b38eb09cd925f9cc2a9b431745e95160fa5..87eefde9481291d016e7bcb4c2214b5c0cefc544 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -187,6 +187,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -95,7 +95,7 @@ index fe62e872f0c989f612dcbfc58894bd1787345d25..465bbaeff36f4d03db40fcaf9b6ab985
              // Paper start - while the above setAir method is named same and looks very similar
              // they are NOT used with same intent and the above should not fire this event. The above method is more of a BlockSetToAirEvent,
 diff --git a/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java b/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java
-index 81d2140351775ad55546af52eb635ccdc8509d89..0ed9f6ae968c06e63e1431ed1ce153dd1e90e908 100644
+index 03b5ab8251497c0c94467f90e6663a0dc766babb..0be28c971bbd88268af4dfdd4489d4fb309ad03a 100644
 --- a/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java
 @@ -112,6 +112,15 @@ public class DoublePlantBlock extends BushBlock {
@@ -115,7 +115,7 @@ index 81d2140351775ad55546af52eb635ccdc8509d89..0ed9f6ae968c06e63e1431ed1ce153dd
                  BlockState iblockdata2 = iblockdata1.getFluidState().is((Fluid) Fluids.WATER) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index 3ab8b99837b1d1faea722c598b0228b2780be8b1..45bd7b9e684f71d9186a33277e5772dc7e04e9da 100644
+index eb5d6446e639649cdef20101045872a978265f0d..a11693ff8fab2accc7793c79664248a6f58176cb 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 @@ -1242,11 +1242,22 @@ public abstract class BlockBehaviour implements FeatureElement {

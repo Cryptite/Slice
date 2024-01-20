@@ -17,7 +17,7 @@ index 4858282de0ad6758b487b80dc3d746ae0357ad39..260bcff54607b61db8f2bb5d4ee7c468
      // Paper start - replace player chunk loader
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 5c7721aa768ec3b2ad659b7242681b4a04153db9..eca931c9915dc6fa702f6178e720fe47658fa046 100644
+index f54e00f11e92d63aa241a3b8693afa5f1797d1ab..0913c1be8b4130ada71e7d4f473a709e55b7d2d5 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -953,10 +953,10 @@ public abstract class PlayerList {
