@@ -59,7 +59,7 @@ index 506e4d80e47723a0764703578370a45ad2f126fd..a1d03e7d4f0a73930e932fffc8707238
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 6e7a3acb40ef3ed062c3e6cc2c5bf5cd35f2d2d6..5e5450aeb355ad396ac369816050f297ca0f309f 100644
+index f0d565ac0b3c8d3c3a200348a16e7db21ff3920a..67a83bfd09befa7250f7a02eaf21797cc24e8c71 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -262,6 +262,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
