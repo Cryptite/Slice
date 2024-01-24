@@ -5,7 +5,7 @@ Subject: [PATCH] Add canDespawn to Warden
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index e52f3da3b63cc3dba59d3e874a8420dd312b5e96..1cd7075feb2aeb61dfb9d8665d07ed82fc14ba3a 100644
+index edc723ea5ca3a325106e7af38c60dbf9f0f5fb77..c855e2826f24c872bbb7ae3af432545e4580fb36 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -599,7 +599,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT

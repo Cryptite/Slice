@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 24 Jan 2024 11:39:13 -0600
+Subject: [PATCH] PlayerResolveObjectIdEvent
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 223e80ea0ede575cf8f73191ef2799ae0ee41ba7..8868ebd92b13bc2aa48e4f6cae33ed464be621d1 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -26,6 +26,8 @@ dependencies {
+     implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.0")
+     // Slice end
+ 
++    implementation("org.mongodb:bson:4.11.1") // Slice - MongoDB Bson Library for ObjectIds
++
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+index acbb64010cd59668aa1bcb52ff1220789cadb1d3..58802dfb9aa2eaf1acc533e6bd8f996231de5074 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+@@ -7,6 +7,8 @@ import java.util.Arrays;
+ import java.util.Collection;
+ import java.util.Optional;
+ import java.util.Set;
++
++import io.papermc.paper.event.player.PlayerResolveObjectIdEvent;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.nbt.CompoundTag;
+ import net.minecraft.network.chat.Component;
+@@ -31,10 +33,8 @@ import net.minecraft.world.level.block.CraftingTableBlock;
+ import net.minecraft.world.level.block.EnchantmentTableBlock;
+ import net.minecraft.world.level.block.entity.BlockEntity;
+ import net.minecraft.world.level.block.state.BlockState;
+-import org.bukkit.GameMode;
+-import org.bukkit.Location;
+-import org.bukkit.Material;
+-import org.bukkit.NamespacedKey;
++import org.bson.types.ObjectId;
++import org.bukkit.*;
+ import org.bukkit.block.Block;
+ import org.bukkit.craftbukkit.CraftServer;
+ import org.bukkit.craftbukkit.entity.memory.CraftMemoryMapper;
+@@ -74,13 +74,27 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+     protected final PermissibleBase perm = new PermissibleBase(this);
+     private boolean op;
+     private GameMode mode;
++    private org.bson.types.ObjectId objectId;
+ 
+     public CraftHumanEntity(final CraftServer server, final Player entity) {
+         super(server, entity);
+         this.mode = server.getDefaultGameMode();
+         this.inventory = new CraftInventoryPlayer(entity.getInventory());
+         this.enderChest = new CraftInventory(entity.getEnderChestInventory());
++
++        // Slice start - resolve ObjectId
++        PlayerResolveObjectIdEvent event = new PlayerResolveObjectIdEvent(entity.getUUID());
++        event.callEvent();
++        objectId = event.getObjectId();
++        // Slice end
++    }
++
++    // Slice start
++    @Override
++    public ObjectId getObjectId() {
++        return objectId;
+     }
++    // Slice end
+ 
+     @Override
+     public PlayerInventory getInventory() {
