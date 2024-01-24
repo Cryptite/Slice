@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index a9126548672522eb2b824221783453f707c5dd40..f47a1767fe5c1454fd9d52660e4d3ead42f38e25 100644
+index cfd4ac06a9af6bf3fac293110482e1df690e075e..12eab26762eaa7058bee5c33b46c46752316b2c0 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -419,6 +419,7 @@ public class ServerPlayerGameMode {
@@ -25,7 +25,7 @@ index a9126548672522eb2b824221783453f707c5dd40..f47a1767fe5c1454fd9d52660e4d3ead
                      org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - capture all item additions to the world
                  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index d7d51f16396ad5539d39b7914125b559bd7dd2b4..6bf4548902316b18e14821767868a9dce36c6d89 100644
+index ed27a963223bfe18310ad5adabf461b5e307ef9c..94a94186dc27d69ef09b12afbce7ecc69ec2bfc5 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
 @@ -378,6 +378,7 @@ public final class ItemStack {
@@ -37,12 +37,12 @@ index d7d51f16396ad5539d39b7914125b559bd7dd2b4..6bf4548902316b18e14821767868a9dc
              if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - Fix cancelled powdered snow bucket placement
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index e6690b38eb09cd925f9cc2a9b431745e95160fa5..87eefde9481291d016e7bcb4c2214b5c0cefc544 100644
+index 5eec5badaaaa0b750fa3a88a381a9be0f6fe4d09..f37686b4e7a50b8cab4d72fcb353ec305c2dc645 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -187,6 +187,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -186,6 +186,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
-     public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
+     public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Faster redstone torch rapid clock removal; Move from Map in BlockRedstoneTorch to here
  
 +    // Paper start - Holder class used to track what Player is responsible the last block event
 +    public static class PendingBlockEvent {
@@ -68,7 +68,7 @@ index e6690b38eb09cd925f9cc2a9b431745e95160fa5..87eefde9481291d016e7bcb4c2214b5c
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -1056,6 +1077,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1055,6 +1076,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index e6690b38eb09cd925f9cc2a9b431745e95160fa5..87eefde9481291d016e7bcb4c2214b5c
              // CraftBukkit end
          }
      }
-@@ -1077,6 +1099,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1076,6 +1098,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          if (iblockdata.isAir()) {
              return false;
          } else {
@@ -92,7 +92,7 @@ index e6690b38eb09cd925f9cc2a9b431745e95160fa5..87eefde9481291d016e7bcb4c2214b5c
 +            // Paper end
 +
              FluidState fluid = this.getFluidState(pos);
-             // Paper start - while the above setAir method is named same and looks very similar
+             // Paper start - BlockDestroyEvent; while the above setAir method is named same and looks very similar
              // they are NOT used with same intent and the above should not fire this event. The above method is more of a BlockSetToAirEvent,
 diff --git a/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java b/src/main/java/net/minecraft/world/level/block/DoublePlantBlock.java
 index 03b5ab8251497c0c94467f90e6663a0dc766babb..0be28c971bbd88268af4dfdd4489d4fb309ad03a 100644
@@ -115,7 +115,7 @@ index 03b5ab8251497c0c94467f90e6663a0dc766babb..0be28c971bbd88268af4dfdd4489d4fb
                  BlockState iblockdata2 = iblockdata1.getFluidState().is((Fluid) Fluids.WATER) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index eb5d6446e639649cdef20101045872a978265f0d..a11693ff8fab2accc7793c79664248a6f58176cb 100644
+index 97a9fbbe6d8435e88e5fe716770e4034ab0db7a7..cf7013d3d1679e675f7f1f71b987b74b73174cf1 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 @@ -1242,11 +1242,22 @@ public abstract class BlockBehaviour implements FeatureElement {

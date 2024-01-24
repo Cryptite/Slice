@@ -27,10 +27,10 @@ index 5ece375eaf6bcc61864997a389bb5e24625e4505..2d61315c9ab87a216e235f1586618b11
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 0c1d7265dee638642f7c868e2f988af7b59e6d7e..e6690b38eb09cd925f9cc2a9b431745e95160fa5 100644
+index b33bb001a48788e727e2f01788a6163024121bf3..5eec5badaaaa0b750fa3a88a381a9be0f6fe4d09 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -906,12 +906,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -905,12 +905,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -45,8 +45,8 @@ index 0c1d7265dee638642f7c868e2f988af7b59e6d7e..e6690b38eb09cd925f9cc2a9b431745e
 +    public boolean setBlock(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, boolean checkLight) {
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
-             // Paper start
-@@ -1107,7 +1107,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+             // Paper start - Protect Bedrock and End Portal/Frames from being destroyed
+@@ -1106,7 +1106,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  iblockdata.getBlock().popExperience((ServerLevel) this, pos, xp, breakingEntity); // Paper - Properly handle xp dropping; custom amount
              }
  
@@ -90,7 +90,7 @@ index 73d6f881a7d4d8ff96040d34ac502e5b0937d577..f9f147861359258c02fd5f99008a3ab8
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index 99b890e8650356fc059a89a4164ca3f9a80f9d1f..3b42df7ee3abeb2f06446cc1eb9fe80cf50f3508 100644
+index 9dd6012556979514f9879f867138bc836c58ef3f..e332c7cff4a9c76b54f530c41f4fdd701a0ad63d 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 @@ -142,7 +142,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {

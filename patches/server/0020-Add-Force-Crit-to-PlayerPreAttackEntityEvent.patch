@@ -5,10 +5,10 @@ Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 9044458491fc9a33923852e324a15ac59d6660b2..433cca813b5c56aadc6c4b44ff5eb19b4d1f67a6 100644
+index 44a17a8e763455e834dcf488044a0f4907ce346e..1f1f40c8c9290dbffce3e92ac5d36696856cb5d3 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -1278,10 +1278,11 @@ public abstract class Player extends LivingEntity {
+@@ -1276,10 +1276,11 @@ public abstract class Player extends LivingEntity {
                          flag1 = true;
                      }
  
@@ -16,9 +16,8 @@ index 9044458491fc9a33923852e324a15ac59d6660b2..433cca813b5c56aadc6c4b44ff5eb19b
 +                    boolean forceCrit = playerAttackEntityEvent.isForceCrit();
 +                    boolean flag2 = forceCrit || (flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity); // Paper - Add critical damage API; diff on change
  
--                    flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper
+                     flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper - Toggleable player crits
 -                    flag2 = flag2 && !this.isSprinting();
-+                    flag2 = flag2 && !level().paperConfig().entities.behavior.disablePlayerCrits; // Paper
 +                    flag2 = forceCrit || (flag2 && !this.isSprinting()); // Slice
                      if (flag2) {
                          f *= 1.5F;

@@ -18,10 +18,10 @@ index ee0331a6bc40cdde08d926fd8eb1dc642630c2e5..d1094f6a61976a81f400ab5b2b604f96
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 1412e120cfcaf03f266a8a2c9b4336cfcc010b5d..bee42880274cf36c57abc5f633e6f14f41a0ea2b 100644
+index 4872d9c2a7591aacf9e0fe852c06351289387c8f..ccd0fbf0d61a0a5e9e806df964c711f5c883a8d4 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -459,6 +459,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -520,6 +520,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
       * Overriding this field will cause memory leaks.
       */
      private final boolean hardCollides;

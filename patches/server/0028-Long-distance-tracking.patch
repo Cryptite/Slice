@@ -5,10 +5,10 @@ Subject: [PATCH] Long distance tracking
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index bccd73960976be2838ccc803a4a9574437689f98..0d36816f679f08c81aecf683584ecd932bfcf8f7 100644
+index 22ec85fb9e5313b94f1dc55c3cfbfe88eded0db6..b88dd166628c46a7f2bf98b0b8bf5a215acb99de 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -1425,6 +1425,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1417,6 +1417,7 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
                  // Paper end - remove allocation of Vec3D here
                  int i = ChunkMap.this.getPlayerViewDistance(player);
                  double d0 = (double) Math.min(this.getEffectiveRange(), i * 16);
@@ -17,7 +17,7 @@ index bccd73960976be2838ccc803a4a9574437689f98..0d36816f679f08c81aecf683584ecd93
                  double d2 = d0 * d0;
                  boolean flag = d1 <= d2 && this.entity.broadcastToPlayer(player) && ChunkMap.this.isChunkTracked(player, this.entity.chunkPosition().x, this.entity.chunkPosition().z);
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 260bcff54607b61db8f2bb5d4ee7c468b80c900a..466a4eed74729e7ff8a3d634ad4ca5f2befcca25 100644
+index d9b9dd6023532a26f5d8173fb1fccf10a9dfec8c..dec8e20a8132e601ed0db3352d22fad968ed555a 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -282,6 +282,7 @@ public class ServerPlayer extends Player {

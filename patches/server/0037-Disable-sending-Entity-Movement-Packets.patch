@@ -5,7 +5,7 @@ Subject: [PATCH] Disable sending Entity Movement Packets
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index a1d03e7d4f0a73930e932fffc870723859ca5e43..2718501470b958daa581c4cb169fe9561f21ea54 100644
+index 4f4ea6dcef4e1960ac69271fbd771dd3ad6af275..81371980e0eaa362ea1fff9813f632db93021bda 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -151,7 +151,7 @@ public class ServerEntity {
@@ -36,10 +36,10 @@ index a1d03e7d4f0a73930e932fffc870723859ca5e43..2718501470b958daa581c4cb169fe956
                              flag5 = true;
                          }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index f62b6e4777486721a1f9d3b5a80591c26b50bd66..b405ef4ba9343e9dcd7d3b136899bff879e82362 100644
+index 5069faacb2e16b112b5c7167de5fe310e20bc086..d80be25ceca44a536d4989a0799716ea7f3a2026 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -425,6 +425,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -424,6 +424,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
      public boolean fixedPose = false; // Paper - Expand Pose API
      public boolean saveable = true; // Slice

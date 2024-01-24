@@ -5,14 +5,14 @@ Subject: [PATCH] Add PlayerGetRespawnLocationEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index e2eb3feb786d6348b6d45dd9babb7b36eebccd6e..f54e00f11e92d63aa241a3b8693afa5f1797d1ab 100644
+index e0ee45036b9bf14a6e2013fe291cde0402b85b1f..8148bb81322b3ba7becbf0fdb636c83558324f81 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -867,49 +867,57 @@ public abstract class PlayerList {
+@@ -866,49 +866,57 @@ public abstract class PlayerList {
  
          // CraftBukkit start - fire PlayerRespawnEvent
          if (location == null) {
--            // boolean isBedSpawn = false; // Paper - moved up
+-            // boolean isBedSpawn = false; // Paper - Add PlayerPostRespawnEvent; moved up
 -            ServerLevel worldserver1 = this.server.getLevel(entityplayer.getRespawnDimension());
 -            if (worldserver1 != null) {
 -                Optional optional;
@@ -29,7 +29,7 @@ index e2eb3feb786d6348b6d45dd9babb7b36eebccd6e..f54e00f11e92d63aa241a3b8693afa5f
 -                }
 +            if (location == null) {
 +                // Slice end
-+                // boolean isBedSpawn = false; // Paper - moved up
++                // boolean isBedSpawn = false; // Paper - Add PlayerPostRespawnEvent; moved up
 +                ServerLevel worldserver1 = this.server.getLevel(entityplayer.getRespawnDimension());
 +                if (worldserver1 != null) {
 +                    Optional optional;

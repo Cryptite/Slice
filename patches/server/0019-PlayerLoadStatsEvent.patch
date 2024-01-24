@@ -5,10 +5,10 @@ Subject: [PATCH] PlayerLoadStatsEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 0913c1be8b4130ada71e7d4f473a709e55b7d2d5..4483bc16c81a5ca088320a28b4723a603b563f7e 100644
+index a412b92ee14b685ec30ce8dc70effffa5c11819f..5946a1b76bc29aaad003b2096e8115d9ee3ffe7c 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1495,7 +1495,7 @@ public abstract class PlayerList {
+@@ -1494,7 +1494,7 @@ public abstract class PlayerList {
                  }
              }
  

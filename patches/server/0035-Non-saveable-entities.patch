@@ -18,10 +18,10 @@ index 7e8dc9e8f381abfdcce2746edc93122d623622d1..303e5ed4d5cf2a64b998656bfd189f19
                  if (entity.isVehicle()) {
                      // we cannot assume that these entities are contained within this chunk, because entities can
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 12fa631aa176e67dcda522dca6376a69ca5b34d8..f62b6e4777486721a1f9d3b5a80591c26b50bd66 100644
+index 85d1f19cc02b9bd159d2614305f070ad26df8f17..5069faacb2e16b112b5c7167de5fe310e20bc086 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -424,6 +424,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -423,6 +423,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      private UUID originWorld;
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
      public boolean fixedPose = false; // Paper - Expand Pose API
@@ -29,7 +29,7 @@ index 12fa631aa176e67dcda522dca6376a69ca5b34d8..f62b6e4777486721a1f9d3b5a80591c2
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-@@ -4825,7 +4826,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4817,7 +4818,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
  
      @Override
      public boolean shouldBeSaved() {
@@ -39,7 +39,7 @@ index 12fa631aa176e67dcda522dca6376a69ca5b34d8..f62b6e4777486721a1f9d3b5a80591c2
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-index f16ac1d640fc97f348c244d4ea86e3278b30ae19..3e1c22cd06ecaa26b0c36563a4d0c44ee7e91b1d 100644
+index 8698104e3eb98e2cc5da5de87a8f538860c1d91d..749c9e53b8c0d8cec866bfe5ceaf9be0312c75aa 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 @@ -1227,4 +1227,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
