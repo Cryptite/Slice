@@ -17,7 +17,7 @@ index a6f58b3457b7477015c5c6d969e7d83017dd3fa1..7f2070bd2d7eb7f0256a96df00103d20
  
      public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 544f8b6c9f2b5d1f9681cc97db09e815e77f8765..a7335d9f890397eff67d0063d077e263a66d2fdd 100644
+index c95c9792cf150b91d72710342859c9e9487bc8b4..bbe3af37c559e64e7660a909b08c89d6c96e2458 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -28,7 +28,7 @@ index 544f8b6c9f2b5d1f9681cc97db09e815e77f8765..a7335d9f890397eff67d0063d077e263
  import com.google.common.collect.ImmutableList;
  import co.aikar.timings.Timings;
  import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-@@ -312,6 +313,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -313,6 +314,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public volatile boolean abnormalExit = false; // Paper
      public static final long SERVER_INIT = System.nanoTime(); // Paper - Lag compensation
  
@@ -37,7 +37,7 @@ index 544f8b6c9f2b5d1f9681cc97db09e815e77f8765..a7335d9f890397eff67d0063d077e263
      public static <S extends MinecraftServer> S spin(Function<Thread, S> serverFactory) {
          AtomicReference<S> atomicreference = new AtomicReference();
          Thread thread = new io.papermc.paper.util.TickThread(() -> { // Paper - rewrite chunk system
-@@ -413,6 +416,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -414,6 +417,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          this.paperConfigurations = services.paperConfigurations(); // Paper - add paper configuration files
      }
  
@@ -50,7 +50,7 @@ index 544f8b6c9f2b5d1f9681cc97db09e815e77f8765..a7335d9f890397eff67d0063d077e263
      private void readScoreboard(DimensionDataStorage persistentStateManager) {
          persistentStateManager.computeIfAbsent(this.getScoreboard().dataFactory(), "scoreboard");
      }
-@@ -916,6 +925,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -917,6 +926,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              this.isSaving = true;
              this.getPlayerList().saveAll(); // Paper - Incremental chunk and player saving; diff on change
              flag3 = this.saveAllChunks(suppressLogs, flush, force);
@@ -58,7 +58,7 @@ index 544f8b6c9f2b5d1f9681cc97db09e815e77f8765..a7335d9f890397eff67d0063d077e263
          } finally {
              this.isSaving = false;
          }
-@@ -1130,6 +1140,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1131,6 +1141,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  throw new IllegalStateException("Failed to initialize server");
              }
  
@@ -74,7 +74,7 @@ index 544f8b6c9f2b5d1f9681cc97db09e815e77f8765..a7335d9f890397eff67d0063d077e263
              this.nextTickTimeNanos = Util.getNanos();
              this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
              this.status = this.buildServerStatus();
-@@ -1531,6 +1550,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1535,6 +1554,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                      level.saveIncrementally(fullSave);
                  }
              }

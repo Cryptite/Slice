@@ -17,8 +17,31 @@ index 223e80ea0ede575cf8f73191ef2799ae0ee41ba7..8868ebd92b13bc2aa48e4f6cae33ed46
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 6b681ac559f3f8fb4f7f3fad71fdb84076c2c640..84de98dbf84e73c671c92bc827a5b9f8fcad3f53 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -251,7 +251,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+             // Paper start - Folia schedulers
+             synchronized (this) {
+                 if (this.bukkitEntity == null) {
+-                    return this.bukkitEntity = CraftEntity.getEntity(this.level.getCraftServer(), this);
++                    this.bukkitEntity = CraftEntity.getEntity(this.level.getCraftServer(), this);
++
++                    // Slice start - resolve ObjectId
++                    if (this.bukkitEntity instanceof org.bukkit.craftbukkit.entity.CraftHumanEntity craftHumanEntity) {
++                        io.papermc.paper.event.player.PlayerResolveObjectIdEvent event = new io.papermc.paper.event.player.PlayerResolveObjectIdEvent((org.bukkit.entity.Player) bukkitEntity);
++                        event.callEvent();
++                        craftHumanEntity.setObjectId(event.getObjectId());
++                    }
++                    // Slice end
++
++                    return this.bukkitEntity;
+                 }
+             }
+             // Paper end - Folia schedulers
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
-index acbb64010cd59668aa1bcb52ff1220789cadb1d3..58802dfb9aa2eaf1acc533e6bd8f996231de5074 100644
+index acbb64010cd59668aa1bcb52ff1220789cadb1d3..190f3e26d379f426a3e7745e5529e02c0ead724e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 @@ -7,6 +7,8 @@ import java.util.Arrays;
@@ -43,7 +66,7 @@ index acbb64010cd59668aa1bcb52ff1220789cadb1d3..58802dfb9aa2eaf1acc533e6bd8f9962
  import org.bukkit.block.Block;
  import org.bukkit.craftbukkit.CraftServer;
  import org.bukkit.craftbukkit.entity.memory.CraftMemoryMapper;
-@@ -74,13 +74,27 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+@@ -74,6 +74,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
      protected final PermissibleBase perm = new PermissibleBase(this);
      private boolean op;
      private GameMode mode;
@@ -51,23 +74,22 @@ index acbb64010cd59668aa1bcb52ff1220789cadb1d3..58802dfb9aa2eaf1acc533e6bd8f9962
  
      public CraftHumanEntity(final CraftServer server, final Player entity) {
          super(server, entity);
-         this.mode = server.getDefaultGameMode();
-         this.inventory = new CraftInventoryPlayer(entity.getInventory());
+@@ -82,6 +83,18 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
          this.enderChest = new CraftInventory(entity.getEnderChestInventory());
-+
-+        // Slice start - resolve ObjectId
-+        PlayerResolveObjectIdEvent event = new PlayerResolveObjectIdEvent(entity.getUUID());
-+        event.callEvent();
-+        objectId = event.getObjectId();
-+        // Slice end
-+    }
-+
+     }
+ 
 +    // Slice start
 +    @Override
 +    public ObjectId getObjectId() {
 +        return objectId;
-     }
++    }
++
++    @Override
++    public void setObjectId(ObjectId objectId) {
++        this.objectId = objectId;
++    }
 +    // Slice end
- 
++
      @Override
      public PlayerInventory getInventory() {
+         return this.inventory;

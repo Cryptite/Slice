@@ -144,7 +144,7 @@ index 529ab44baaf573b97cf7e89560c548642733188f..e3e0f306ebed31ce4742e7d2f15ab102
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index ccd0fbf0d61a0a5e9e806df964c711f5c883a8d4..85d1f19cc02b9bd159d2614305f070ad26df8f17 100644
+index 166af7aba37ae8cca610d95b93ed8ae9e47ad85b..827a0611771f20063bbd6b390ab87af870b94d72 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -3385,7 +3385,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
@@ -170,10 +170,10 @@ index 8192278ee16adfb74abb7ce955752fe8b43787d2..2b93d9ca3df4d1a9acd670752390018a
  
      public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index e009a7dffc548043d22ec62259bb0b737178388d..0c980953444001ca5bbdb06ccf56079cd02588f0 100644
+index 2196c5bd9560e45a4b56fd639b98850b4635bf86..14ee258ea560b180485b5742ee7083c5e1099a26 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2733,7 +2733,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2691,7 +2691,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

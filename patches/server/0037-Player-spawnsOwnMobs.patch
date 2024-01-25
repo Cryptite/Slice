@@ -5,10 +5,10 @@ Subject: [PATCH] Player spawnsOwnMobs
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index ce1cee91351d2665437573b0d756420769637fa0..a4319888da00ee82b17c01a118e325efab43d976 100644
+index 366c0c9b45a819f7f94ebe3e49b8ab7f9edf9ce7..55281d6dc09ebdd262e05973e4d9c1e82681e05d 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-@@ -562,7 +562,7 @@ public class ServerChunkCache extends ChunkSource {
+@@ -549,7 +549,7 @@ public class ServerChunkCache extends ChunkSource {
                  // Paper start - optimise chunk tick iteration
                  ChunkMap playerChunkMap = this.chunkMap;
                  for (ServerPlayer player : this.level.players) {

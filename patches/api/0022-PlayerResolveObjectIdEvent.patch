@@ -19,36 +19,31 @@ index bf01892c248b988531d21d9fb0f74d0adf2205ac..44b537f6da989cea6ebde8d14dea834d
      compileOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.9.18")
 diff --git a/src/main/java/io/papermc/paper/event/player/PlayerResolveObjectIdEvent.java b/src/main/java/io/papermc/paper/event/player/PlayerResolveObjectIdEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c5e4581be8ed8b60118535f6c385f6d2e72c1f62
+index 0000000000000000000000000000000000000000..4c28994757812f9c7f59d9eb827908bb64e63118
 --- /dev/null
 +++ b/src/main/java/io/papermc/paper/event/player/PlayerResolveObjectIdEvent.java
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,44 @@
 +package io.papermc.paper.event.player;
 +
 +import org.bson.types.ObjectId;
-+import org.bukkit.event.Event;
++import org.bukkit.Bukkit;
++import org.bukkit.entity.Player;
 +import org.bukkit.event.HandlerList;
++import org.bukkit.event.player.PlayerEvent;
 +import org.jetbrains.annotations.NotNull;
 +import org.jetbrains.annotations.Nullable;
 +
 +import java.util.Objects;
-+import java.util.UUID;
 +
 +/**
 + * Called when a player trades with a standalone merchant GUI.
 + */
-+public class PlayerResolveObjectIdEvent extends Event {
++public class PlayerResolveObjectIdEvent extends PlayerEvent {
 +    private static final HandlerList handlers = new HandlerList();
-+    private final UUID uuid;
 +    private ObjectId objectId;
 +
-+    public PlayerResolveObjectIdEvent(@NotNull UUID uuid) {
-+        this.uuid = uuid;
-+    }
-+
-+    @NotNull
-+    public UUID getUuid() {
-+        return uuid;
++    public PlayerResolveObjectIdEvent(@NotNull Player player) {
++        super(player, !Bukkit.isPrimaryThread());
 +    }
 +
 +    @Nullable
@@ -73,15 +68,16 @@ index 0000000000000000000000000000000000000000..c5e4581be8ed8b60118535f6c385f6d2
 +
 +}
 diff --git a/src/main/java/org/bukkit/entity/HumanEntity.java b/src/main/java/org/bukkit/entity/HumanEntity.java
-index 8b0d04d5b39ee817555a36adddc39b18fc6f0d02..c3d2778659fb8eb12c203717c61705049bf7d530 100644
+index 8b0d04d5b39ee817555a36adddc39b18fc6f0d02..6a1df3ccfadfa70594fd71c6d24d94e43297742b 100644
 --- a/src/main/java/org/bukkit/entity/HumanEntity.java
 +++ b/src/main/java/org/bukkit/entity/HumanEntity.java
-@@ -22,6 +22,10 @@ import org.jetbrains.annotations.Nullable;
+@@ -22,6 +22,11 @@ import org.jetbrains.annotations.Nullable;
   */
  public interface HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder {
  
 +    // Slice start
 +    org.bson.types.@Nullable ObjectId getObjectId();
++    void setObjectId(@Nullable org.bson.types.ObjectId objectId);
 +    // Slice end
 +
      // Paper start
