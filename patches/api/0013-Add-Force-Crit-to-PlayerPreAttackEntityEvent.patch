@@ -5,18 +5,18 @@ Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
-index d49999ea597ef247bbf2298e6bf5600bfe003c3e..4ed53b14f94154043e3043f4fef540b45b2b272d 100644
+index 148f46f4572a778f090b461808b53cf9cad10e11..abb2c6f8035c81bd2cb43bf5aa9b3744c10e5e48 100644
 --- a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
 +++ b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
-@@ -26,6 +26,7 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
-     private final Entity attacked;
-     private boolean cancelled;
+@@ -28,6 +28,7 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
      private final boolean willAttack;
+ 
+     private boolean cancelled;
 +    private boolean forceCrit; // Slice
  
-     public PrePlayerAttackEntityEvent(@NotNull Player who, @NotNull Entity attacked, boolean willAttack) {
-         super(who);
-@@ -55,6 +56,16 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+     @ApiStatus.Internal
+     public PrePlayerAttackEntityEvent(@NotNull Player player, @NotNull Entity attacked, boolean willAttack) {
+@@ -60,6 +61,16 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
          return this.willAttack;
      }
  
@@ -30,6 +30,6 @@ index d49999ea597ef247bbf2298e6bf5600bfe003c3e..4ed53b14f94154043e3043f4fef540b4
 +    }
 +    // Slice end
 +
-     @NotNull
      @Override
-     public HandlerList getHandlers() {
+     public boolean isCancelled() {
+         return this.cancelled;

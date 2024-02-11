@@ -17,6 +17,40 @@ index 366c0c9b45a819f7f94ebe3e49b8ab7f9edf9ce7..55281d6dc09ebdd262e05973e4d9c1e8
                          playerChunkMap.playerMobSpawnMap.remove(player);
                          player.playerNaturallySpawnedEvent = null;
                          player.lastEntitySpawnRadiusSquared = -1.0;
+diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java b/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java
+index 4e2c23ccdf4e4a4d65b291dbe20952bae1838bff..b7c6ec93244da6ebba116ab5d17179f291314b29 100644
+--- a/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java
++++ b/src/main/java/net/minecraft/world/entity/ai/goal/EatBlockGoal.java
+@@ -2,7 +2,12 @@ package net.minecraft.world.entity.ai.goal;
+ 
+ import java.util.EnumSet;
+ import java.util.function.Predicate;
++
++import com.destroystokyo.paper.util.maplist.ReferenceList;
++import io.papermc.paper.util.player.NearbyPlayers;
+ import net.minecraft.core.BlockPos;
++import net.minecraft.server.level.ServerLevel;
++import net.minecraft.server.level.ServerPlayer;
+ import net.minecraft.world.entity.Mob;
+ import net.minecraft.world.level.GameRules;
+ import net.minecraft.world.level.Level;
+@@ -31,11 +36,12 @@ public class EatBlockGoal extends Goal {
+ 
+     @Override
+     public boolean canUse() {
+-        // Paper start - Fix MC-210802
+-        if (!((net.minecraft.server.level.ServerLevel) this.level).chunkSource.chunkMap.anyPlayerCloseEnoughForSpawning(this.mob.chunkPosition())) {
++        // Paper start - Fix MC-210802 // Slice start - adjust due to our spawnsOwnMobs logic
++        NearbyPlayers nearbyPlayers = ((ServerLevel) this.level).chunkSource.chunkMap.getNearbyPlayers();
++        ReferenceList<ServerPlayer> generalNearbyPlayers = nearbyPlayers.getPlayers(this.mob.chunkPosition(), NearbyPlayers.NearbyMapType.GENERAL);
++        if (generalNearbyPlayers == null || generalNearbyPlayers.size() == 0) {
+             return false;
+-        }
+-        // Paper end
++        } // Slice end
+         if (this.mob.getRandom().nextInt(this.mob.isBaby() ? 50 : 1000) != 0) {
+             return false;
+         } else {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
 index 2b93d9ca3df4d1a9acd670752390018a4332065f..5d37ffb421b22b0d1acffa43ac0bdd2c80414123 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java

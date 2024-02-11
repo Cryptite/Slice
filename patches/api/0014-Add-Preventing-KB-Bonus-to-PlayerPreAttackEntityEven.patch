@@ -5,18 +5,18 @@ Subject: [PATCH] Add Preventing KB Bonus to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
-index 4ed53b14f94154043e3043f4fef540b45b2b272d..608df52360df66390fce3070e52e4ecd4cd5fb64 100644
+index abb2c6f8035c81bd2cb43bf5aa9b3744c10e5e48..0ad3d64b0b0281a9afc998faff371bbdf000d864 100644
 --- a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
 +++ b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
-@@ -27,6 +27,7 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+@@ -29,6 +29,7 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+ 
      private boolean cancelled;
-     private final boolean willAttack;
      private boolean forceCrit; // Slice
 +    private boolean preventKnockbackBonus; // Slice
  
-     public PrePlayerAttackEntityEvent(@NotNull Player who, @NotNull Entity attacked, boolean willAttack) {
-         super(who);
-@@ -64,6 +65,15 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+     @ApiStatus.Internal
+     public PrePlayerAttackEntityEvent(@NotNull Player player, @NotNull Entity attacked, boolean willAttack) {
+@@ -69,6 +70,15 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
      public void setForceCrit(boolean forceCrit) {
          this.forceCrit = forceCrit;
      }
@@ -31,4 +31,4 @@ index 4ed53b14f94154043e3043f4fef540b45b2b272d..608df52360df66390fce3070e52e4ecd
 +
      // Slice end
  
-     @NotNull
+     @Override

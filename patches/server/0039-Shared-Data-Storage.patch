@@ -17,7 +17,7 @@ index a6f58b3457b7477015c5c6d969e7d83017dd3fa1..7f2070bd2d7eb7f0256a96df00103d20
  
      public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c95c9792cf150b91d72710342859c9e9487bc8b4..bbe3af37c559e64e7660a909b08c89d6c96e2458 100644
+index 48eaa18bec43e88020047d1ffe57b84146793d6f..3fe8c1f92673400e40dbea4c101256384cad26f6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -58,7 +58,7 @@ index c95c9792cf150b91d72710342859c9e9487bc8b4..bbe3af37c559e64e7660a909b08c89d6
          } finally {
              this.isSaving = false;
          }
-@@ -1131,6 +1141,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1132,6 +1142,15 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  throw new IllegalStateException("Failed to initialize server");
              }
  
@@ -74,7 +74,7 @@ index c95c9792cf150b91d72710342859c9e9487bc8b4..bbe3af37c559e64e7660a909b08c89d6
              this.nextTickTimeNanos = Util.getNanos();
              this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
              this.status = this.buildServerStatus();
-@@ -1535,6 +1554,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1536,6 +1555,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                      level.saveIncrementally(fullSave);
                  }
              }

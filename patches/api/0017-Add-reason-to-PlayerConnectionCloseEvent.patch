@@ -5,15 +5,16 @@ Subject: [PATCH] Add reason to PlayerConnectionCloseEvent
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java b/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
-index 12c1c6fe9dc8dc5f5faf6dcf99f6857219ef22b8..42954466c13a926e735754949cc9d78fa1ad7b10 100644
+index d0fb13adc140f1ca74d0c3448f92baa60684f3e2..3c69210c2d665794fb77b6ff23d632a02e626875 100644
 --- a/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
 +++ b/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
-@@ -50,12 +50,18 @@ public class PlayerConnectionCloseEvent extends Event {
+@@ -42,13 +42,19 @@ public class PlayerConnectionCloseEvent extends Event {
      @NotNull private final UUID playerUniqueId;
      @NotNull private final String playerName;
      @NotNull private final InetAddress ipAddress;
 +    @NotNull private final ConnectionCloseReason reason;
  
+     @ApiStatus.Internal
      public PlayerConnectionCloseEvent(@NotNull final UUID playerUniqueId, @NotNull final String playerName, @NotNull final InetAddress ipAddress, final boolean async) {
 +        this(playerUniqueId, playerName, ipAddress, ConnectionCloseReason.NORMAL, async);
 +    }
@@ -27,9 +28,9 @@ index 12c1c6fe9dc8dc5f5faf6dcf99f6857219ef22b8..42954466c13a926e735754949cc9d78f
      }
  
      /**
-@@ -92,4 +98,26 @@ public class PlayerConnectionCloseEvent extends Event {
+@@ -85,4 +91,26 @@ public class PlayerConnectionCloseEvent extends Event {
      public static HandlerList getHandlerList() {
-         return HANDLERS;
+         return HANDLER_LIST;
      }
 +
 +    /**
