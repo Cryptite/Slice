@@ -5,7 +5,7 @@ Subject: [PATCH] Add BlockDestroyedByNeighborEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index cfd4ac06a9af6bf3fac293110482e1df690e075e..12eab26762eaa7058bee5c33b46c46752316b2c0 100644
+index a7b217ddbcbf92513bd38101fdfca2075505e267..92c8cb4fe9c82e32876fa75134a6009c874f6594 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 @@ -419,6 +419,7 @@ public class ServerPlayerGameMode {
@@ -37,10 +37,10 @@ index ed27a963223bfe18310ad5adabf461b5e307ef9c..94a94186dc27d69ef09b12afbce7ecc6
              if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - Fix cancelled powdered snow bucket placement
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index dbeaec6c95be922ab17ce6e919dfd5dc6f618804..1b71dd295dd2add5dc351e5daba25119cf7af083 100644
+index d2ca67b1a9468b4b5a9f2e388310715e86695501..a343c16def4d03e82cde7e7ad4d40cd94ab99715 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -186,6 +186,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -181,6 +181,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
      public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Faster redstone torch rapid clock removal; Move from Map in BlockRedstoneTorch to here
  
@@ -68,7 +68,7 @@ index dbeaec6c95be922ab17ce6e919dfd5dc6f618804..1b71dd295dd2add5dc351e5daba25119
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -1051,6 +1072,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1046,6 +1067,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index dbeaec6c95be922ab17ce6e919dfd5dc6f618804..1b71dd295dd2add5dc351e5daba25119
              // CraftBukkit end
          }
      }
-@@ -1072,6 +1094,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1067,6 +1089,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          if (iblockdata.isAir()) {
              return false;
          } else {
@@ -115,7 +115,7 @@ index 03b5ab8251497c0c94467f90e6663a0dc766babb..0be28c971bbd88268af4dfdd4489d4fb
                  BlockState iblockdata2 = iblockdata1.getFluidState().is((Fluid) Fluids.WATER) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
  
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index 97a9fbbe6d8435e88e5fe716770e4034ab0db7a7..cf7013d3d1679e675f7f1f71b987b74b73174cf1 100644
+index 2892e586146cbc560f0bcf4b9af6d0575cb0a82e..b665a8f932ddae519cdefade555f9ea31fe8f4ac 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 @@ -1242,11 +1242,22 @@ public abstract class BlockBehaviour implements FeatureElement {

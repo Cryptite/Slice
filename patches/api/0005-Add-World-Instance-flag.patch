@@ -5,10 +5,10 @@ Subject: [PATCH] Add World Instance flag
 
 
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index d3081d4445af73c2c7b23c5fc60861f184ac808e..415a137775f072d1aefa841b01b6bf7a5f97b6a3 100644
+index c5fe36050eeaff80cfb989fe2f38370215af6fe5..671321b77475f20ec1cf682a184d42497160dce3 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -2663,6 +2663,11 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+@@ -2704,6 +2704,11 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
       */
      public void setAutoSave(boolean value);
  

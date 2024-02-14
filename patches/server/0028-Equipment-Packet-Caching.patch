@@ -59,10 +59,10 @@ index e3e0f306ebed31ce4742e7d2f15ab102b93a9dff..4f4ea6dcef4e1960ac69271fbd771dd3
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 6071451339080bbdd98fb634791a56988984c8bc..70d2ec6c248b01438de30827404186e5d152cda0 100644
+index 6523795e715e5d472739e9bc6433143115c3de8f..c59576d4fef3b711af9fbba0d9b8e6a0909cf484 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -262,6 +262,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -261,6 +261,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper - Friction API
@@ -71,7 +71,7 @@ index 6071451339080bbdd98fb634791a56988984c8bc..70d2ec6c248b01438de30827404186e5
  
      @Override
      public float getBukkitYaw() {
-@@ -3111,6 +3113,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3112,6 +3114,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -79,7 +79,7 @@ index 6071451339080bbdd98fb634791a56988984c8bc..70d2ec6c248b01438de30827404186e5
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3203,7 +3206,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3204,7 +3207,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -106,7 +106,7 @@ index 6071451339080bbdd98fb634791a56988984c8bc..70d2ec6c248b01438de30827404186e5
      }
  
      // Paper start - Hide unnecessary item meta
-@@ -4543,4 +4564,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4544,4 +4565,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -182,10 +182,10 @@ index 6071451339080bbdd98fb634791a56988984c8bc..70d2ec6c248b01438de30827404186e5
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 4afc1c9d2a7638e84a55fe30932dc36db465c31a..c8ed26388e7becf0b4426735068dc1f5b7b3dc34 100644
+index b057d4d4226e1b6f2db92f81f4efb69ce207f829..4327a56aec66799e055988d21d15887c7ea82ed1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -1118,4 +1118,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+@@ -1143,4 +1143,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
          getHandle().knockback(strength, directionX, directionZ);
      };
      // Paper end

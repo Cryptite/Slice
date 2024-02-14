@@ -5,10 +5,10 @@ Subject: [PATCH] Vanish
 
 
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index 0b057d6be0d55c275867bd1cb98387bc3237d881..2f1c4ecb27d47745fa9bad3a36f006103aaf79b2 100644
+index b284e62465ddf8e4a129c99f202c45fd1a2e0c65..5acc50a7e3be04d5ce49e8c9de0c2f3e1a2baf20 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
-@@ -1122,4 +1122,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+@@ -1117,4 +1117,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
       */
      void setSaveable(boolean saveable);
      // Slice end

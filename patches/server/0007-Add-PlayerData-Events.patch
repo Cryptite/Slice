@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerData Events
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-index f47a1767fe5c1454fd9d52660e4d3ead42f38e25..bcadfd11b4073ee1e8f2a3f5fa93505fe25ef15c 100644
+index 92c8cb4fe9c82e32876fa75134a6009c874f6594..9637ed39f3022a9d8d0b45a7bd5895657783bed5 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayerGameMode.java
-@@ -603,6 +603,8 @@ public class ServerPlayerGameMode {
+@@ -601,6 +601,8 @@ public class ServerPlayerGameMode {
                      enuminteractionresult1 = stack.useOn(itemactioncontext);
                  }
  
@@ -45,7 +45,7 @@ index f890738d3bb9fb5e70a9d323c6cec97f9948f9cf..0e02785ec35e635bef33cc89c54b146c
  
      private static <T> ResourceLocation getKey(Stat<T> stat) {
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index b3a90d6ef0e17c236e0b3c46e2d0012671afdaa7..bb22635a8dc7d4e2030f50da62983119520a0b91 100644
+index 63e187c65cb855031f286aad0d25ac4694f7a331..b0f3aa2b90e2dc5dd7b450cae9ce4eba3d04e568 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -36,6 +36,7 @@ public class PlayerDataStorage {

@@ -5,10 +5,10 @@ Subject: [PATCH] AntiXray Bypass
 
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 47c485099f7667590669309e82bdcabf5e4ebb74..d1f9ee2f20fdb64eb8b2c87bdd2ecc8ec6135a70 100644
+index 69b7524859ec51f879cbb9d13f3ab9cec7549562..23098a702f2073577d1ccec9f4cc4105cd24d668 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2990,6 +2990,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -3058,6 +3058,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
       */
      public void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra);
  
