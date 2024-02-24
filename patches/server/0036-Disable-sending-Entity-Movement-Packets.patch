@@ -36,10 +36,10 @@ index 4f4ea6dcef4e1960ac69271fbd771dd3ad6af275..81371980e0eaa362ea1fff9813f632db
                              flag5 = true;
                          }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 5069faacb2e16b112b5c7167de5fe310e20bc086..d80be25ceca44a536d4989a0799716ea7f3a2026 100644
+index 1d35db213e7ac7518c587cc0dd0c80c3f99a0c41..297e2b8438dde1c1903505e8e7bbc94c3340d2d1 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -424,6 +424,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -425,6 +425,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
      public boolean fixedPose = false; // Paper - Expand Pose API
      public boolean saveable = true; // Slice

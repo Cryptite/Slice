@@ -18,10 +18,10 @@ index 1b090f1e79b996e52097afc49c1cec85936653e6..5185bcbf5363fa2c7e2b0226706cc66d
          private static final byte CHUNK_TICKET_STAGE_NONE           = 0;
          private static final byte CHUNK_TICKET_STAGE_LOADING        = 1;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index a1edae705041fee8907a998859628ef4cf6597a8..46a22322f2f660957e9f873f66adf3777c662326 100644
+index 8eddc09c4c6af56bfd578641fe983fb7f37885cf..57288d7a643a407cf1f079e08e84a6c1a6937dc4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -540,6 +540,13 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -546,6 +546,13 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          return true;
      }
  

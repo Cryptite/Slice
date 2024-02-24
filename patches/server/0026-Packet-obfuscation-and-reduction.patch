@@ -144,10 +144,10 @@ index 529ab44baaf573b97cf7e89560c548642733188f..e3e0f306ebed31ce4742e7d2f15ab102
  
          if (this.entity instanceof LivingEntity) {
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index b76f26658c483f34b2e4060cb41ee676d0978173..bf5f42cd19cc207a08b45c3f2ace4e1827e31aaf 100644
+index 20f8e96110a3a6401e71dc9b61fb5678e17fc428..00125637b8c3324eff2461ec6546e238ce358779 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -3385,7 +3385,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -3405,7 +3405,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
              this.entityData.markDirty(Entity.DATA_AIR_SUPPLY_ID);
              return;
          }
@@ -157,10 +157,10 @@ index b76f26658c483f34b2e4060cb41ee676d0978173..bf5f42cd19cc207a08b45c3f2ace4e18
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index af35f6d9764ec03e24ef20b371dec64476e03ad3..a9455c46bfc181b3ebe04f19ef87a12023dc67e1 100644
+index de8b794575dfad2ced1b44fab8dffc248ba47d19..7e2fa586ae255cb94e302c14d0811e36e860f188 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -644,7 +644,7 @@ public abstract class Player extends LivingEntity {
+@@ -646,7 +646,7 @@ public abstract class Player extends LivingEntity {
      public void increaseScore(int score) {
          int j = this.getScore();
  
@@ -170,10 +170,10 @@ index af35f6d9764ec03e24ef20b371dec64476e03ad3..a9455c46bfc181b3ebe04f19ef87a120
  
      public void startAutoSpinAttack(int riptideTicks) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 52f2acf2bbbf71dd30f19af862b7e05ab4c63647..6efc5fd8484a6a0af422c6712b353ccdb2acf764 100644
+index 4d6e9fb4b3a880ce2cd7e194fbb37df7abc087a2..7d4615d97256870aea8c758dde8d6908688615a0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -2706,7 +2706,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2757,7 +2757,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
                  this.sendHealthUpdate();
              }
          }

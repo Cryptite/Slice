@@ -17,10 +17,10 @@ index e7fe98ea30ae6d0baea3ec1f9f98a89502a49a12..7e2651aa63cc9ddbe28fb9ecbc518835
      }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index fed596e3a93920a10737557fc84384d53abf2b43..52f2acf2bbbf71dd30f19af862b7e05ab4c63647 100644
+index a72b24e9695fa1375dc787fc6b2ac163acc5bec0..4d6e9fb4b3a880ce2cd7e194fbb37df7abc087a2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -193,6 +193,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -199,6 +199,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      public org.bukkit.event.player.PlayerResourcePackStatusEvent.Status resourcePackStatus; // Paper - more resource pack API
      private static final boolean DISABLE_CHANNEL_LIMIT = System.getProperty("paper.disableChannelLimit") != null; // Paper - add a flag to disable the channel limit
      private long lastSaveTime; // Paper - getLastPlayed replacement API
@@ -28,7 +28,7 @@ index fed596e3a93920a10737557fc84384d53abf2b43..52f2acf2bbbf71dd30f19af862b7e05a
  
      public CraftPlayer(CraftServer server, ServerPlayer entity) {
          super(server, entity);
-@@ -2903,6 +2904,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2954,6 +2955,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      }
      // Paper end
  

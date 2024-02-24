@@ -25,10 +25,10 @@ index a7b217ddbcbf92513bd38101fdfca2075505e267..92c8cb4fe9c82e32876fa75134a6009c
                      org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockDropItemEvent(bblock, state, this.player, itemsToDrop); // Paper - capture all item additions to the world
                  }
 diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
-index ed27a963223bfe18310ad5adabf461b5e307ef9c..94a94186dc27d69ef09b12afbce7ecc69ec2bfc5 100644
+index 1ad126d992d95062a3db08374db7a927f23a0cac..7648e43a77b06b9f4a31b216824cdd9c1d79788f 100644
 --- a/src/main/java/net/minecraft/world/item/ItemStack.java
 +++ b/src/main/java/net/minecraft/world/item/ItemStack.java
-@@ -378,6 +378,7 @@ public final class ItemStack {
+@@ -379,6 +379,7 @@ public final class ItemStack {
              CompoundTag oldData = this.getTagClone();
              int oldCount = this.getCount();
              ServerLevel world = (ServerLevel) context.getLevel();
@@ -37,7 +37,7 @@ index ed27a963223bfe18310ad5adabf461b5e307ef9c..94a94186dc27d69ef09b12afbce7ecc6
              if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - Fix cancelled powdered snow bucket placement
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index d2ca67b1a9468b4b5a9f2e388310715e86695501..a343c16def4d03e82cde7e7ad4d40cd94ab99715 100644
+index 6f88d46662f9a63927f654e256257f30dc1b5f1e..ef887fa0089cec0e4543b9c1cec1e48bc2d5cc61 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -181,6 +181,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {

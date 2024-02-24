@@ -5,10 +5,10 @@ Subject: [PATCH] Add reason to PlayerConnectionCloseEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
-index 76f31845fe50200d09e5ab6a6c08da00444414ad..eb86d1d10c61f599161e2387613bfcd5d6cb2dea 100644
+index 87c5690774363edc1b7ebff10b041e48c0a6d56d..cf018b276c674f49c2aaa0084ecdcdc4dc6edbd4 100644
 --- a/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerConfigurationPacketListenerImpl.java
-@@ -138,6 +138,7 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis
+@@ -142,6 +142,7 @@ public class ServerConfigurationPacketListenerImpl extends ServerCommonPacketLis
              // Paper end - Debugging
              this.connection.send(new ClientboundDisconnectPacket(ServerConfigurationPacketListenerImpl.DISCONNECT_REASON_INVALID_DATA));
              this.connection.disconnect(ServerConfigurationPacketListenerImpl.DISCONNECT_REASON_INVALID_DATA);

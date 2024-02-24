@@ -5,23 +5,23 @@ Subject: [PATCH] Non-saveable entities
 
 
 diff --git a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
-index 7e8dc9e8f381abfdcce2746edc93122d623622d1..303e5ed4d5cf2a64b998656bfd189f19f8c8fcde 100644
+index c78cbec447032de9fe69748591bef6be300160ed..bb3f14d00a8894fc4dfa12b29c27ef56cc44848d 100644
 --- a/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
 +++ b/src/main/java/io/papermc/paper/world/ChunkEntitySlices.java
-@@ -118,7 +118,7 @@ public final class ChunkEntitySlices {
+@@ -119,7 +119,7 @@ public final class ChunkEntitySlices {
                  // removed by us below
                  continue;
              }
 -            if (entity.shouldBeSaved()) {
 +            if (entity.shouldBeSaved() || !entity.saveable) { // Slice
-                 entity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK);
+                 entity.setRemoved(Entity.RemovalReason.UNLOADED_TO_CHUNK, EntityRemoveEvent.Cause.UNLOAD);
                  if (entity.isVehicle()) {
                      // we cannot assume that these entities are contained within this chunk, because entities can
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 85d1f19cc02b9bd159d2614305f070ad26df8f17..5069faacb2e16b112b5c7167de5fe310e20bc086 100644
+index 00125637b8c3324eff2461ec6546e238ce358779..1d35db213e7ac7518c587cc0dd0c80c3f99a0c41 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -423,6 +423,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -424,6 +424,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      private UUID originWorld;
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
      public boolean fixedPose = false; // Paper - Expand Pose API
@@ -29,7 +29,7 @@ index 85d1f19cc02b9bd159d2614305f070ad26df8f17..5069faacb2e16b112b5c7167de5fe310
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-@@ -4817,7 +4818,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -4844,7 +4845,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
  
      @Override
      public boolean shouldBeSaved() {
@@ -39,10 +39,10 @@ index 85d1f19cc02b9bd159d2614305f070ad26df8f17..5069faacb2e16b112b5c7167de5fe310
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-index 8698104e3eb98e2cc5da5de87a8f538860c1d91d..749c9e53b8c0d8cec866bfe5ceaf9be0312c75aa 100644
+index 0b5a31477e3b76833fb97a455842316193663c8e..5db4cf24de9a1c1980f22e72b6f09da146017189 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-@@ -1227,4 +1227,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -1228,4 +1228,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
          return this.getHandle().getScoreboardName();
      }
      // Paper end - entity scoreboard name

@@ -5,7 +5,7 @@ Subject: [PATCH] Smooth Teleports
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 0dba30c41affafe7b1d585b515925043b37712fa..d9b9dd6023532a26f5d8173fb1fccf10a9dfec8c 100644
+index 58591bf2f63b9c5e97d9ce4188dff3366968a178..dce047e5ce4f42e04fcb6b95dd9a3e5e46e5d0da 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -281,6 +281,7 @@ public class ServerPlayer extends Player {
@@ -17,10 +17,10 @@ index 0dba30c41affafe7b1d585b515925043b37712fa..d9b9dd6023532a26f5d8173fb1fccf10
      // Paper start - replace player chunk loader
      private final java.util.concurrent.atomic.AtomicReference<io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances> viewDistances = new java.util.concurrent.atomic.AtomicReference<>(new io.papermc.paper.chunk.system.RegionizedPlayerChunkLoader.ViewDistances(-1, -1, -1));
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 8148bb81322b3ba7becbf0fdb636c83558324f81..a412b92ee14b685ec30ce8dc70effffa5c11819f 100644
+index 81c28b63e9dfe21d8f17f465468c40cf5ef84e9a..6295a4cbfabe9f6fa58d6682a0ef8bd802a19408 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -952,10 +952,10 @@ public abstract class PlayerList {
+@@ -953,10 +953,10 @@ public abstract class PlayerList {
          ServerLevel worldserver2 = entityplayer1.serverLevel();
          LevelData worlddata = worldserver2.getLevelData();
  
@@ -34,10 +34,10 @@ index 8148bb81322b3ba7becbf0fdb636c83558324f81..a412b92ee14b685ec30ce8dc70effffa
          entityplayer1.connection.send(new ClientboundChangeDifficultyPacket(worlddata.getDifficulty(), worlddata.isDifficultyLocked()));
          entityplayer1.connection.send(new ClientboundSetExperiencePacket(entityplayer1.experienceProgress, entityplayer1.totalExperience, entityplayer1.experienceLevel));
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 5c1e016de183933c5458deaae257b978e6350307..23a55976ebd62c52cd28d04c50de975b1fa932a0 100644
+index 616d2e479d91673695ade0db151a0099b568904f..a72b24e9695fa1375dc787fc6b2ac163acc5bec0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1225,6 +1225,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1255,6 +1255,15 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          // Paper end
      }
  

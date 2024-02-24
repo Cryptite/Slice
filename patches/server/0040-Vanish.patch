@@ -5,10 +5,10 @@ Subject: [PATCH] Vanish
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d80be25ceca44a536d4989a0799716ea7f3a2026..95f8b8cd1a429af527763f318ba64a773597924c 100644
+index 297e2b8438dde1c1903505e8e7bbc94c3340d2d1..c07e6ff45c2dd51fcd2031bae3d7b32cb614b7ac 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -425,6 +425,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -426,6 +426,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      public boolean fixedPose = false; // Paper - Expand Pose API
      public boolean saveable = true; // Slice
      public boolean sendMovementPackets = true; // Slice
@@ -16,7 +16,7 @@ index d80be25ceca44a536d4989a0799716ea7f3a2026..95f8b8cd1a429af527763f318ba64a77
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-@@ -1313,7 +1314,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -1325,7 +1326,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
      }
  
      private boolean vibrationAndSoundEffectsFromBlock(BlockPos pos, BlockState state, boolean playSound, boolean emitEvent, Vec3 movement) {
@@ -26,10 +26,10 @@ index d80be25ceca44a536d4989a0799716ea7f3a2026..95f8b8cd1a429af527763f318ba64a77
          } else {
              boolean flag2 = this.isStateClimbable(state);
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-index 749c9e53b8c0d8cec866bfe5ceaf9be0312c75aa..8686ac0ef7ba13ecf41a149b4f60937990a365d9 100644
+index 5db4cf24de9a1c1980f22e72b6f09da146017189..a3ab470b534441c0985e137ea299c8fc46bd982b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-@@ -1239,4 +1239,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -1240,4 +1240,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
          this.entity.saveable = saveable;
      }
      // Slice end

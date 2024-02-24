@@ -5,10 +5,10 @@ Subject: [PATCH] Add Preventing KB Bonus to PlayerPreAttackEntityEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index f343eb93740d087ef00fea7827a5e86a3e938e4c..af35f6d9764ec03e24ef20b371dec64476e03ad3 100644
+index 7c80c0a4a6ab953d4d2aaf44b8d38b7f4839ebc7..de8b794575dfad2ced1b44fab8dffc248ba47d19 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -1270,7 +1270,11 @@ public abstract class Player extends LivingEntity {
+@@ -1272,7 +1272,11 @@ public abstract class Player extends LivingEntity {
                      boolean flag = f2 > 0.9F;
                      boolean flag1 = false;
                      byte b0 = 0;

@@ -5,7 +5,7 @@ Subject: [PATCH] PlayerResolveObjectIdEvent
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 223e80ea0ede575cf8f73191ef2799ae0ee41ba7..8868ebd92b13bc2aa48e4f6cae33ed464be621d1 100644
+index f9a08cb94f5d31e16b4fbfc19b6c18d429a53936..ed15e47b52103b4341e69849bd35bdad5d2fd92d 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -26,6 +26,8 @@ dependencies {
@@ -18,10 +18,10 @@ index 223e80ea0ede575cf8f73191ef2799ae0ee41ba7..8868ebd92b13bc2aa48e4f6cae33ed46
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 6b681ac559f3f8fb4f7f3fad71fdb84076c2c640..84de98dbf84e73c671c92bc827a5b9f8fcad3f53 100644
+index c07e6ff45c2dd51fcd2031bae3d7b32cb614b7ac..6846b526ab04eaa6596df635c282c236a1f529c2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -251,7 +251,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+@@ -252,7 +252,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
              // Paper start - Folia schedulers
              synchronized (this) {
                  if (this.bukkitEntity == null) {

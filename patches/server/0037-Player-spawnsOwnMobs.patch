@@ -52,10 +52,10 @@ index 4e2c23ccdf4e4a4d65b291dbe20952bae1838bff..b7c6ec93244da6ebba116ab5d17179f2
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 2b93d9ca3df4d1a9acd670752390018a4332065f..5d37ffb421b22b0d1acffa43ac0bdd2c80414123 100644
+index 7e2fa586ae255cb94e302c14d0811e36e860f188..55791ab44fd7c11ceedb4bdcc2c9c45cbe916a98 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -182,6 +182,8 @@ public abstract class Player extends LivingEntity {
+@@ -184,6 +184,8 @@ public abstract class Player extends LivingEntity {
      public boolean affectsSpawning = true; // Paper - Affects Spawning API
      public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET; // Paper - flying fall damage
  

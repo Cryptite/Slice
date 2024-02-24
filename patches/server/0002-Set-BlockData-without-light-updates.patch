@@ -27,7 +27,7 @@ index 5ece375eaf6bcc61864997a389bb5e24625e4505..2d61315c9ab87a216e235f1586618b11
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 19f23a6c8fb5c02843c27fb8a242ec9d0d1b538b..d2ca67b1a9468b4b5a9f2e388310715e86695501 100644
+index f476ba6c97944bdffae5aacae2e285d17541f46e..6f88d46662f9a63927f654e256257f30dc1b5f1e 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -896,12 +896,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -90,10 +90,10 @@ index 22036ed3ea0629bc12981a8d91a03e55cc2117d6..4dcbaddc99225e8cfe9b8dbbf2196bfc
          }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-index 9dd6012556979514f9879f867138bc836c58ef3f..e332c7cff4a9c76b54f530c41f4fdd701a0ad63d 100644
+index 35f7de6b50d3adae7bdd0da5f779f0a466d25522..e2aad3f47e0789f123e689bf2fcdee6bf207407e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftRegionAccessor.java
-@@ -142,7 +142,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
+@@ -149,7 +149,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
          BlockPos pos = new BlockPos(x, y, z);
          net.minecraft.world.level.block.state.BlockState old = this.getHandle().getBlockState(pos);
  
