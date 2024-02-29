@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Thu, 29 Feb 2024 08:34:20 -0600
+Subject: [PATCH] Make AdvancementProgress Map ctor public
+
+
+diff --git a/src/main/java/net/minecraft/advancements/AdvancementProgress.java b/src/main/java/net/minecraft/advancements/AdvancementProgress.java
+index 2adba57cb01fc95d414570ef86777228247fae53..9c040d0ecc7a53761856ecf1e9dd35b2b06fd5f1 100644
+--- a/src/main/java/net/minecraft/advancements/AdvancementProgress.java
++++ b/src/main/java/net/minecraft/advancements/AdvancementProgress.java
+@@ -46,9 +46,9 @@ public class AdvancementProgress implements Comparable<AdvancementProgress> {
+     private final Map<String, CriterionProgress> criteria;
+     private AdvancementRequirements requirements = AdvancementRequirements.EMPTY;
+ 
+-    private AdvancementProgress(Map<String, CriterionProgress> criteriaProgresses) {
++    public AdvancementProgress(Map<String, CriterionProgress> criteriaProgresses) {
+         this.criteria = criteriaProgresses;
+-    }
++    } // Slice
+ 
+     public AdvancementProgress() {
+         this.criteria = Maps.newHashMap();
