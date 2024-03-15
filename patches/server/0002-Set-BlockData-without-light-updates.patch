@@ -27,10 +27,10 @@ index 5ece375eaf6bcc61864997a389bb5e24625e4505..2d61315c9ab87a216e235f1586618b11
              return false;
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index f476ba6c97944bdffae5aacae2e285d17541f46e..6f88d46662f9a63927f654e256257f30dc1b5f1e 100644
+index bc89f9e90af3d69872a58c47a4c2545ba91b6ba5..a67bf805d7a078192987dbeb80af7d29df236d38 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -896,12 +896,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -905,12 +905,12 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      @Override
@@ -46,7 +46,7 @@ index f476ba6c97944bdffae5aacae2e285d17541f46e..6f88d46662f9a63927f654e256257f30
          // CraftBukkit start - tree generation
          if (this.captureTreeGeneration) {
              // Paper start - Protect Bedrock and End Portal/Frames from being destroyed
-@@ -1097,7 +1097,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1106,7 +1106,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  iblockdata.getBlock().popExperience((ServerLevel) this, pos, xp, breakingEntity); // Paper - Properly handle xp dropping; custom amount
              }
  

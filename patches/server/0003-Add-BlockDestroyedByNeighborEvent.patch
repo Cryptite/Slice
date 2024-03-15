@@ -37,7 +37,7 @@ index 1ad126d992d95062a3db08374db7a927f23a0cac..7648e43a77b06b9f4a31b216824cdd9c
              if (!(item instanceof BucketItem/* || item instanceof SolidBucketItem*/)) { // if not bucket // Paper - Fix cancelled powdered snow bucket placement
                  world.captureBlockStates = true;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 6f88d46662f9a63927f654e256257f30dc1b5f1e..ef887fa0089cec0e4543b9c1cec1e48bc2d5cc61 100644
+index a67bf805d7a078192987dbeb80af7d29df236d38..5cdadd4cf103af239a46aeb82b7d56f37672ded3 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -181,6 +181,27 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -68,7 +68,7 @@ index 6f88d46662f9a63927f654e256257f30dc1b5f1e..ef887fa0089cec0e4543b9c1cec1e48b
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -1046,6 +1067,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1055,6 +1076,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              if (!this.preventPoiUpdated) {
                  this.onBlockStateChange(blockposition, iblockdata1, iblockdata2);
              }
@@ -76,7 +76,7 @@ index 6f88d46662f9a63927f654e256257f30dc1b5f1e..ef887fa0089cec0e4543b9c1cec1e48b
              // CraftBukkit end
          }
      }
-@@ -1067,6 +1089,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1076,6 +1098,17 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          if (iblockdata.isAir()) {
              return false;
          } else {

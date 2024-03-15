@@ -5,10 +5,10 @@ Subject: [PATCH] Shared Data Storage
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index a6f58b3457b7477015c5c6d969e7d83017dd3fa1..7f2070bd2d7eb7f0256a96df00103d20c45e65a0 100644
+index b53b6cc4463675096b061b3b65f14a4695c742e2..6100d75e5d9184fd4ec79ffbd00cea0d637e5073 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -331,6 +331,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+@@ -333,6 +333,7 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
          public IntOr.Default compressionLevel = IntOr.Default.USE_DEFAULT;
@@ -17,7 +17,7 @@ index a6f58b3457b7477015c5c6d969e7d83017dd3fa1..7f2070bd2d7eb7f0256a96df00103d20
  
      public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 48eaa18bec43e88020047d1ffe57b84146793d6f..3fe8c1f92673400e40dbea4c101256384cad26f6 100644
+index 268bebac970646a9d697ec31ea5c89b9f583618f..59db2872229b4229f959bf227d1a2cf54c208ce8 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -83,7 +83,7 @@ index 48eaa18bec43e88020047d1ffe57b84146793d6f..3fe8c1f92673400e40dbea4c10125638
              this.isSaving = false;
          }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index f033f530eef10177c349f2673bb3ee8ebdb1d30b..ebd5fe9f64672b01e3981c19aa9464e8f20dbc03 100644
+index 21f54a4a3de169ede1687324009aea3f9d986db4..4e5bdf47beab8477fd5278fc4c9ff162ad835d12 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -2116,7 +2116,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
