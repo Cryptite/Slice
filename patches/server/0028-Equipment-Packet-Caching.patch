@@ -59,19 +59,22 @@ index e3e0f306ebed31ce4742e7d2f15ab102b93a9dff..4f4ea6dcef4e1960ac69271fbd771dd3
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..6a52e12c35902e29404666c9874af13f7cb2b11f 100644
+index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..c66cdd40cd2d87c68baf6a362b94b2c4de6e0847 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -263,6 +263,8 @@ public abstract class LivingEntity extends Entity implements Attackable {
-     public org.bukkit.craftbukkit.entity.CraftLivingEntity getBukkitLivingEntity() { return (org.bukkit.craftbukkit.entity.CraftLivingEntity) super.getBukkitEntity(); } // Paper
+@@ -264,6 +264,11 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper - Friction API
-+    private final com.google.common.collect.Table<String, ItemStack, ItemStack> equipmentPacketCache = com.google.common.collect.HashBasedTable.create(); // Slice
-+    public java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentMap = new java.util.HashMap<>(); // Slice
  
++    // Slice start
++    private final com.google.common.cache.Cache<String, Map<ItemStack, ItemStack>> equipmentPacketCache = com.google.common.cache.CacheBuilder.newBuilder().expireAfterWrite(15, java.util.concurrent.TimeUnit.MINUTES).build();
++    public java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentMap = new java.util.HashMap<>();
++    // Slice end
++
      @Override
      public float getBukkitYaw() {
-@@ -3133,6 +3135,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+         return this.getYHeadRot();
+@@ -3133,6 +3138,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -79,7 +82,7 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..6a52e12c35902e29404666c9874af13f
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3225,7 +3228,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3225,7 +3231,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -106,28 +109,30 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..6a52e12c35902e29404666c9874af13f
      }
  
      // Paper start - Hide unnecessary item meta
-@@ -4565,4 +4586,74 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4565,4 +4589,76 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
 +
 +    // Slice start
 +    public ItemStack getOrCreateCachedEquipmentItem(String tag, EquipmentSlot slot, ItemStack itemStack) {
-+        return equipmentPacketCache.row(tag).computeIfAbsent(itemStack, i -> {
-+            String name = slot.name();
++        return equipmentPacketCache.asMap()
++                .computeIfAbsent(tag,  s -> new java.util.HashMap<>())
++                .computeIfAbsent(itemStack, i -> {
++                    String name = slot.name();
 +
-+            //How neat is this.
-+            if (name.equals("MAINHAND")) {
-+                name = "HAND";
-+            } else if (name.equals("OFFHAND")) {
-+                name = "OFF_HAND";
-+            }
++                    //How neat is this.
++                    if (name.equals("MAINHAND")) {
++                        name = "HAND";
++                    } else if (name.equals("OFFHAND")) {
++                        name = "OFF_HAND";
++                    }
 +
-+            org.bukkit.event.entity.EntityEquipmentItemLookup event = new org.bukkit.event.entity.EntityEquipmentItemLookup(getBukkitEntity(), tag, org.bukkit.inventory.EquipmentSlot.valueOf(name), CraftItemStack.asBukkitCopy(i));
-+            this.level().getCraftServer().getPluginManager().callEvent(event);
-+            org.bukkit.inventory.ItemStack eventItem = event.getItemStack();
-+            return CraftItemStack.asNMSCopy(eventItem);
-+        });
++                    org.bukkit.event.entity.EntityEquipmentItemLookup event = new org.bukkit.event.entity.EntityEquipmentItemLookup(getBukkitEntity(), tag, org.bukkit.inventory.EquipmentSlot.valueOf(name), CraftItemStack.asBukkitCopy(i));
++                    this.level().getCraftServer().getPluginManager().callEvent(event);
++                    org.bukkit.inventory.ItemStack eventItem = event.getItemStack();
++                    return CraftItemStack.asNMSCopy(eventItem);
++                });
 +    }
 +    // Slice end
 +
