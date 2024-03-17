@@ -59,30 +59,38 @@ index e3e0f306ebed31ce4742e7d2f15ab102b93a9dff..4f4ea6dcef4e1960ac69271fbd771dd3
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..c66cdd40cd2d87c68baf6a362b94b2c4de6e0847 100644
+index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..b6bd645a0afafa17992f4958f56e84c418d47f82 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -264,6 +264,11 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -143,7 +143,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
+ import org.bukkit.event.player.PlayerItemConsumeEvent;
+ // CraftBukkit end
+ 
+-import co.aikar.timings.MinecraftTimings; // Paper
+ 
+ public abstract class LivingEntity extends Entity implements Attackable {
+ 
+@@ -264,6 +263,11 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper - Friction API
  
 +    // Slice start
-+    private final com.google.common.cache.Cache<String, Map<ItemStack, ItemStack>> equipmentPacketCache = com.google.common.cache.CacheBuilder.newBuilder().expireAfterWrite(15, java.util.concurrent.TimeUnit.MINUTES).build();
-+    public java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentMap = new java.util.HashMap<>();
++    private static final com.google.common.cache.Cache<String, Map<ItemStack, ItemStack>> equipmentPacketCache = com.google.common.cache.CacheBuilder.newBuilder().expireAfterWrite(15, java.util.concurrent.TimeUnit.MINUTES).build();
++    protected final java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentPacket = new java.util.HashMap<>();
 +    // Slice end
 +
      @Override
      public float getBukkitYaw() {
          return this.getYHeadRot();
-@@ -3133,6 +3138,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3133,6 +3137,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
-+                cachedEquipmentMap.clear(); // Slice - Must invalidate cached equipment map if we have changes
++                cachedEquipmentPacket.clear(); // Slice - Must invalidate cached equipment map if we have changes
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3225,7 +3231,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3225,7 +3230,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -109,7 +117,7 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..c66cdd40cd2d87c68baf6a362b94b2c4
      }
  
      // Paper start - Hide unnecessary item meta
-@@ -4565,4 +4589,76 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4565,4 +4588,76 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
@@ -144,11 +152,11 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..c66cdd40cd2d87c68baf6a362b94b2c4
 +        boolean sendEquipment = !event.isCancelled();
 +        String tag = event.getTag();
 +        if (sendEquipment && this instanceof ServerPlayer player && tag != null) {
-+            ClientboundSetEquipmentPacket equipmentPacket = player.cachedEquipmentMap.get(tag);
++            ClientboundSetEquipmentPacket equipmentPacket = player.cachedEquipmentPacket.get(tag);
 +            if (equipmentPacket != null) {
 +                //Event says use a tag, and our tag exists; so we simply used our entire cached packet
 +                consumer.accept(equipmentPacket);
-+                sendEquipment = false;
++                return;
 +            }
 +        }
 +
@@ -176,7 +184,7 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..c66cdd40cd2d87c68baf6a362b94b2c4
 +            if (!list.isEmpty()) {
 +                ClientboundSetEquipmentPacket equipmentPacket = new ClientboundSetEquipmentPacket(getId(), list);
 +                if (tag != null) {
-+                    cachedEquipmentMap.put(tag, equipmentPacket);
++                    cachedEquipmentPacket.put(tag, equipmentPacket);
 +                }
 +                consumer.accept(equipmentPacket);
 +            }
