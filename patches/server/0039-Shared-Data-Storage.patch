@@ -5,10 +5,10 @@ Subject: [PATCH] Shared Data Storage
 
 
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-index b53b6cc4463675096b061b3b65f14a4695c742e2..6100d75e5d9184fd4ec79ffbd00cea0d637e5073 100644
+index f2e30d8743a97c0541808dc5c03300c0d881b843..4087fb8ab1b42ea5367b4461cf9b1f2f6bed0309 100644
 --- a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
-@@ -333,6 +333,7 @@ public class GlobalConfiguration extends ConfigurationPart {
+@@ -334,6 +334,7 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean useDimensionTypeForCustomSpawners = false;
          public boolean strictAdvancementDimensionCheck = false;
          public IntOr.Default compressionLevel = IntOr.Default.USE_DEFAULT;
@@ -17,7 +17,7 @@ index b53b6cc4463675096b061b3b65f14a4695c742e2..6100d75e5d9184fd4ec79ffbd00cea0d
  
      public BlockUpdates blockUpdates;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 268bebac970646a9d697ec31ea5c89b9f583618f..59db2872229b4229f959bf227d1a2cf54c208ce8 100644
+index 2db7cb6f86a88f93fbdef0565b901c42f5c03e73..017644fb55a2713d911d0a8bb1cc8a2aff456f8a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -2,6 +2,7 @@ package net.minecraft.server;
@@ -74,7 +74,7 @@ index 268bebac970646a9d697ec31ea5c89b9f583618f..59db2872229b4229f959bf227d1a2cf5
              this.nextTickTimeNanos = Util.getNanos();
              this.statusIcon = (ServerStatus.Favicon) this.loadStatusIcon().orElse(null); // CraftBukkit - decompile error
              this.status = this.buildServerStatus();
-@@ -1536,6 +1555,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1546,6 +1565,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                      level.saveIncrementally(fullSave);
                  }
              }

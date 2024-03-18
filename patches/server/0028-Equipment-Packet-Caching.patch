@@ -59,7 +59,7 @@ index e3e0f306ebed31ce4742e7d2f15ab102b93a9dff..4f4ea6dcef4e1960ac69271fbd771dd3
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..b6bd645a0afafa17992f4958f56e84c418d47f82 100644
+index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..e2b6d539395fbc59116cfce56189e0f129a34e0d 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -143,7 +143,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
@@ -75,7 +75,7 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..b6bd645a0afafa17992f4958f56e84c4
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper - Friction API
  
 +    // Slice start
-+    private static final com.google.common.cache.Cache<String, Map<ItemStack, ItemStack>> equipmentPacketCache = com.google.common.cache.CacheBuilder.newBuilder().expireAfterWrite(15, java.util.concurrent.TimeUnit.MINUTES).build();
++    private static final java.util.Map<String, com.google.common.cache.Cache<ItemStack, ItemStack>> equipmentPacketCache = new java.util.HashMap<>();
 +    protected final java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentPacket = new java.util.HashMap<>();
 +    // Slice end
 +
@@ -124,8 +124,8 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..b6bd645a0afafa17992f4958f56e84c4
 +
 +    // Slice start
 +    public ItemStack getOrCreateCachedEquipmentItem(String tag, EquipmentSlot slot, ItemStack itemStack) {
-+        return equipmentPacketCache.asMap()
-+                .computeIfAbsent(tag,  s -> new java.util.HashMap<>())
++        return equipmentPacketCache.computeIfAbsent(tag,  s -> com.google.common.cache.CacheBuilder.newBuilder().expireAfterWrite(15, java.util.concurrent.TimeUnit.MINUTES).build())
++                .asMap()
 +                .computeIfAbsent(itemStack, i -> {
 +                    String name = slot.name();
 +
