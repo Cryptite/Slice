@@ -5,7 +5,7 @@ Subject: [PATCH] PlayerResolveObjectIdEvent
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index f9a08cb94f5d31e16b4fbfc19b6c18d429a53936..ed15e47b52103b4341e69849bd35bdad5d2fd92d 100644
+index 85c077a53422e1c2dc1ff550ac117016c3d8e3f0..46980b062980be8c564a215a2ae67e0d1fe5251e 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -26,6 +26,8 @@ dependencies {
@@ -18,7 +18,7 @@ index f9a08cb94f5d31e16b4fbfc19b6c18d429a53936..ed15e47b52103b4341e69849bd35bdad
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index c07e6ff45c2dd51fcd2031bae3d7b32cb614b7ac..6846b526ab04eaa6596df635c282c236a1f529c2 100644
+index e858d24061ce8fad612c12adac205c7ad59b8767..ad2567133405744abcf20d8572d6c7afc37581af 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -252,7 +252,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
@@ -41,7 +41,7 @@ index c07e6ff45c2dd51fcd2031bae3d7b32cb614b7ac..6846b526ab04eaa6596df635c282c236
              }
              // Paper end - Folia schedulers
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
-index acbb64010cd59668aa1bcb52ff1220789cadb1d3..190f3e26d379f426a3e7745e5529e02c0ead724e 100644
+index 7984365c8290ac9e526a413b56e1c8c0841e330c..933fc8295b3b697c9f8cd8516ccac13348dcb843 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 @@ -7,6 +7,8 @@ import java.util.Arrays;
@@ -66,7 +66,7 @@ index acbb64010cd59668aa1bcb52ff1220789cadb1d3..190f3e26d379f426a3e7745e5529e02c
  import org.bukkit.block.Block;
  import org.bukkit.craftbukkit.CraftServer;
  import org.bukkit.craftbukkit.entity.memory.CraftMemoryMapper;
-@@ -74,6 +74,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+@@ -75,6 +75,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
      protected final PermissibleBase perm = new PermissibleBase(this);
      private boolean op;
      private GameMode mode;
@@ -74,7 +74,7 @@ index acbb64010cd59668aa1bcb52ff1220789cadb1d3..190f3e26d379f426a3e7745e5529e02c
  
      public CraftHumanEntity(final CraftServer server, final Player entity) {
          super(server, entity);
-@@ -82,6 +83,18 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+@@ -83,6 +84,18 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
          this.enderChest = new CraftInventory(entity.getEnderChestInventory());
      }
  

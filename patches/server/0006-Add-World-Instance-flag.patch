@@ -5,7 +5,7 @@ Subject: [PATCH] Add World Instance flag
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 6907d1be36fbdf0856c0e11983218d2fd1f9cb46..7de4209af926c0ca3449c977a98b4c999635bd08 100644
+index 502bdc726b7890b00ee36871d905dea44e8719e3..4653878c059a15491eb54d7211311db7e2fe570a 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -223,6 +223,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
@@ -17,10 +17,10 @@ index 6907d1be36fbdf0856c0e11983218d2fd1f9cb46..7de4209af926c0ca3449c977a98b4c99
  
      public LevelChunk getChunkIfLoaded(int x, int z) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index bfb178c69026e9759e9afaebb9da141b62d1f144..8eddc09c4c6af56bfd578641fe983fb7f37885cf 100644
+index 01797d9791f19dfda4b168218eadeaae97f11eab..2e5fae21dcf511c18d309780fcc3204d3bfa7af2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -1313,6 +1313,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1333,6 +1333,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          this.world.noSave = !value;
      }
  

@@ -5,11 +5,11 @@ Subject: [PATCH] PlayerResolveObjectIdEvent
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index bf01892c248b988531d21d9fb0f74d0adf2205ac..44b537f6da989cea6ebde8d14dea834d24f8d7d4 100644
+index 04853c43b99951bf0d4c96ef73724625bdaf018f..504b1b57ba604d261f5f59dc204350f75d1777f8 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -56,6 +56,8 @@ dependencies {
-     implementation("org.ow2.asm:asm-commons:9.5")
+     implementation("org.ow2.asm:asm-commons:9.7")
      // Paper end
  
 +    implementation("org.mongodb:bson:4.11.1") // Slice - MongoDB Bson Library for ObjectIds

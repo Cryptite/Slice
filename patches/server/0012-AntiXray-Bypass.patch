@@ -17,7 +17,7 @@ index e7fe98ea30ae6d0baea3ec1f9f98a89502a49a12..7e2651aa63cc9ddbe28fb9ecbc518835
      }
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index a72b24e9695fa1375dc787fc6b2ac163acc5bec0..4d6e9fb4b3a880ce2cd7e194fbb37df7abc087a2 100644
+index bbafd70973b36fefe4f0228d6ca7b24f9771ead7..a86600e01572ee14f35ecf1b7e71dbac369632e1 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -199,6 +199,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
@@ -28,7 +28,7 @@ index a72b24e9695fa1375dc787fc6b2ac163acc5bec0..4d6e9fb4b3a880ce2cd7e194fbb37df7
  
      public CraftPlayer(CraftServer server, ServerPlayer entity) {
          super(server, entity);
-@@ -2954,6 +2955,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -2952,6 +2953,17 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
      }
      // Paper end
  

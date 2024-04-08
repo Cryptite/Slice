@@ -18,7 +18,7 @@ index c78cbec447032de9fe69748591bef6be300160ed..bb3f14d00a8894fc4dfa12b29c27ef56
                  if (entity.isVehicle()) {
                      // we cannot assume that these entities are contained within this chunk, because entities can
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 00125637b8c3324eff2461ec6546e238ce358779..1d35db213e7ac7518c587cc0dd0c80c3f99a0c41 100644
+index a23c584ce1f9abcc911aa6a39715b8eeca4ff0af..e25ca5a3f2b7c4573fefba976bc0e79d7a491b62 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -424,6 +424,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
@@ -39,10 +39,10 @@ index 00125637b8c3324eff2461ec6546e238ce358779..1d35db213e7ac7518c587cc0dd0c80c3
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-index 0b5a31477e3b76833fb97a455842316193663c8e..5db4cf24de9a1c1980f22e72b6f09da146017189 100644
+index e8e4489bcd64fde1b3226bdc7a7cc612508bda3f..56044646165af2abefc6ab1b73feda4a8778de87 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
-@@ -1228,4 +1228,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+@@ -1270,4 +1270,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
          return this.getHandle().getScoreboardName();
      }
      // Paper end - entity scoreboard name

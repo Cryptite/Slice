@@ -59,7 +59,7 @@ index e3e0f306ebed31ce4742e7d2f15ab102b93a9dff..4f4ea6dcef4e1960ac69271fbd771dd3
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..e2b6d539395fbc59116cfce56189e0f129a34e0d 100644
+index e9bb7feb591032904516d1b9374f486d8a7d066c..86e173f1d916ca5545d012e4c86919f402253f1c 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -143,7 +143,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
@@ -195,13 +195,13 @@ index 23570a0b1227a840b9c1e6ae326827ea655bb5f7..e2b6d539395fbc59116cfce56189e0f1
 +    // Slice end
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-index 3f952d1409118535f325f614f1a6507c40efa4d6..3e36b1e140c5f82018d603db84eaab2e1c80f6da 100644
+index c4a166a0c226c6083c25c58145d9631d4296e615..187cea96bbe0f1c157484ad42e74951bc714d199 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftLivingEntity.java
-@@ -1156,4 +1156,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
-         getHandle().knockback(strength, directionX, directionZ);
-     };
-     // Paper end
+@@ -1210,4 +1210,14 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
+         this.getHandle().setYBodyRot(bodyYaw);
+     }
+     // Paper end - body yaw API
 +
 +    // Slice start
 +    @Override
