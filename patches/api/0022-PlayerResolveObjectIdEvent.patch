@@ -74,7 +74,7 @@ index 8b0d04d5b39ee817555a36adddc39b18fc6f0d02..6a1df3ccfadfa70594fd71c6d24d94e4
 @@ -22,6 +22,11 @@ import org.jetbrains.annotations.Nullable;
   */
  public interface HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder {
- 
+
 +    // Slice start
 +    org.bson.types.@Nullable ObjectId getObjectId();
 +    void setObjectId(@Nullable org.bson.types.ObjectId objectId);
