@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Thu, 2 May 2024 08:51:50 -0500
+Subject: [PATCH] Set LevelChunkSections
+
+
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
+index f7e5e016a7028a9196e689e950805b0d5b31fe38..9ca07bf5bf68749970258d611013bec425a3c48c 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkAccess.java
+@@ -80,7 +80,7 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+     protected final Map<BlockPos, CompoundTag> pendingBlockEntities = Maps.newHashMap();
+     public final Map<BlockPos, BlockEntity> blockEntities = Maps.newHashMap();
+     protected final LevelHeightAccessor levelHeightAccessor;
+-    protected final LevelChunkSection[] sections;
++    protected LevelChunkSection[] sections; // Slice - Remove final
+ 
+     // CraftBukkit start - SPIGOT-6814: move to IChunkAccess to account for 1.17 to 1.18 chunk upgrading.
+     private static final org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry DATA_TYPE_REGISTRY = new org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry();
+@@ -217,6 +217,8 @@ public abstract class ChunkAccess implements BlockGetter, BiomeManager.NoiseBiom
+         return this.getSections()[yIndex];
+     }
+ 
++    public void setSections(LevelChunkSection[] sections) { this.sections = sections; } // Slice
++
+     public Collection<Entry<Heightmap.Types, Heightmap>> getHeightmaps() {
+         return Collections.unmodifiableSet(this.heightmaps.entrySet());
+     }

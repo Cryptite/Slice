@@ -1,0 +1,70 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 21 May 2024 08:11:40 -0500
+Subject: [PATCH] Expose getBlockPosBelowThatAffectsMyMovement Fix patch
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index ad2567133405744abcf20d8572d6c7afc37581af..afde18e38484f7f3d6041cef54168d5ae7a1d901 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -1401,7 +1401,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, S
+         return this.getOnPos(0.2F);
+     }
+ 
+-    protected BlockPos getBlockPosBelowThatAffectsMyMovement() {
++    public BlockPos getBlockPosBelowThatAffectsMyMovement() {
+         return this.getOnPos(0.500001F);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/ExperienceOrb.java b/src/main/java/net/minecraft/world/entity/ExperienceOrb.java
+index 36422fb394a158f36c84ba0ee03cc704956c91b2..78dbed58541c33749a2fbd12b6f521e31d7eb907 100644
+--- a/src/main/java/net/minecraft/world/entity/ExperienceOrb.java
++++ b/src/main/java/net/minecraft/world/entity/ExperienceOrb.java
+@@ -192,7 +192,7 @@ public class ExperienceOrb extends Entity {
+     }
+ 
+     @Override
+-    protected BlockPos getBlockPosBelowThatAffectsMyMovement() {
++    public BlockPos getBlockPosBelowThatAffectsMyMovement() {
+         return this.getOnPos(0.999999F);
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+index 29ce703a79f7893ac990ad80e0f1c1cf63546e6c..0033125e504df35e907cab8acd7d0d7f7ff982a4 100644
+--- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
++++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
+@@ -257,7 +257,7 @@ public class ItemEntity extends Entity implements TraceableEntity {
+     // Spigot end
+ 
+     @Override
+-    protected BlockPos getBlockPosBelowThatAffectsMyMovement() {
++    public BlockPos getBlockPosBelowThatAffectsMyMovement() {
+         return this.getOnPos(0.999999F);
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index 8af60900f5e385546bb452cd0bc0c702d5df0a46..25e721d069f350b93559a0bb8841415d51bc09b7 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -25,6 +25,7 @@ import org.bukkit.Location;
+ import org.bukkit.Server;
+ import org.bukkit.Sound;
+ import org.bukkit.World;
++import org.bukkit.block.Block;
+ import org.bukkit.block.BlockFace;
+ import org.bukkit.block.PistonMoveReaction;
+ import org.bukkit.craftbukkit.CraftServer;
+@@ -1294,4 +1295,12 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         this.entity.vanished = vanished;
+     }
+     // Slice end
++
++    // Slice start
++    @Override
++    public Block getBlockStandingOn() {
++        net.minecraft.core.BlockPos pos = this.entity.getBlockPosBelowThatAffectsMyMovement();
++        return this.entity.level().getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
++    }
++    // Slice end
+ }
