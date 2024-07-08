@@ -59,7 +59,7 @@ index e3e0f306ebed31ce4742e7d2f15ab102b93a9dff..4f4ea6dcef4e1960ac69271fbd771dd3
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index e9bb7feb591032904516d1b9374f486d8a7d066c..86e173f1d916ca5545d012e4c86919f402253f1c 100644
+index e9bb7feb591032904516d1b9374f486d8a7d066c..0a33397271c053f20cd49be452993e24815b07db 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -143,7 +143,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
@@ -75,7 +75,7 @@ index e9bb7feb591032904516d1b9374f486d8a7d066c..86e173f1d916ca5545d012e4c86919f4
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper - Friction API
  
 +    // Slice start
-+    private static final java.util.Map<String, com.google.common.cache.Cache<ItemStack, ItemStack>> equipmentPacketCache = new java.util.HashMap<>();
++    private static final java.util.Map<String, com.google.common.cache.Cache<Integer, ItemStack>> equipmentPacketCache = new java.util.HashMap<>();
 +    protected final java.util.Map<String, net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket> cachedEquipmentPacket = new java.util.HashMap<>();
 +    // Slice end
 +
@@ -124,9 +124,9 @@ index e9bb7feb591032904516d1b9374f486d8a7d066c..86e173f1d916ca5545d012e4c86919f4
 +
 +    // Slice start
 +    public ItemStack getOrCreateCachedEquipmentItem(String tag, EquipmentSlot slot, ItemStack itemStack) {
-+        return equipmentPacketCache.computeIfAbsent(tag,  s -> com.google.common.cache.CacheBuilder.newBuilder().expireAfterWrite(15, java.util.concurrent.TimeUnit.MINUTES).build())
++        return equipmentPacketCache.computeIfAbsent(tag,  s -> com.google.common.cache.CacheBuilder.newBuilder().expireAfterAccess(10, java.util.concurrent.TimeUnit.MINUTES).build())
 +                .asMap()
-+                .computeIfAbsent(itemStack, i -> {
++                .computeIfAbsent(itemStack.hashCode(), i -> {
 +                    String name = slot.name();
 +
 +                    //How neat is this.
@@ -136,7 +136,7 @@ index e9bb7feb591032904516d1b9374f486d8a7d066c..86e173f1d916ca5545d012e4c86919f4
 +                        name = "OFF_HAND";
 +                    }
 +
-+                    org.bukkit.event.entity.EntityEquipmentItemLookup event = new org.bukkit.event.entity.EntityEquipmentItemLookup(getBukkitEntity(), tag, org.bukkit.inventory.EquipmentSlot.valueOf(name), CraftItemStack.asBukkitCopy(i));
++                    org.bukkit.event.entity.EntityEquipmentItemLookup event = new org.bukkit.event.entity.EntityEquipmentItemLookup(getBukkitEntity(), tag, org.bukkit.inventory.EquipmentSlot.valueOf(name), CraftItemStack.asBukkitCopy(itemStack));
 +                    this.level().getCraftServer().getPluginManager().callEvent(event);
 +                    org.bukkit.inventory.ItemStack eventItem = event.getItemStack();
 +                    return CraftItemStack.asNMSCopy(eventItem);
