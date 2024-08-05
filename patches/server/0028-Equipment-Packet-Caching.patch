@@ -59,10 +59,18 @@ index e3e0f306ebed31ce4742e7d2f15ab102b93a9dff..4f4ea6dcef4e1960ac69271fbd771dd3
  
          if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index e9bb7feb591032904516d1b9374f486d8a7d066c..0a33397271c053f20cd49be452993e24815b07db 100644
+index e9bb7feb591032904516d1b9374f486d8a7d066c..d6c23f52fdbcf55cb69b75ed95e7e83d0136eb87 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -143,7 +143,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
+@@ -1,6 +1,7 @@
+ package net.minecraft.world.entity;
+ 
+ import com.google.common.base.Objects;
++import com.google.common.cache.Cache;
+ import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.ImmutableMap;
+ import com.google.common.collect.Lists;
+@@ -143,7 +144,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
  import org.bukkit.event.player.PlayerItemConsumeEvent;
  // CraftBukkit end
  
@@ -70,7 +78,7 @@ index e9bb7feb591032904516d1b9374f486d8a7d066c..0a33397271c053f20cd49be452993e24
  
  public abstract class LivingEntity extends Entity implements Attackable {
  
-@@ -264,6 +263,11 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -264,6 +264,11 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public boolean silentDeath = false; // Paper - mark entity as dying silently for cancellable death event
      public net.kyori.adventure.util.TriState frictionState = net.kyori.adventure.util.TriState.NOT_SET; // Paper - Friction API
  
@@ -82,7 +90,7 @@ index e9bb7feb591032904516d1b9374f486d8a7d066c..0a33397271c053f20cd49be452993e24
      @Override
      public float getBukkitYaw() {
          return this.getYHeadRot();
-@@ -3133,6 +3137,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3133,6 +3138,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -90,7 +98,7 @@ index e9bb7feb591032904516d1b9374f486d8a7d066c..0a33397271c053f20cd49be452993e24
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -3225,7 +3230,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3225,7 +3231,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
              }
  
          });
@@ -117,14 +125,23 @@ index e9bb7feb591032904516d1b9374f486d8a7d066c..0a33397271c053f20cd49be452993e24
      }
  
      // Paper start - Hide unnecessary item meta
-@@ -4565,4 +4588,76 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4565,4 +4589,85 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
 +
 +    // Slice start
++    public static void invalidateCachedEquipment(String tag) {
++        Cache<Integer, ItemStack> removedCache = equipmentPacketCache.remove(tag);
++        if (removedCache != null) {
++            removedCache.asMap().clear();
++        }
++    }
++    
 +    public ItemStack getOrCreateCachedEquipmentItem(String tag, EquipmentSlot slot, ItemStack itemStack) {
-+        return equipmentPacketCache.computeIfAbsent(tag,  s -> com.google.common.cache.CacheBuilder.newBuilder().expireAfterAccess(10, java.util.concurrent.TimeUnit.MINUTES).build())
++        return equipmentPacketCache.computeIfAbsent(tag,  s -> com.google.common.cache.CacheBuilder.newBuilder()
++                        .expireAfterAccess(10, java.util.concurrent.TimeUnit.MINUTES)
++                        .build())
 +                .asMap()
 +                .computeIfAbsent(itemStack.hashCode(), i -> {
 +                    String name = slot.name();
