@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 9 Nov 2024 09:54:36 -0600
+Subject: [PATCH] Add provided Material to getDrops
+
+
+diff --git a/src/main/java/org/bukkit/block/Block.java b/src/main/java/org/bukkit/block/Block.java
+index 0efd8bb70ebdb86372022c9e12ec89f229ab3b52..be4f8fc7e7d9b6fb3ef0f557c9f591431c902837 100644
+--- a/src/main/java/org/bukkit/block/Block.java
++++ b/src/main/java/org/bukkit/block/Block.java
+@@ -677,6 +677,20 @@ public interface Block extends Metadatable, Translatable, net.kyori.adventure.tr
+     @NotNull
+     Collection<ItemStack> getDrops(@Nullable ItemStack tool, @Nullable Entity entity); // Paper
+ 
++    // Slice start
++    /**
++     * Returns a list of items which would drop by the entity destroying this
++     * block as though it were a given Material with a specific tool
++     *
++     * @param blockType The block type to use as the source loot
++     * @param tool The tool or item in hand used for digging
++     * @param entity the entity destroying the block
++     * @return a list of dropped items for this type of block
++     */
++    @NotNull
++    Collection<ItemStack> getDrops(@NotNull Material blockType, @NotNull ItemStack tool, @Nullable Entity entity);
++    // Slice end
++
+     /**
+      * Returns if the given item is a preferred choice to break this Block.
+      *
