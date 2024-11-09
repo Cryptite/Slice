@@ -83,7 +83,6 @@ paperweight {
 
 tasks.generateDevelopmentBundle {
     apiCoordinates.set("com.lokamc.slice:slice-api")
-    mojangApiCoordinates.set("io.papermc.paper:paper-mojangapi")
     libraryRepositories.set(
         listOf(
             "https://repo.maven.apache.org/maven2/",

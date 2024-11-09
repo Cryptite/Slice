@@ -1,82 +1,91 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: MiniDigger <admin@minidigger.me>
-Date: Fri, 12 Aug 2022 08:07:34 -0500
-Subject: [PATCH] Build Changes
+Date: Sat, 12 Jun 2021 16:40:34 +0200
+Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index bcfe59b6efb628ee1e7f9d60667360d4d885fb6a..8aaee003050df9bd20e9f3e0263a47350c9840b1 100644
+index 421f6b3dc8890d63d2e7aa774d0bf8f7e15890ab..2e616a1bb34aebfa3999370ec3e5d7b0d61d6cef 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -13,8 +13,12 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
+@@ -13,7 +13,7 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
  val alsoShade: Configuration by configurations.creating
- 
+
  dependencies {
 -    implementation(project(":paper-api"))
--    implementation(project(":paper-mojangapi"))
-+    // Slice start
-+    implementation(project(":slice-api"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.20.4-R0.1-SNAPSHOT") {
-+        exclude("io.papermc.paper", "paper-api")
-+    }
-+    // Slice end
++    implementation(project(":slice-api")) // slice - update api reference
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -71,7 +75,7 @@ tasks.jar {
+@@ -84,14 +84,14 @@ tasks.jar {
+         val gitBranch = git("rev-parse", "--abbrev-ref", "HEAD").getText().trim() // Paper
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
-             "Implementation-Title" to "CraftBukkit",
--            "Implementation-Version" to "git-Paper-$implementationVersion",
-+            "Implementation-Version" to "git-Slice-$implementationVersion", // Slice
+-            "Implementation-Title" to "Paper",
++            "Implementation-Title" to "slice", // slice - rename
+             "Implementation-Version" to implementationVersion,
              "Implementation-Vendor" to date, // Paper
-             "Specification-Title" to "Bukkit",
+-            "Specification-Title" to "Paper",
++            "Specification-Title" to "Slice", // slice - rename
              "Specification-Version" to project.version,
-@@ -150,7 +154,7 @@ fun TaskContainer.registerRunTask(
+-            "Specification-Vendor" to "Paper Team",
+-            "Brand-Id" to "papermc:paper",
+-            "Brand-Name" to "Paper",
++            "Specification-Vendor" to "Loka", // slice - rename
++            "Brand-Id" to "loka:slice", // slice - rename
++            "Brand-Name" to "Slice", // slice - rename
+             "Build-Number" to (build ?: ""),
+             "Build-Time" to Instant.now().toString(),
+             "Git-Branch" to gitBranch, // Paper
+@@ -148,7 +148,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
 -    group = "paper"
-+    group = "paperweight"
++    group = "paperweight" // slice
      mainClass.set("org.bukkit.craftbukkit.Main")
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
-diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c8772c773f9933ed1d1debfe707af4373c458152..9ce9af857a5f2414658027ff5bb765cc4233899b 100644
---- a/src/main/java/net/minecraft/server/MinecraftServer.java
-+++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1865,7 +1865,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
- 
-     @DontObfuscate
-     public String getServerModName() {
--        return "Paper"; // Paper
-+        return "Slice"; // Slice - Slice > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+diff --git a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
+index 790bad0494454ca12ee152e3de6da3da634d9b20..9d87cb3068124367cb2b8b5adad7a889ab5fd76c 100644
+--- a/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
++++ b/src/main/java/io/papermc/paper/ServerBuildInfoImpl.java
+@@ -31,6 +31,7 @@ public record ServerBuildInfoImpl(
+     private static final String ATTRIBUTE_GIT_COMMIT = "Git-Commit";
+
+     private static final String BRAND_PAPER_NAME = "Paper";
++    private static final String BRAND_SLICE_NAME = "Slice"; // slice - rename
+
+     private static final String BUILD_DEV = "DEV";
+
+@@ -44,7 +45,7 @@ public record ServerBuildInfoImpl(
+                 .map(Key::key)
+                 .orElse(BRAND_PAPER_ID),
+             getManifestAttribute(manifest, ATTRIBUTE_BRAND_NAME)
+-                .orElse(BRAND_PAPER_NAME),
++                .orElse(BRAND_SLICE_NAME), // slice - rename
+             SharedConstants.getCurrentVersion().getId(),
+             SharedConstants.getCurrentVersion().getName(),
+             getManifestAttribute(manifest, ATTRIBUTE_BUILD_NUMBER)
+@@ -61,7 +62,7 @@ public record ServerBuildInfoImpl(
+
+     @Override
+     public boolean isBrandCompatible(final @NotNull Key brandId) {
+-        return brandId.equals(this.brandId);
++        return brandId.equals(this.brandId) || brandId.equals(BRAND_PAPER_ID); // slice - rename - slice supports both paper and slice plugins.
      }
- 
-     public SystemReport fillSystemReport(SystemReport details) {
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index c490a29bcf7410bc54959ee71375605964379ed5..93fde7271340d157ed12129930656aeedd95ea79 100644
---- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-+++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -266,7 +266,7 @@ import javax.annotation.Nullable; // Paper
- import javax.annotation.Nonnull; // Paper
- 
- public final class CraftServer implements Server {
--    private final String serverName = "Paper"; // Paper
-+    private final String serverName = "Slice"; // Slice // Paper
-     private final String serverVersion;
-     private final String bukkitVersion = Versioning.getBukkitVersion();
-     private final Logger logger = Logger.getLogger("Minecraft");
+
+     @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 774556a62eb240da42e84db4502e2ed43495be17..fdd8fa9ec021b4846b59e1693e32d4d02a712efe 100644
+index 774556a62eb240da42e84db4502e2ed43495be17..21f39bd0c33ef2635249298e6a247afba8b05742 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
      public static String getBukkitVersion() {
          String result = "Unknown-Version";
- 
+
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.lokamc.slice/slice-api/pom.properties"); // Slice
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.lokamc.slice/slice-api/pom.properties"); // slice
          Properties properties = new Properties();
- 
+
          if (stream != null) {
