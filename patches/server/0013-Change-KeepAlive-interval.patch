@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 13 Nov 2024 08:04:58 -0600
+Subject: [PATCH] Change KeepAlive interval
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+index b0bc66dc7248aae691dcab68b925b52a1695e63f..7096cbc201cd18e71b5da6b825fca83201ada1a3 100644
+--- a/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerCommonPacketListenerImpl.java
+@@ -261,7 +261,7 @@ public abstract class ServerCommonPacketListenerImpl implements ServerCommonPack
+         long currentTime = Util.getMillis();
+         long elapsedTime = currentTime - this.keepAliveTime;
+ 
+-        if (!this.isSingleplayerOwner() && elapsedTime >= 15000L) { // Paper - use vanilla's 15000L between keep alive packets
++        if (!this.isSingleplayerOwner() && elapsedTime >= 5000L) { // Paper - use vanilla's 15000L between keep alive packets // Slice -> 5s
+             if (this.keepAlivePending && !this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // Paper - check keepalive limit, don't fire if already disconnected
+                 this.disconnect(ServerCommonPacketListenerImpl.TIMEOUT_DISCONNECTION_MESSAGE, PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
+             } else if (this.checkIfClosed(currentTime)) { // Paper

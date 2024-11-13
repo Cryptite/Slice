@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 13 Nov 2024 07:44:28 -0600
+Subject: [PATCH] Allow opening covered chests
+
+
+diff --git a/src/main/java/net/minecraft/world/level/block/ChestBlock.java b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+index edef8fc62f8dba1b57214d8d7d805ff0d83f4114..c948eb36db7f902ce65523e19651057e39a1a8ad 100644
+--- a/src/main/java/net/minecraft/world/level/block/ChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+@@ -341,9 +341,7 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
+     }
+ 
+     public static boolean isBlockedChestByBlock(BlockGetter world, BlockPos pos) {
+-        BlockPos blockposition1 = pos.above();
+-
+-        return world.getBlockState(blockposition1).isRedstoneConductor(world, blockposition1);
++        return false; // Slice
+     }
+ 
+     private static boolean isCatSittingOnChest(LevelAccessor world, BlockPos pos) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftEnderChest.java b/src/main/java/org/bukkit/craftbukkit/block/CraftEnderChest.java
+index f45ee675a10729845bf376fa95e648b23b9aac12..bb59827851262051bc832f32bf54877b6a896990 100644
+--- a/src/main/java/org/bukkit/craftbukkit/block/CraftEnderChest.java
++++ b/src/main/java/org/bukkit/craftbukkit/block/CraftEnderChest.java
+@@ -62,9 +62,7 @@ public class CraftEnderChest extends CraftBlockEntityState<EnderChestBlockEntity
+     // Paper start - More Chest Block API
+     @Override
+     public boolean isBlocked() {
+-        // Uses the same logic as EnderChestBlock's check for opening container
+-        final net.minecraft.core.BlockPos abovePos = this.getPosition().above();
+-        return this.isPlaced() && this.getWorldHandle().getBlockState(abovePos).isRedstoneConductor(this.getWorldHandle(), abovePos);
++        return false; // Slice
+     }
+     // Paper end - More Chest Block API
+ }

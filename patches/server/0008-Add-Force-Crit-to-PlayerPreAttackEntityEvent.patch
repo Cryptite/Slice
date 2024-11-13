@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 13 Nov 2024 07:49:32 -0600
+Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 61d412c4f1ebd55661cc3f0260468e3ac0efe0bb..551da84c834132d106457c123e1b195e4be904b8 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -1269,7 +1269,7 @@ public abstract class Player extends LivingEntity {
+                     }
+ 
+                     f += itemstack.getItem().getAttackDamageBonus(target, f, damagesource);
+-                    boolean flag2 = flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity && !this.isSprinting();
++                    boolean flag2 = playerAttackEntityEvent.isForceCrit() || (flag && this.fallDistance > 0.0F && !this.onGround() && !this.onClimbable() && !this.isInWater() && !this.hasEffect(MobEffects.BLINDNESS) && !this.isPassenger() && target instanceof LivingEntity && !this.isSprinting()); // Slice
+ 
+                     flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper - Toggleable player crits
+                     if (flag2) {

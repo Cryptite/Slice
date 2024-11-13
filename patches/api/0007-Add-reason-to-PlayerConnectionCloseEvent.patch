@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 13 Nov 2024 08:04:09 -0600
+Subject: [PATCH] Add reason to PlayerConnectionCloseEvent
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java b/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
+index 5f5afcdb3c9e669ed0e730c720ad91d16b95602c..9447c571a514155cebc47a3bd9f6d0d79bdc8c97 100644
+--- a/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
++++ b/src/main/java/com/destroystokyo/paper/event/player/PlayerConnectionCloseEvent.java
+@@ -7,6 +7,7 @@ import org.bukkit.event.HandlerList;
+ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+ import org.bukkit.event.player.PlayerQuitEvent;
+ import org.jetbrains.annotations.ApiStatus;
++import org.jetbrains.annotations.NotNull;
+ import org.jspecify.annotations.NullMarked;
+ 
+ /**
+@@ -42,13 +43,19 @@ public class PlayerConnectionCloseEvent extends Event {
+     private final UUID playerUniqueId;
+     private final String playerName;
+     private final InetAddress ipAddress;
++    @NotNull private final ConnectionCloseReason reason;
+ 
+     @ApiStatus.Internal
+     public PlayerConnectionCloseEvent(final UUID playerUniqueId, final String playerName, final InetAddress ipAddress, final boolean async) {
++        this(playerUniqueId, playerName, ipAddress, ConnectionCloseReason.NORMAL, async);
++    }
++
++    public PlayerConnectionCloseEvent(@NotNull final UUID playerUniqueId, @NotNull final String playerName, @NotNull final InetAddress ipAddress, @NotNull ConnectionCloseReason reason, final boolean async) {
+         super(async);
+         this.playerUniqueId = playerUniqueId;
+         this.playerName = playerName;
+         this.ipAddress = ipAddress;
++        this.reason = reason;
+     }
+ 
+     /**
+@@ -80,4 +87,27 @@ public class PlayerConnectionCloseEvent extends Event {
+     public static HandlerList getHandlerList() {
+         return HANDLER_LIST;
+     }
++
++
++    /**
++     * Returns the reason for the closed connection.
++     */
++    @NotNull
++    public ConnectionCloseReason getReason() {
++        return this.reason;
++    }
++
++    public enum ConnectionCloseReason {
++        /**
++         * Player disconnected normally
++         */
++        NORMAL,
++
++        /**
++         * Player has invalid data for some reason.
++         * <p>
++         * One example of this is a player logging into an unloaded world.
++         */
++        INVALID_PLAYER_DATA,
++    }
+ }

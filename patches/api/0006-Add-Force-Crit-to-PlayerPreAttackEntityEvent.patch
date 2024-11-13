@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Wed, 13 Nov 2024 07:49:32 -0600
+Subject: [PATCH] Add Force Crit to PlayerPreAttackEntityEvent
+
+
+diff --git a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
+index a6c5818bcdd8de5f2d0e9bf72d1e3816652e0199..196d790d766548a2e4afc31820658ba493a1fe83 100644
+--- a/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
++++ b/src/main/java/io/papermc/paper/event/player/PrePlayerAttackEntityEvent.java
+@@ -28,6 +28,7 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+     private final boolean willAttack;
+ 
+     private boolean cancelled;
++    private boolean forceCrit; // Slice
+ 
+     @ApiStatus.Internal
+     public PrePlayerAttackEntityEvent(final Player player, final Entity attacked, final boolean willAttack) {
+@@ -59,6 +60,16 @@ public class PrePlayerAttackEntityEvent extends PlayerEvent implements Cancellab
+         return this.willAttack;
+     }
+ 
++    // Slice start
++    public boolean isForceCrit() {
++        return forceCrit;
++    }
++
++    public void setForceCrit(boolean forceCrit) {
++        this.forceCrit = forceCrit;
++    }
++    // Slice end
++
+     @Override
+     public boolean isCancelled() {
+         return this.cancelled;
