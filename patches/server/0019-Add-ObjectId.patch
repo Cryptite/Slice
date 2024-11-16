@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 16 Nov 2024 09:22:24 -0600
+Subject: [PATCH] Add ObjectId
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index d6dae3101aa719b194a9426a13bf76379f281379..720672975286789da1d85e3b18b9eb34e00a74f1 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -33,6 +33,8 @@ dependencies {
+     implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.0")
+     // Slice end
+ 
++    implementation("org.mongodb:bson:4.11.1") // Slice - MongoDB Bson Library for ObjectIds
++
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index d10e360e664ae5ccb85c0c77848e527bc39ad775..f046cc8883af6d7fafb93aea3c7e4b664bbe7e8b 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -267,7 +267,17 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+             // Paper start - Folia schedulers
+             synchronized (this) {
+                 if (this.bukkitEntity == null) {
+-                    return this.bukkitEntity = CraftEntity.getEntity(this.level.getCraftServer(), this);
++                    this.bukkitEntity = CraftEntity.getEntity(this.level.getCraftServer(), this);
++
++                    // Slice start - resolve ObjectId
++                    if (this.bukkitEntity instanceof org.bukkit.craftbukkit.entity.CraftHumanEntity craftHumanEntity) {
++                        io.papermc.paper.event.player.PlayerResolveObjectIdEvent event = new io.papermc.paper.event.player.PlayerResolveObjectIdEvent((org.bukkit.entity.Player) bukkitEntity);
++                        event.callEvent();
++                        craftHumanEntity.setObjectId(event.getObjectId());
++                    }
++                    // Slice end
++
++                    return this.bukkitEntity;
+                 }
+             }
+             // Paper end - Folia schedulers
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+index 4312290ad970f71e1dc25b707ab312c597a481a9..17577943a77ac2bc4e2bdfa6f79489157004fd04 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
+@@ -73,6 +73,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+     protected final PermissibleBase perm = new PermissibleBase(this);
+     private boolean op;
+     private GameMode mode;
++    private org.bson.types.ObjectId objectId;
+ 
+     public CraftHumanEntity(final CraftServer server, final Player entity) {
+         super(server, entity);
+@@ -81,6 +82,18 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
+         this.enderChest = new CraftInventory(entity.getEnderChestInventory());
+     }
+ 
++    // Slice start
++    @Override
++    public org.bson.types.ObjectId getObjectId() {
++        return objectId;
++    }
++
++    @Override
++    public void setObjectId(org.bson.types.ObjectId objectId) {
++        this.objectId = objectId;
++    }
++    // Slice end
++
+     @Override
+     public PlayerInventory getInventory() {
+         return this.inventory;

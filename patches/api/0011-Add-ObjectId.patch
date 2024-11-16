@@ -1,0 +1,85 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 16 Nov 2024 09:22:24 -0600
+Subject: [PATCH] Add ObjectId
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index e29e5024fa693baae469d47fe77b57118f14627c..5770f7c756d033076e0fb629d6aa11fb97ccb0f2 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -69,6 +69,8 @@ dependencies {
+     implementation("org.ow2.asm:asm-commons:9.7.1")
+     // Paper end
+ 
++    implementation("org.mongodb:bson:4.11.1") // Slice - MongoDB Bson Library for ObjectIds
++
+     api("org.apache.maven:maven-resolver-provider:3.9.6") // Paper - make API dependency for Paper Plugins
+     compileOnly("org.apache.maven.resolver:maven-resolver-connector-basic:1.9.18")
+     compileOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.9.18")
+diff --git a/src/main/java/io/papermc/paper/event/player/PlayerResolveObjectIdEvent.java b/src/main/java/io/papermc/paper/event/player/PlayerResolveObjectIdEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..4c28994757812f9c7f59d9eb827908bb64e63118
+--- /dev/null
++++ b/src/main/java/io/papermc/paper/event/player/PlayerResolveObjectIdEvent.java
+@@ -0,0 +1,44 @@
++package io.papermc.paper.event.player;
++
++import org.bson.types.ObjectId;
++import org.bukkit.Bukkit;
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.player.PlayerEvent;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++import java.util.Objects;
++
++/**
++ * Called when a player trades with a standalone merchant GUI.
++ */
++public class PlayerResolveObjectIdEvent extends PlayerEvent {
++    private static final HandlerList handlers = new HandlerList();
++    private ObjectId objectId;
++
++    public PlayerResolveObjectIdEvent(@NotNull Player player) {
++        super(player, !Bukkit.isPrimaryThread());
++    }
++
++    @Nullable
++    public ObjectId getObjectId() {
++        return this.objectId;
++    }
++
++    public void setObjectId(@NotNull ObjectId objectId) {
++        this.objectId = Objects.requireNonNull(objectId, "ObjectId cannot be null!");
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++
++}
+diff --git a/src/main/java/org/bukkit/entity/HumanEntity.java b/src/main/java/org/bukkit/entity/HumanEntity.java
+index 488604ba1a516b477693877c74712e4a45624a8b..2a3e40b0b7f058713634d99f61755b368e05fa74 100644
+--- a/src/main/java/org/bukkit/entity/HumanEntity.java
++++ b/src/main/java/org/bukkit/entity/HumanEntity.java
+@@ -22,6 +22,11 @@ import org.jetbrains.annotations.Nullable;
+  */
+ public interface HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder {
+ 
++    // Slice start
++    org.bson.types.@Nullable ObjectId getObjectId();
++    void setObjectId(@Nullable org.bson.types.ObjectId objectId);
++    // Slice end
++
+     // Paper start
+     @Override
+     org.bukkit.inventory.@NotNull EntityEquipment getEquipment();
