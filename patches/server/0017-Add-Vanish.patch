@@ -1,0 +1,84 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 16 Nov 2024 09:10:35 -0600
+Subject: [PATCH] Add Vanish
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 64a5c8f8918284d61619adcad3040f5ef70e8ef0..d10e360e664ae5ccb85c0c77848e527bc39ad775 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -432,6 +432,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+     private UUID originWorld;
+     public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
+     public boolean fixedPose = false; // Paper - Expand Pose API
++    public boolean vanished; // Slice
+ 
+     public void setOrigin(@javax.annotation.Nonnull Location location) {
+         this.origin = location.toVector();
+@@ -1425,7 +1426,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+     }
+ 
+     private boolean vibrationAndSoundEffectsFromBlock(BlockPos pos, BlockState state, boolean playSound, boolean emitEvent, Vec3 movement) {
+-        if (state.isAir()) {
++        if (vanished || state.isAir()) { // Slice
+             return false;
+         } else {
+             boolean flag2 = this.isStateClimbable(state);
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index ddabaed899c755925ad8618b78c33dacaf2126ac..aefa94ffd630e2dd6aefd547664ae25d2a81420c 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -1306,4 +1306,16 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         }
+     }
+     // Paper end - broadcast hurt animation
++
++    // Slice start
++    @Override
++    public boolean isVanished() {
++        return this.entity.vanished;
++    }
++
++    @Override
++    public void setVanished(boolean vanished) {
++        this.entity.vanished = vanished;
++    }
++    // Slice end
+ }
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java
+index da1c1fe0faf6819b15a81d6ad53370948e5f984f..84eff85e98484c9701e203bb1fa61435ee88bab4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryCustom.java
+@@ -69,6 +69,14 @@ public class CraftInventoryCustom extends CraftInventory {
+     }
+     // Paper end
+ 
++    // Slice start
++    public void setLocation(Location location) {
++        if (this.inventory instanceof MinecraftInventory minecraftInventory) {
++            minecraftInventory.location = location;
++        }
++    }
++    // Slice end
++
+     static class MinecraftInventory implements Container {
+         private final NonNullList<ItemStack> items;
+         private int maxStack = MAX_STACK;
+@@ -77,6 +85,7 @@ public class CraftInventoryCustom extends CraftInventory {
+         private final net.kyori.adventure.text.Component adventure$title; // Paper
+         private InventoryType type;
+         private final InventoryHolder owner;
++        private Location location; // Slice
+ 
+         // Paper start
+         public MinecraftInventory(InventoryHolder owner, InventoryType type, net.kyori.adventure.text.Component title) {
+@@ -239,7 +248,7 @@ public class CraftInventoryCustom extends CraftInventory {
+ 
+         @Override
+         public Location getLocation() {
+-            return null;
++            return location;
+         }
+ 
+         // Paper start

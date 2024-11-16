@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 16 Nov 2024 09:10:35 -0600
+Subject: [PATCH] Add Vanish
+
+
+diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
+index d0ae8a94db20281d3664d74718c65234eb2e5f83..6324e8f11a382288fc0a6c30f47760ea50e231d5 100644
+--- a/src/main/java/org/bukkit/entity/Entity.java
++++ b/src/main/java/org/bukkit/entity/Entity.java
+@@ -1172,4 +1172,19 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+      */
+     void broadcastHurtAnimation(@NotNull java.util.Collection<Player> players);
+     // Paper end - broadcast hurt animation
++
++    // Slice start
++    /**
++     * Returns true if the entity is vanished and cannot emit sounds, effects, etc.
++     */
++    boolean isVanished();
++
++    /**
++     * Sets whether the entity is vanished and cannot emit sounds, effects, etc.
++     *
++     * @param vanished the saveable status
++     * @see #isVanished()
++     */
++    void setVanished(boolean vanished);
++    // Slice end
+ }

@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 16 Nov 2024 08:58:56 -0600
+Subject: [PATCH] Biome freeze override
+
+
+diff --git a/src/main/java/net/minecraft/world/level/biome/Biome.java b/src/main/java/net/minecraft/world/level/biome/Biome.java
+index b725eea9d3ca81d2ef7802f5d0346d924aa1f808..1d903fa83432ed971f784b8cb244b0c5b163830e 100644
+--- a/src/main/java/net/minecraft/world/level/biome/Biome.java
++++ b/src/main/java/net/minecraft/world/level/biome/Biome.java
+@@ -71,6 +71,7 @@ public final class Biome {
+             long2FloatLinkedOpenHashMap.defaultReturnValue(Float.NaN);
+             return long2FloatLinkedOpenHashMap;
+         }));
++    public Boolean canFreeze = null; // Slice
+ 
+     Biome(Biome.ClimateSettings weather, BiomeSpecialEffects effects, BiomeGenerationSettings generationSettings, MobSpawnSettings spawnSettings) {
+         this.climateSettings = weather;
+@@ -120,6 +121,8 @@ public final class Biome {
+     }
+ 
+     public boolean shouldFreeze(LevelReader world, BlockPos pos, boolean doWaterCheck) {
++        if (canFreeze != null) return canFreeze; // Slice
++
+         if (this.warmEnoughToRain(pos, world.getSeaLevel())) {
+             return false;
+         } else {

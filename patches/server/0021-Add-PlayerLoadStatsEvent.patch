@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 16 Nov 2024 09:34:15 -0600
+Subject: [PATCH] Add PlayerLoadStatsEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index b775de1732238954e9bbbd072277254d2dc91b18..e590ce0e76985dd5c701ae933509221a2853266a 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -1414,7 +1414,7 @@ public abstract class PlayerList {
+                 }
+             }
+ 
+-            serverstatisticmanager = new ServerStatsCounter(this.server, file1);
++            serverstatisticmanager = new ServerStatsCounter(this.server, file1, uuid); // Slice
+             // this.stats.put(uuid, serverstatisticmanager); // CraftBukkit
+         }
+ 
+diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+index da7e1a69ecb4e6b3be2d8544ac406aa519bd196e..3bac27ffaea7fe873aa73605256f83837322fe0a 100644
+--- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
++++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+@@ -45,10 +45,16 @@ public class ServerStatsCounter extends StatsCounter {
+     private final File file;
+     private final Set<Stat<?>> dirty = Sets.newHashSet();
+ 
+-    public ServerStatsCounter(MinecraftServer server, File file) {
++    public ServerStatsCounter(MinecraftServer server, File file, java.util.UUID uuid) { // Slice
+         this.server = server;
+         this.file = file;
+-        if (file.isFile()) {
++        // Slice start - If event supplies stats, use it. Otherwise just load from disk as usual
++        com.destroystokyo.paper.event.player.PlayerLoadStatsEvent event = new com.destroystokyo.paper.event.player.PlayerLoadStatsEvent(uuid);
++        org.bukkit.Bukkit.getPluginManager().callEvent(event);
++        String providedJson = event.getStatistics();
++        if (providedJson != null) {
++            this.parseLocal(server.getFixerUpper(), providedJson);
++        } else if (file.isFile()) { // Slice end
+             try {
+                 this.parseLocal(server.getFixerUpper(), FileUtils.readFileToString(file));
+             } catch (IOException ioexception) {

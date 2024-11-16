@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
-Date: Wed, 13 Nov 2024 08:07:59 -0600
-Subject: [PATCH] ChunkStatusChangeEvent
+Date: Sat, 16 Nov 2024 08:48:20 -0600
+Subject: [PATCH] Add ChunkStatusChangeEvent
 
 
 diff --git a/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/scheduling/NewChunkHolder.java b/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/scheduling/NewChunkHolder.java
-index eafa4e6d55cd0f9314ac0f2b96a7f48fbb5e1a4c..1c39f73a10a05b792adf4d98b7db24edb2938030 100644
+index eafa4e6d55cd0f9314ac0f2b96a7f48fbb5e1a4c..ee5f51bc5f31f269bdac239cb48265ae355db1ff 100644
 --- a/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/scheduling/NewChunkHolder.java
 +++ b/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/scheduling/NewChunkHolder.java
 @@ -1261,6 +1261,13 @@ public final class NewChunkHolder {
@@ -14,8 +14,8 @@ index eafa4e6d55cd0f9314ac0f2b96a7f48fbb5e1a4c..1c39f73a10a05b792adf4d98b7db24ed
  
 +                // Slice start
 +                new com.destroystokyo.paper.event.chunk.ChunkStatusChangeEvent(new org.bukkit.craftbukkit.CraftChunk(chunk),
-+                        com.destroystokyo.paper.event.chunk.ChunkStatusChangeEvent.ChunkStatus.valueOf(currState.name()),
-+                        com.destroystokyo.paper.event.chunk.ChunkStatusChangeEvent.ChunkStatus.valueOf(nextState.name()))
++                        com.destroystokyo.paper.event.chunk.ChunkStatusChangeEvent.ChunkStatus.valueOf(current.name()),
++                        com.destroystokyo.paper.event.chunk.ChunkStatusChangeEvent.ChunkStatus.valueOf(current.name()))
 +                        .callEvent();
 +                // Slice end
 +

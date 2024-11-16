@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 16 Nov 2024 09:14:26 -0600
+Subject: [PATCH] Add jackson
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 32751460e29684401a461fddf82c371b3ff627dd..d6dae3101aa719b194a9426a13bf76379f281379 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -26,6 +26,13 @@ abstract class MockitoAgentProvider : CommandLineArgumentProvider {
+ 
+ dependencies {
+     implementation(project(":slice-api"))
++
++    // Slice start - JSON logging for DataDog ingestion
++    implementation("com.fasterxml.jackson.core:jackson-core:2.13.0")
++    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
++    implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.0")
++    // Slice end
++
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+     implementation("net.minecrell:terminalconsoleappender:1.3.0")
