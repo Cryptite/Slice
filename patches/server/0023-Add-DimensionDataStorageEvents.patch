@@ -1,0 +1,68 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sun, 17 Nov 2024 09:19:41 -0600
+Subject: [PATCH] Add DimensionDataStorageEvents
+
+
+diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
+index d16f124e0371ce943298c8d7d9bfac21e98cf885..74de7e040ebccb000aa258238ed0bc41dec3754f 100644
+--- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
+@@ -1,12 +1,12 @@
+ package net.minecraft.world.level.storage;
+ 
++import ca.spottedleaf.dataconverter.minecraft.converters.custom.V3818_Commands;
+ import com.mojang.datafixers.DataFixer;
+ import com.mojang.logging.LogUtils;
++import io.papermc.paper.event.server.DimensionDataStorageSaveEvent;
+ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+-import java.io.DataInputStream;
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.io.PushbackInputStream;
++
++import java.io.*;
+ import java.nio.file.Files;
+ import java.nio.file.Path;
+ import java.util.HashMap;
+@@ -128,29 +128,34 @@ public class DimensionDataStorage implements AutoCloseable {
+     }
+ 
+     public CompletableFuture<?> scheduleSave() {
+-        Map<Path, CompoundTag> map = this.collectDirtyTagsToSave();
++        Map<String, CompoundTag> map = this.collectDirtyTagsToSave();
+         if (map.isEmpty()) {
+             return CompletableFuture.completedFuture(null);
+         } else {
+             this.pendingWriteFuture = this.pendingWriteFuture
+                 .thenCompose(
+                     v -> CompletableFuture.allOf(
+-                            map.entrySet().stream().map(entry -> tryWriteAsync(entry.getKey(), entry.getValue())).toArray(CompletableFuture[]::new)
++                            map.entrySet().stream().map(entry -> tryWriteAsync(entry.getKey(), this.getDataFile(entry.getKey()), entry.getValue())).toArray(CompletableFuture[]::new)
+                         )
+                 );
+             return this.pendingWriteFuture;
+         }
+     }
+ 
+-    private Map<Path, CompoundTag> collectDirtyTagsToSave() {
+-        Map<Path, CompoundTag> map = new Object2ObjectArrayMap<>();
+-        this.cache.forEach((id, state) -> state.filter(SavedData::isDirty).ifPresent(state2 -> map.put(this.getDataFile(id), state2.save(this.registries))));
++    private Map<String, CompoundTag> collectDirtyTagsToSave() {
++        Map<String, CompoundTag> map = new Object2ObjectArrayMap<>();
++        this.cache.forEach((id, state) -> state.filter(SavedData::isDirty).ifPresent(state2 -> map.put(id, state2.save(this.registries))));
+         return map;
+     }
+ 
+-    private static CompletableFuture<Void> tryWriteAsync(Path path, CompoundTag nbt) {
++    private static CompletableFuture<Void> tryWriteAsync(String id, Path path, CompoundTag nbt) {
+         return CompletableFuture.runAsync(() -> {
+             try {
++                ByteArrayOutputStream buf = new ByteArrayOutputStream();
++                NbtIo.writeCompressed(nbt, buf);
++                DimensionDataStorageSaveEvent event = new DimensionDataStorageSaveEvent(id, buf);
++                if (!event.callEvent()) return;
++
+                 NbtIo.writeCompressed(nbt, path);
+             } catch (IOException var3) {
+                 LOGGER.error("Could not save data to {}", path.getFileName(), var3);

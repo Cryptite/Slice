@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sun, 17 Nov 2024 08:24:22 -0600
+Subject: [PATCH] Expose getBlockPosBelowThatAffectsMyMovement
+
+
+diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
+index 6324e8f11a382288fc0a6c30f47760ea50e231d5..8188b3a27fddac18cf49db5a8049149e784f4cbc 100644
+--- a/src/main/java/org/bukkit/entity/Entity.java
++++ b/src/main/java/org/bukkit/entity/Entity.java
+@@ -1187,4 +1187,12 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+      */
+     void setVanished(boolean vanished);
+     // Slice end
++
++    // Slice start
++    /**
++     * Returns the Block that is currently supporting the player, particularly in the case of
++     * crouching over the edge of a block.
++     */
++    org.bukkit.block.Block getBlockStandingOn();
++    // Slice end
+ }

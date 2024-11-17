@@ -1,0 +1,140 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sun, 17 Nov 2024 09:19:41 -0600
+Subject: [PATCH] Add DimensionDataStorageEvents
+
+
+diff --git a/src/main/java/io/papermc/paper/event/server/DimensionDataStorageLoadEvent.java b/src/main/java/io/papermc/paper/event/server/DimensionDataStorageLoadEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..f85074ae3bb7eb558fc07a4e1877f130aec33d39
+--- /dev/null
++++ b/src/main/java/io/papermc/paper/event/server/DimensionDataStorageLoadEvent.java
+@@ -0,0 +1,61 @@
++package io.papermc.paper.event.server;
++
++import com.google.gson.JsonElement;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.server.ServerEvent;
++import org.jetbrains.annotations.ApiStatus;
++import org.jspecify.annotations.NullMarked;
++
++import java.nio.file.Path;
++
++/**
++ * Called when resources such as datapacks are reloaded (e.g. /minecraft:reload)
++ * <p>
++ * Intended for use to re-register custom recipes, advancements that may be lost during a reload like this.
++ */
++@NullMarked
++public class DimensionDataStorageLoadEvent extends ServerEvent implements Cancellable {
++    public static final HandlerList HANDLER_LIST = new HandlerList();
++
++    private final Path path;
++    private final JsonElement json;
++    private boolean cancelled;
++    @ApiStatus.Internal
++    public DimensionDataStorageLoadEvent(final Path path, final JsonElement json) {
++        this.path = path;
++        this.json = json;
++    }
++
++    public Path getPath() {
++        return path;
++    }
++
++    public JsonElement getJson() {
++        return json;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return this.cancelled;
++    }
++
++    @Override
++    public void setCancelled(final boolean cancel) {
++        this.cancelled = cancel;
++    }
++
++    public static HandlerList getHandlerList() {
++        return HANDLER_LIST;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return HANDLER_LIST;
++    }
++
++    public enum Cause {
++        COMMAND,
++        PLUGIN,
++    }
++}
+diff --git a/src/main/java/io/papermc/paper/event/server/DimensionDataStorageSaveEvent.java b/src/main/java/io/papermc/paper/event/server/DimensionDataStorageSaveEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..2b29981621c959dd6027a072dab06339ebf315bf
+--- /dev/null
++++ b/src/main/java/io/papermc/paper/event/server/DimensionDataStorageSaveEvent.java
+@@ -0,0 +1,61 @@
++package io.papermc.paper.event.server;
++
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.server.ServerEvent;
++import org.jetbrains.annotations.ApiStatus;
++import org.jspecify.annotations.NullMarked;
++
++import java.io.ByteArrayOutputStream;
++import java.nio.file.Path;
++
++/**
++ * Called when resources such as datapacks are reloaded (e.g. /minecraft:reload)
++ * <p>
++ * Intended for use to re-register custom recipes, advancements that may be lost during a reload like this.
++ */
++@NullMarked
++public class DimensionDataStorageSaveEvent extends ServerEvent implements Cancellable {
++    public static final HandlerList HANDLER_LIST = new HandlerList();
++
++    private final String id;
++    private final ByteArrayOutputStream output;
++    private boolean cancelled;
++    @ApiStatus.Internal
++    public DimensionDataStorageSaveEvent(final String id, final ByteArrayOutputStream output) {
++        this.id = id;
++        this.output = output;
++    }
++
++    public String getId() {
++        return id;
++    }
++
++    public ByteArrayOutputStream getOutput() {
++        return output;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return this.cancelled;
++    }
++
++    @Override
++    public void setCancelled(final boolean cancel) {
++        this.cancelled = cancel;
++    }
++
++    public static HandlerList getHandlerList() {
++        return HANDLER_LIST;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return HANDLER_LIST;
++    }
++
++    public enum Cause {
++        COMMAND,
++        PLUGIN,
++    }
++}

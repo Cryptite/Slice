@@ -5,7 +5,7 @@ Subject: [PATCH] Packet obfuscation and reduction
 
 
 diff --git a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
-index 0f99733660f91280e4c6262cf75b3c9cae86f65a..fd28ad10df3cfcfdb44cafc4182ead53a4200027 100644
+index 0f99733660f91280e4c6262cf75b3c9cae86f65a..8845497071ca3be0e439b454f1f2d14f0f74e842 100644
 --- a/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 +++ b/src/main/java/net/minecraft/network/syncher/SynchedEntityData.java
 @@ -63,15 +63,29 @@ public class SynchedEntityData {
@@ -48,7 +48,7 @@ index 0f99733660f91280e4c6262cf75b3c9cae86f65a..fd28ad10df3cfcfdb44cafc4182ead53
 +    public List<SynchedEntityData.DataValue<?>> packForeignDirty() {
 +        List<SynchedEntityData.DataValue<?>> list = null;
 +
-+        for (DataItem<?> dataItem : this.itemsById.values()) {
++        for (DataItem<?> dataItem : this.itemsById) {
 +            if (dataItem.isDirty(true)) {
 +                dataItem.setForeignDirty(false);
 +                if (list == null) {
