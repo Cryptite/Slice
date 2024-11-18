@@ -1,0 +1,63 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Tom <cryptite@gmail.com>
+Date: Mon, 18 Nov 2024 08:34:27 -0600
+Subject: [PATCH] Add PlayerData Events
+
+
+diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+index 3bac27ffaea7fe873aa73605256f83837322fe0a..ba8416b010ca17cc5a4640dab2f9f5420227f3ca 100644
+--- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
++++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+@@ -210,7 +210,12 @@ public class ServerStatsCounter extends StatsCounter {
+         return nbttagcompound;
+     }
+ 
+-    protected String toJson() {
++    // Slice start - OBFHELPER
++    public String toJson() {
++        return serialize().toString();
++    }
++
++    public JsonObject serialize() { // Slice end
+         Map<StatType<?>, JsonObject> map = Maps.newHashMap();
+         ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
+ 
+@@ -236,7 +241,7 @@ public class ServerStatsCounter extends StatsCounter {
+ 
+         jsonobject1.add("stats", jsonobject);
+         jsonobject1.addProperty("DataVersion", SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+-        return jsonobject1.toString();
++        return jsonobject1; // Slice
+     }
+ 
+     private static <T> ResourceLocation getKey(Stat<T> stat) {
+diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+index b148cf247acdd36f856d0495cde4cc5ad32b5a2f..bbb452e5e56f4efa97f2e1a0ee920b1d1e9a28a4 100644
+--- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
+@@ -36,6 +36,7 @@ public class PlayerDataStorage {
+ 
+     public void save(Player player) {
+         if (org.spigotmc.SpigotConfig.disablePlayerDataSaving) return; // Spigot
++        if (!new com.destroystokyo.paper.event.player.PlayerSaveDataEvent((org.bukkit.entity.Player) player.getBukkitEntity()).callEvent()) return; // Slice
+         try {
+             CompoundTag nbttagcompound = player.saveWithoutId(new CompoundTag());
+             Path path = this.playerDir.toPath();
+@@ -108,6 +109,17 @@ public class PlayerDataStorage {
+     }
+ 
+     public Optional<CompoundTag> load(Player player) {
++        // Slice start - If event supplies playerdata, use it. Otherwise just load from disk as usual
++        com.destroystokyo.paper.event.player.PlayerLoadDataEvent event = new com.destroystokyo.paper.event.player.PlayerLoadDataEvent(player.getUUID());
++        org.bukkit.Bukkit.getPluginManager().callEvent(event);
++
++        Object playerData = event.getPlayerData();
++        if (playerData instanceof CompoundTag data) {
++            player.load(data);
++            return Optional.of(data);
++        }
++        // Slice end
++
+         // CraftBukkit start
+         return this.load(player.getName().getString(), player.getStringUUID()).map((nbttagcompound) -> {
+             if (player instanceof ServerPlayer) {

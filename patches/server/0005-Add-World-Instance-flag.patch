@@ -5,13 +5,13 @@ Subject: [PATCH] Add World Instance flag
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 3b6b6483bf855493948417f44f06427b625bc910..7bdbe1f2fa31781b7bd7b12c555b1b668edbfd6b 100644
+index a0611bf5f88d5b12dc981dda14e355c751ff802e..e0f87699b4a2a503e86e1cde732a200bff9e57ae 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -230,6 +230,7 @@ public class ServerLevel extends Level implements ServerEntityGetter, WorldGenLe
-     public final UUID uuid;
+@@ -231,6 +231,7 @@ public class ServerLevel extends Level implements ServerEntityGetter, WorldGenLe
      public boolean hasPhysicsEvent = true; // Paper - BlockPhysicsEvent
      public boolean hasEntityMoveEvent; // Paper - Add EntityMoveEvent
+     private final alternate.current.wire.WireHandler wireHandler = new alternate.current.wire.WireHandler(this); // Paper - optimize redstone (Alternate Current)
 +    public boolean instance; // Slice
  
      public LevelChunk getChunkIfLoaded(int x, int z) {
