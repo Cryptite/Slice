@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 18 Nov 2024 11:20:07 -0600
+Subject: [PATCH] Non-saveable-entities
+
+
+diff --git a/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java b/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java
+index b3c993a790fc3fab6a408c731deb297f74c959ce..7c1d4b08cbd41b70e712a636321ff9d73541ed8c 100644
+--- a/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java
++++ b/src/main/java/ca/spottedleaf/moonrise/patches/chunk_system/level/entity/ChunkEntitySlices.java
+@@ -161,7 +161,7 @@ public final class ChunkEntitySlices {
+                 // removed by us below
+                 continue;
+             }
+-            if (entity.shouldBeSaved()) {
++            if (entity.shouldBeSaved() || !entity.saveable) { // Slice
+                 PlatformHooks.get().unloadEntity(entity);
+                 if (entity.isVehicle()) {
+                     // we cannot assume that these entities are contained within this chunk, because entities can
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index cd16a08af2da0dca57472b9e264eb4b45e7546e9..33d3980ac32442cb130dff242765fead6dacd473 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -443,6 +443,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+     public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
+     public boolean fixedPose = false; // Paper - Expand Pose API
+     public boolean vanished; // Slice
++    public boolean saveable = true; // Slice
+ 
+     public void setOrigin(@javax.annotation.Nonnull Location location) {
+         this.origin = location.toVector();
+@@ -5246,6 +5247,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+ 
+     @Override
+     public boolean shouldBeSaved() {
++        if (!this.saveable) return false; // Slice
+         return this.removalReason != null && !this.removalReason.shouldSave() ? false : (this.isPassenger() ? false : !this.isVehicle() || !((ca.spottedleaf.moonrise.patches.chunk_system.entity.ChunkSystemEntity)this).moonrise$hasAnyPlayerPassengers()); // Paper - rewrite chunk system
+     }
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+index 0a34c8fb259ac9d3bfba518521d9137495509b96..1f0a4a89815bf8110e7c02d2d3325e47fc9c2abe 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftEntity.java
+@@ -1327,4 +1327,17 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
+         return this.entity.level().getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+     }
+     // Slice end
++
++
++    // Slice start
++    @Override
++    public boolean isSaveable() {
++        return this.entity.saveable;
++    }
++
++    @Override
++    public void setSaveable(boolean saveable) {
++        this.entity.saveable = saveable;
++    }
++    // Slice end
+ }
