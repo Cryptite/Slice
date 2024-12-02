@@ -5,7 +5,7 @@ Subject: [PATCH] Add ObjectId
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index d6dae3101aa719b194a9426a13bf76379f281379..720672975286789da1d85e3b18b9eb34e00a74f1 100644
+index fcc93b891c04d8b340b29a8b96e939df9b58839a..4893e10810583c12f6b34ec63d96bc8477264415 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -33,6 +33,8 @@ dependencies {
@@ -15,13 +15,13 @@ index d6dae3101aa719b194a9426a13bf76379f281379..720672975286789da1d85e3b18b9eb34
 +    implementation("org.mongodb:bson:4.11.1") // Slice - MongoDB Bson Library for ObjectIds
 +
      // Paper start
-     implementation("org.jline:jline-terminal-jansi:3.21.0")
-     implementation("net.minecrell:terminalconsoleappender:1.3.0")
+     implementation("org.jline:jline-terminal-ffm:3.27.1") // use ffm on java 22+
+     implementation("org.jline:jline-terminal-jni:3.27.1") // fall back to jni on java 21
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d10e360e664ae5ccb85c0c77848e527bc39ad775..f046cc8883af6d7fafb93aea3c7e4b664bbe7e8b 100644
+index 9bb19124498370c5b5ecaff10f523ee6e391b767..77cc9ae3f5d71454c3b75c44cf53bcfbc5f3eb84 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -267,7 +267,17 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -223,7 +223,17 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
              // Paper start - Folia schedulers
              synchronized (this) {
                  if (this.bukkitEntity == null) {
@@ -41,7 +41,7 @@ index d10e360e664ae5ccb85c0c77848e527bc39ad775..f046cc8883af6d7fafb93aea3c7e4b66
              }
              // Paper end - Folia schedulers
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
-index 4312290ad970f71e1dc25b707ab312c597a481a9..17577943a77ac2bc4e2bdfa6f79489157004fd04 100644
+index e345cdbfab44a0f5da80d738798dbb4424b7ab5c..ba1280382f2b95ea2cb412d3a15789affc65bb12 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftHumanEntity.java
 @@ -73,6 +73,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {

@@ -5,18 +5,18 @@ Subject: [PATCH] Add Vanish
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 64a5c8f8918284d61619adcad3040f5ef70e8ef0..d10e360e664ae5ccb85c0c77848e527bc39ad775 100644
+index 55b9b33ce85cdff75de8753e6294c99bb1b1f7ee..9bb19124498370c5b5ecaff10f523ee6e391b767 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -432,6 +432,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
-     private UUID originWorld;
+@@ -389,6 +389,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
      public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
      public boolean fixedPose = false; // Paper - Expand Pose API
+     private final int despawnTime; // Paper - entity despawn time limit
 +    public boolean vanished; // Slice
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-@@ -1425,7 +1426,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -1389,7 +1390,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
      }
  
      private boolean vibrationAndSoundEffectsFromBlock(BlockPos pos, BlockState state, boolean playSound, boolean emitEvent, Vec3 movement) {

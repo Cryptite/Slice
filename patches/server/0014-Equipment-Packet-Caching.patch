@@ -26,7 +26,7 @@ index 830bd76916e26a3a54954d3cf7b7520af52a2258..dc9c7a844c2aee1dae80006eafe085c6
          this.entity = buf.readVarInt();
          this.slots = Lists.newArrayList();
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 6a3a8f0466998409a01223bc0c16d92b96e50118..096fc42fddbbbe1f7bb5cd260cd2f0d580c6b77a 100644
+index f36a075dbee2b96d01899e02460b1d8443e91749..34a650a3a884b9f85d369d1ef2b03cbe328f5b63 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -298,6 +298,11 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -41,7 +41,7 @@ index 6a3a8f0466998409a01223bc0c16d92b96e50118..096fc42fddbbbe1f7bb5cd260cd2f0d5
      @Override
      public float getBukkitYaw() {
          return this.getYHeadRot();
-@@ -3361,6 +3366,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3383,6 +3388,7 @@ public abstract class LivingEntity extends Entity implements Attackable {
          if (map != null) {
              this.handleHandSwap(map);
              if (!map.isEmpty()) {
@@ -49,7 +49,7 @@ index 6a3a8f0466998409a01223bc0c16d92b96e50118..096fc42fddbbbe1f7bb5cd260cd2f0d5
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -4781,4 +4787,84 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -4803,4 +4809,84 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }

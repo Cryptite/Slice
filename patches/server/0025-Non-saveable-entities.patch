@@ -18,18 +18,18 @@ index b3c993a790fc3fab6a408c731deb297f74c959ce..7c1d4b08cbd41b70e712a636321ff9d7
                  if (entity.isVehicle()) {
                      // we cannot assume that these entities are contained within this chunk, because entities can
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index cd16a08af2da0dca57472b9e264eb4b45e7546e9..33d3980ac32442cb130dff242765fead6dacd473 100644
+index a46df2ccbae85cdbdb7a19825a89c1797337d270..b878b2559d3957055702d8281846196732909ebd 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -443,6 +443,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
-     public boolean freezeLocked = false; // Paper - Freeze Tick Lock API
+@@ -400,6 +400,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
      public boolean fixedPose = false; // Paper - Expand Pose API
+     private final int despawnTime; // Paper - entity despawn time limit
      public boolean vanished; // Slice
 +    public boolean saveable = true; // Slice
  
      public void setOrigin(@javax.annotation.Nonnull Location location) {
          this.origin = location.toVector();
-@@ -5246,6 +5247,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+@@ -5210,6 +5211,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
  
      @Override
      public boolean shouldBeSaved() {
