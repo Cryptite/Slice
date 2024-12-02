@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 2 Dec 2024 11:52:34 -0600
+Subject: [PATCH] Map Events
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index e256e5ff5c167c6cff5b9e985cdc80d5c9203708..5f0439860468283dcdcce17fefc22c5e088b8dc4 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -2119,6 +2119,14 @@ public class ServerLevel extends Level implements ServerEntityGetter, WorldGenLe
+ 
+     @Override
+     public MapId getFreeMapId() {
++        // Slice start
++        io.papermc.paper.event.server.MapGetFreeIndexEvent event = new io.papermc.paper.event.server.MapGetFreeIndexEvent();
++        event.callEvent();
++        int newIndex = event.getIndex();
++        if (newIndex != -1) {
++            return new MapId(newIndex);
++        }
++        // Slice end
+         return ((MapIndex) this.getServer().overworld().getDataStorage().computeIfAbsent(MapIndex.factory(), "idcounts")).getFreeAuxValueForMap();
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
+index 4f256e61f858020f32e7a66664375ba05a57826b..04f989bb34bda3f71501156d727074fad0df3e7e 100644
+--- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
++++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
+@@ -70,6 +70,22 @@ public class DimensionDataStorage implements AutoCloseable {
+     @Nullable
+     private <T extends SavedData> T readSavedData(BiFunction<CompoundTag, HolderLookup.Provider, T> readFunction, DataFixTypes dataFixTypes, String id) {
+         try {
++            // Slice start
++            if (id.startsWith("map_")) {
++                int mapId = Integer.parseInt(id.split("map_")[1]);
++                io.papermc.paper.event.server.MapLoadEvent event = new io.papermc.paper.event.server.MapLoadEvent(mapId);
++                event.callEvent();
++                ByteArrayInputStream buf = event.getBuf();
++                if (buf != null) {
++                    try {
++                        return readFunction.apply(NbtIo.readCompressed(buf, NbtAccounter.unlimitedHeap()), this.registries);
++                    } catch (IOException e) {
++                        LOGGER.error("Error loading saved data: {}", id, e);
++                    }
++                }
++            }
++            // Slice end
++
+             Path path = this.getDataFile(id);
+             if (Files.exists(path)) {
+                 CompoundTag compoundTag = this.readTagFromDisk(id, dataFixTypes, SharedConstants.getCurrentVersion().getDataVersion().getVersion());

@@ -1,0 +1,114 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Mon, 2 Dec 2024 11:52:34 -0600
+Subject: [PATCH] Map Events
+
+
+diff --git a/src/main/java/io/papermc/paper/event/server/MapGetFreeIndexEvent.java b/src/main/java/io/papermc/paper/event/server/MapGetFreeIndexEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..25999adb10ed0f3514332d64f27ea118bfccbfb4
+--- /dev/null
++++ b/src/main/java/io/papermc/paper/event/server/MapGetFreeIndexEvent.java
+@@ -0,0 +1,41 @@
++package io.papermc.paper.event.server;
++
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.server.ServerEvent;
++import org.jetbrains.annotations.ApiStatus;
++import org.jspecify.annotations.NullMarked;
++
++/**
++ * Called when we try to fetch a new index for a newly-created map.
++ */
++@NullMarked
++public class MapGetFreeIndexEvent extends ServerEvent {
++    public static final HandlerList HANDLER_LIST = new HandlerList();
++
++    private int index = -1;
++    @ApiStatus.Internal
++    public MapGetFreeIndexEvent() {
++    }
++
++    public int getIndex() {
++        return index;
++    }
++
++    public void setIndex(int index) {
++        this.index = index;
++    }
++
++    public static HandlerList getHandlerList() {
++        return HANDLER_LIST;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return HANDLER_LIST;
++    }
++
++    public enum Cause {
++        COMMAND,
++        PLUGIN,
++    }
++}
+diff --git a/src/main/java/io/papermc/paper/event/server/MapLoadEvent.java b/src/main/java/io/papermc/paper/event/server/MapLoadEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..0dfab37f18b797003b932a8a8b16943c1dd7677c
+--- /dev/null
++++ b/src/main/java/io/papermc/paper/event/server/MapLoadEvent.java
+@@ -0,0 +1,55 @@
++package io.papermc.paper.event.server;
++
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.server.ServerEvent;
++import org.jetbrains.annotations.ApiStatus;
++import org.jspecify.annotations.NullMarked;
++import org.jspecify.annotations.Nullable;
++
++import java.io.ByteArrayInputStream;
++import java.io.ByteArrayOutputStream;
++
++/**
++ * Called when we want to load a Map from disk
++ */
++@NullMarked
++public class MapLoadEvent extends ServerEvent {
++    public static final HandlerList HANDLER_LIST = new HandlerList();
++
++    private int id;
++    private ByteArrayInputStream buf;
++    @ApiStatus.Internal
++    public MapLoadEvent(int id) {
++        this.id = id;
++    }
++
++    public int getIndex() {
++        return id;
++    }
++
++    public void setIndex(int index) {
++        this.id = index;
++    }
++
++    public @Nullable ByteArrayInputStream getBuf() {
++        return buf;
++    }
++
++    public void setBuf(ByteArrayInputStream buf) {
++        this.buf = buf;
++    }
++
++    public static HandlerList getHandlerList() {
++        return HANDLER_LIST;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return HANDLER_LIST;
++    }
++
++    public enum Cause {
++        COMMAND,
++        PLUGIN,
++    }
++}

@@ -19,3 +19,6 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 /commit.sh
 /publish.sh
+/slice-api/
+/slice-server/
+/generated/
