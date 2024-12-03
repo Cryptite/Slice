@@ -24,10 +24,10 @@ index e256e5ff5c167c6cff5b9e985cdc80d5c9203708..5f0439860468283dcdcce17fefc22c5e
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-index 4f256e61f858020f32e7a66664375ba05a57826b..04f989bb34bda3f71501156d727074fad0df3e7e 100644
+index 4f256e61f858020f32e7a66664375ba05a57826b..f1eefed0282c2f5af125c6579fd5311d6e7f78b9 100644
 --- a/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/DimensionDataStorage.java
-@@ -70,6 +70,22 @@ public class DimensionDataStorage implements AutoCloseable {
+@@ -70,6 +70,23 @@ public class DimensionDataStorage implements AutoCloseable {
      @Nullable
      private <T extends SavedData> T readSavedData(BiFunction<CompoundTag, HolderLookup.Provider, T> readFunction, DataFixTypes dataFixTypes, String id) {
          try {
@@ -39,7 +39,8 @@ index 4f256e61f858020f32e7a66664375ba05a57826b..04f989bb34bda3f71501156d727074fa
 +                ByteArrayInputStream buf = event.getBuf();
 +                if (buf != null) {
 +                    try {
-+                        return readFunction.apply(NbtIo.readCompressed(buf, NbtAccounter.unlimitedHeap()), this.registries);
++                        CompoundTag tag = NbtIo.readCompressed(buf, NbtAccounter.unlimitedHeap());
++                        return readFunction.apply(tag.getCompound("data"), this.registries);
 +                    } catch (IOException e) {
 +                        LOGGER.error("Error loading saved data: {}", id, e);
 +                    }
