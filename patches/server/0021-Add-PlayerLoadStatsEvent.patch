@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
 Date: Sat, 16 Nov 2024 09:34:15 -0600
-Subject: [PATCH] Add PlayerLoadStatsEvent
+Subject: [PATCH] Add PlayerLoadStatsEvent Fix patch
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index b775de1732238954e9bbbd072277254d2dc91b18..e590ce0e76985dd5c701ae933509221a2853266a 100644
+index 2c1781a45828ef8018e976a445984197f0df1445..46f060f33fcbc6a4568a7fcfba29e83a4d192578 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1414,7 +1414,7 @@ public abstract class PlayerList {
@@ -18,7 +18,7 @@ index b775de1732238954e9bbbd072277254d2dc91b18..e590ce0e76985dd5c701ae933509221a
          }
  
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index da7e1a69ecb4e6b3be2d8544ac406aa519bd196e..3bac27ffaea7fe873aa73605256f83837322fe0a 100644
+index da7e1a69ecb4e6b3be2d8544ac406aa519bd196e..6947650f299f99402a4a8d9c8384eb9f71a8e3a6 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 @@ -45,10 +45,16 @@ public class ServerStatsCounter extends StatsCounter {
@@ -33,10 +33,130 @@ index da7e1a69ecb4e6b3be2d8544ac406aa519bd196e..3bac27ffaea7fe873aa73605256f8383
 +        // Slice start - If event supplies stats, use it. Otherwise just load from disk as usual
 +        com.destroystokyo.paper.event.player.PlayerLoadStatsEvent event = new com.destroystokyo.paper.event.player.PlayerLoadStatsEvent(uuid);
 +        org.bukkit.Bukkit.getPluginManager().callEvent(event);
-+        String providedJson = event.getStatistics();
++        JsonObject providedJson = event.getStatistics();
 +        if (providedJson != null) {
-+            this.parseLocal(server.getFixerUpper(), providedJson);
++            parseLocal(server.getFixerUpper(), providedJson);
 +        } else if (file.isFile()) { // Slice end
              try {
                  this.parseLocal(server.getFixerUpper(), FileUtils.readFileToString(file));
              } catch (IOException ioexception) {
+@@ -101,77 +107,59 @@ public class ServerStatsCounter extends StatsCounter {
+         try {
+             JsonReader jsonreader = new JsonReader(new StringReader(json));
+ 
+-            label48:
+-            {
+-                try {
+-                    jsonreader.setLenient(false);
+-                    JsonElement jsonelement = Streams.parse(jsonreader);
+-
+-                    if (!jsonelement.isJsonNull()) {
+-                        CompoundTag nbttagcompound = ServerStatsCounter.fromJson(jsonelement.getAsJsonObject());
+-
+-                        nbttagcompound = DataFixTypes.STATS.updateToCurrentVersion(dataFixer, nbttagcompound, NbtUtils.getDataVersion(nbttagcompound, 1343));
+-                        if (!nbttagcompound.contains("stats", 10)) {
+-                            break label48;
+-                        }
+-
+-                        CompoundTag nbttagcompound1 = nbttagcompound.getCompound("stats");
+-                        Iterator iterator = nbttagcompound1.getAllKeys().iterator();
+-
+-                        while (true) {
+-                            if (!iterator.hasNext()) {
+-                                break label48;
+-                            }
+-
+-                            String s1 = (String) iterator.next();
+-
+-                            if (nbttagcompound1.contains(s1, 10)) {
+-                                Util.ifElse(BuiltInRegistries.STAT_TYPE.getOptional(ResourceLocation.parse(s1)), (statisticwrapper) -> {
+-                                    CompoundTag nbttagcompound2 = nbttagcompound1.getCompound(s1);
+-                                    Iterator iterator1 = nbttagcompound2.getAllKeys().iterator();
+-
+-                                    while (iterator1.hasNext()) {
+-                                        String s2 = (String) iterator1.next();
+-
+-                                        if (nbttagcompound2.contains(s2, 99)) {
+-                                            Util.ifElse(this.getStat(statisticwrapper, s2), (statistic) -> {
+-                                                this.stats.put(statistic, nbttagcompound2.getInt(s2));
+-                                            }, () -> {
+-                                                ServerStatsCounter.LOGGER.warn("Invalid statistic in {}: Don't know what {} is", this.file, s2);
+-                                            });
+-                                        } else {
+-                                            ServerStatsCounter.LOGGER.warn("Invalid statistic value in {}: Don't know what {} is for key {}", new Object[]{this.file, nbttagcompound2.get(s2), s2});
+-                                        }
+-                                    }
+-
+-                                }, () -> {
+-                                    ServerStatsCounter.LOGGER.warn("Invalid statistic type in {}: Don't know what {} is", this.file, s1);
+-                                });
+-                            }
+-                        }
+-                    }
+-
+-                    ServerStatsCounter.LOGGER.error("Unable to parse Stat data from {}", this.file);
+-                } catch (Throwable throwable) {
+-                    try {
+-                        jsonreader.close();
+-                    } catch (Throwable throwable1) {
+-                        throwable.addSuppressed(throwable1);
+-                    }
++            // Slice start
++            try {
++                jsonreader.setLenient(false);
++                JsonElement jsonelement = Streams.parse(jsonreader);
+ 
+-                    throw throwable;
++                if (!jsonelement.isJsonNull()) {
++                    parseLocal(dataFixer, jsonelement.getAsJsonObject()); // Slice
++                }
++            } catch (Throwable throwable) {
++                try {
++                    jsonreader.close();
++                } catch (Throwable throwable1) {
++                    throwable.addSuppressed(throwable1);
+                 }
+ 
+-                jsonreader.close();
+-                return;
++                throw throwable;
+             }
+ 
+             jsonreader.close();
+         } catch (IOException | JsonParseException jsonparseexception) {
+             ServerStatsCounter.LOGGER.error("Unable to parse Stat data from {}", this.file, jsonparseexception);
+         }
++    }
++
++    public void parseLocal(DataFixer dataFixer, JsonObject jsonObject) {
++        CompoundTag nbttagcompound = ServerStatsCounter.fromJson(jsonObject);
++        nbttagcompound = DataFixTypes.STATS.updateToCurrentVersion(dataFixer, nbttagcompound, NbtUtils.getDataVersion(nbttagcompound, 1343));
++        if (!nbttagcompound.contains("stats", 10)) {
++            ServerStatsCounter.LOGGER.error("Unable to parse Stat data from {}", jsonObject);
++            return;
++        }
+ 
++        CompoundTag nbttagcompound1 = nbttagcompound.getCompound("stats");
++
++        for (String s1 : nbttagcompound1.getAllKeys()) {
++            if (nbttagcompound1.contains(s1, 10)) {
++                Util.ifElse(BuiltInRegistries.STAT_TYPE.getOptional(ResourceLocation.parse(s1)), (statisticwrapper) -> {
++                    CompoundTag nbttagcompound2 = nbttagcompound1.getCompound(s1);
++                    for (String s2 : nbttagcompound2.getAllKeys()) {
++                        if (nbttagcompound2.contains(s2, 99)) {
++                            Util.ifElse(this.getStat(statisticwrapper, s2),
++                                    (statistic) -> this.stats.put(statistic, nbttagcompound2.getInt(s2)),
++                                    () -> ServerStatsCounter.LOGGER.warn("Invalid statistic in {}: Don't know what {} is", this.file, s2));
++                        } else {
++                            ServerStatsCounter.LOGGER.warn("Invalid statistic value in {}: Don't know what {} is for key {}", new Object[]{this.file, nbttagcompound2.get(s2), s2});
++                        }
++                    }
++
++                }, () -> ServerStatsCounter.LOGGER.warn("Invalid statistic type in {}: Don't know what {} is", this.file, s1));
++            }
++        }
+     }
++    // Slice end
+ 
+     private <T> Optional<Stat<T>> getStat(StatType<T> type, String id) {
+         // CraftBukkit - decompile error start

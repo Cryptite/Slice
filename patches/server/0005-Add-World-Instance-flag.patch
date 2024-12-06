@@ -17,10 +17,10 @@ index 585e2b43a0326f0b81597fa1234d3c67c76af550..e256e5ff5c167c6cff5b9e985cdc80d5
      public LevelChunk getChunkIfLoaded(int x, int z) {
          return this.chunkSource.getChunkAtIfLoadedImmediately(x, z); // Paper - Use getChunkIfLoadedImmediately
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index 8f234b46c24a0ae08aa5f8190c5b27e1f62dfbab..149100c63bce390440f2d162cfd45ebf2ddc6976 100644
+index 57da11c0da7322e74810e7108e9c8000b0c36520..68e3dee346fe013f8e69900a0911583f851d2782 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-@@ -1329,6 +1329,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
+@@ -1330,6 +1330,18 @@ public class CraftWorld extends CraftRegionAccessor implements World {
          this.world.noSave = !value;
      }
  

@@ -5,10 +5,10 @@ Subject: [PATCH] Add PlayerData Events
 
 
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index 3bac27ffaea7fe873aa73605256f83837322fe0a..ba8416b010ca17cc5a4640dab2f9f5420227f3ca 100644
+index 6947650f299f99402a4a8d9c8384eb9f71a8e3a6..299fcc2ecb17f8d42ff3480ec9868127faa9b0fc 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-@@ -210,7 +210,12 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -192,7 +192,12 @@ public class ServerStatsCounter extends StatsCounter {
          return nbttagcompound;
      }
  
@@ -22,7 +22,7 @@ index 3bac27ffaea7fe873aa73605256f83837322fe0a..ba8416b010ca17cc5a4640dab2f9f542
          Map<StatType<?>, JsonObject> map = Maps.newHashMap();
          ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
  
-@@ -236,7 +241,7 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -218,7 +223,7 @@ public class ServerStatsCounter extends StatsCounter {
  
          jsonobject1.add("stats", jsonobject);
          jsonobject1.addProperty("DataVersion", SharedConstants.getCurrentVersion().getDataVersion().getVersion());
