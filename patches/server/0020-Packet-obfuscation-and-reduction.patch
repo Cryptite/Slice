@@ -119,10 +119,10 @@ index 0f99733660f91280e4c6262cf75b3c9cae86f65a..8845497071ca3be0e439b454f1f2d14f
  
      public static record DataValue<T>(int id, EntityDataSerializer<T> serializer, T value) {
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index 90eb4927fa51ce3df86aa7b6c71f49150a03e337..357f1d375cd92ce73516c6baceffe8dd89b9e499 100644
+index a6c3beb9d5ab87fca882e1761983ebe385011296..112a8c0840ded4156782a6bab7550d4696b02c6f 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
-@@ -449,7 +449,20 @@ public class ServerEntity {
+@@ -434,7 +434,20 @@ public class ServerEntity {
  
          if (list != null) {
              this.trackedDataValues = datawatcher.getNonDefaultValues();
@@ -171,7 +171,7 @@ index 551da84c834132d106457c123e1b195e4be904b8..e4041c58a23d3eaefd01402635f71440
  
      public void startAutoSpinAttack(int riptideTicks, float riptideAttackDamage, ItemStack stack) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index adf8f0ddde16f08b10cd733eeabf9d40db77001b..c92c59d18a218b8b34b94dca874291d0f95a678a 100644
+index 973726a3429498b19bf36915b2e84ff29a203704..b4d72cbcbb9caa10e07fc07278d85fdc87f40102 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -2864,7 +2864,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {

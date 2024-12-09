@@ -19,6 +19,19 @@ index edef8fc62f8dba1b57214d8d7d805ff0d83f4114..c948eb36db7f902ce65523e19651057e
      }
  
      private static boolean isCatSittingOnChest(LevelAccessor world, BlockPos pos) {
+diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+index 2a207fb2e1c26b562de42240e11c856bd2a23458..601746d00c1afd85ca8a0c5578ef587e6a231bcf 100644
+--- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+@@ -83,7 +83,7 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
+         PlayerEnderChestContainer playerEnderChestContainer = player.getEnderChestInventory();
+         if (playerEnderChestContainer != null && world.getBlockEntity(pos) instanceof EnderChestBlockEntity enderChestBlockEntity) {
+             BlockPos blockPos = pos.above();
+-            if (world.getBlockState(blockPos).isRedstoneConductor(world, blockPos)) { // Paper - diff on change; make sure that EnderChest#isBlocked uses the same logic
++            if (false) { // Slice - allow block on top to not block opening // world.getBlockState(blockPos).isRedstoneConductor(world, blockPos)) { // Paper - diff on change; make sure that EnderChest#isBlocked uses the same logic
+                 return InteractionResult.SUCCESS;
+             } else {
+                 // Paper start - Fix InventoryOpenEvent cancellation - moved up;
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/CraftEnderChest.java b/src/main/java/org/bukkit/craftbukkit/block/CraftEnderChest.java
 index f45ee675a10729845bf376fa95e648b23b9aac12..bb59827851262051bc832f32bf54877b6a896990 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/CraftEnderChest.java

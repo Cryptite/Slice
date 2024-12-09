@@ -25,8 +25,36 @@ index 830bd76916e26a3a54954d3cf7b7520af52a2258..dc9c7a844c2aee1dae80006eafe085c6
      private ClientboundSetEquipmentPacket(RegistryFriendlyByteBuf buf) {
          this.entity = buf.readVarInt();
          this.slots = Lists.newArrayList();
+diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
+index 90eb4927fa51ce3df86aa7b6c71f49150a03e337..a6c3beb9d5ab87fca882e1761983ebe385011296 100644
+--- a/src/main/java/net/minecraft/server/level/ServerEntity.java
++++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
+@@ -388,22 +388,7 @@ public class ServerEntity {
+         Entity entity = this.entity;
+ 
+         if (entity instanceof LivingEntity entityliving) {
+-            List<Pair<EquipmentSlot, ItemStack>> list = Lists.newArrayList();
+-            Iterator iterator = EquipmentSlot.VALUES.iterator();
+-
+-            while (iterator.hasNext()) {
+-                EquipmentSlot enumitemslot = (EquipmentSlot) iterator.next();
+-                ItemStack itemstack = entityliving.getItemBySlot(enumitemslot);
+-
+-                if (!itemstack.isEmpty()) {
+-                    list.add(Pair.of(enumitemslot, itemstack.copy()));
+-                }
+-            }
+-
+-            if (!list.isEmpty()) {
+-                sender.accept(new ClientboundSetEquipmentPacket(this.entity.getId(), list, true)); // Paper - data sanitization
+-            }
+-            ((LivingEntity) this.entity).detectEquipmentUpdatesPublic(); // CraftBukkit - SPIGOT-3789: sync again immediately after sending
++            entityliving.sendEquipment(sender, player);
+         }
+ 
+         if (!this.entity.getPassengers().isEmpty()) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index f36a075dbee2b96d01899e02460b1d8443e91749..34a650a3a884b9f85d369d1ef2b03cbe328f5b63 100644
+index f36a075dbee2b96d01899e02460b1d8443e91749..0634626d4a0bda9ac58f1fd16265ca866ee9f5c3 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -298,6 +298,11 @@ public abstract class LivingEntity extends Entity implements Attackable {
@@ -49,7 +77,34 @@ index f36a075dbee2b96d01899e02460b1d8443e91749..34a650a3a884b9f85d369d1ef2b03cbe
                  this.handleEquipmentChanges(map);
              }
          }
-@@ -4803,4 +4809,84 @@ public abstract class LivingEntity extends Entity implements Attackable {
+@@ -3507,7 +3513,25 @@ public abstract class LivingEntity extends Entity implements Attackable {
+             }
+ 
+         });
+-        ((ServerLevel) this.level()).getChunkSource().broadcast(this, new ClientboundSetEquipmentPacket(this.getId(), list, true)); // Paper - data sanitization
++
++        // Slice start
++        net.minecraft.server.level.ChunkMap.TrackedEntity entityTracker = ((ServerLevel) this.level()).getChunkSource().chunkMap.entityMap.get(getId());
++        if (entityTracker != null) {
++            ClientboundSetEquipmentPacket packet = new ClientboundSetEquipmentPacket(this.getId(), list);
++            for (net.minecraft.server.network.ServerPlayerConnection playerConnection : entityTracker.seenBy) {
++                ServerPlayer player = playerConnection.getPlayer();
++                org.bukkit.event.player.PlayerReceiveEquipmentEvent event = new org.bukkit.event.player.PlayerReceiveEquipmentEvent(player.getBukkitEntity(), getBukkitEntity());
++                level().getCraftServer().getPluginManager().callEvent(event);
++
++                String tag = event.getTag();
++                if (tag != null) {
++                    playerConnection.send(new ClientboundSetEquipmentPacket(this.getId(), list, this, false, tag));
++                } else {
++                    playerConnection.send(packet);
++                }
++            }
++        }
++        // Slice end
+     }
+ 
+     private ItemStack getLastArmorItem(EquipmentSlot slot) {
+@@ -4803,4 +4827,84 @@ public abstract class LivingEntity extends Entity implements Attackable {
      public static record Fallsounds(SoundEvent small, SoundEvent big) {
  
      }
