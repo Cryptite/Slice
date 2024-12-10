@@ -32,7 +32,7 @@ index 6947650f299f99402a4a8d9c8384eb9f71a8e3a6..299fcc2ecb17f8d42ff3480ec9868127
  
      private static <T> ResourceLocation getKey(Stat<T> stat) {
 diff --git a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
-index b148cf247acdd36f856d0495cde4cc5ad32b5a2f..bbb452e5e56f4efa97f2e1a0ee920b1d1e9a28a4 100644
+index b148cf247acdd36f856d0495cde4cc5ad32b5a2f..f9403d73ae2400e148a76bf79661e2e96fe7a6cc 100644
 --- a/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 +++ b/src/main/java/net/minecraft/world/level/storage/PlayerDataStorage.java
 @@ -36,6 +36,7 @@ public class PlayerDataStorage {
@@ -43,7 +43,7 @@ index b148cf247acdd36f856d0495cde4cc5ad32b5a2f..bbb452e5e56f4efa97f2e1a0ee920b1d
          try {
              CompoundTag nbttagcompound = player.saveWithoutId(new CompoundTag());
              Path path = this.playerDir.toPath();
-@@ -108,6 +109,17 @@ public class PlayerDataStorage {
+@@ -108,6 +109,21 @@ public class PlayerDataStorage {
      }
  
      public Optional<CompoundTag> load(Player player) {
@@ -53,6 +53,10 @@ index b148cf247acdd36f856d0495cde4cc5ad32b5a2f..bbb452e5e56f4efa97f2e1a0ee920b1d
 +
 +        Object playerData = event.getPlayerData();
 +        if (playerData instanceof CompoundTag data) {
++            data = ca.spottedleaf.dataconverter.minecraft.MCDataConverter.convertTag(ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry.PLAYER,
++                    data,
++                    NbtUtils.getDataVersion(data, -1),
++                    net.minecraft.SharedConstants.getCurrentVersion().getDataVersion().getVersion()); // Paper - rewrite data conversion system
 +            player.load(data);
 +            return Optional.of(data);
 +        }
