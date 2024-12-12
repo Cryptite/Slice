@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Thu, 12 Dec 2024 15:20:17 -0600
+Subject: [PATCH] Player spawnsOwnMobs
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index d021cd5b6136f0125076513977f430c6d4dd4f9f..e134cdebde3e3afa6ddce177c949b4fb7a3ed277 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -582,6 +582,7 @@ public class ServerChunkCache extends ChunkSource implements ca.spottedleaf.moon
+         if (flag && (this.spawnEnemies || this.spawnFriendlies)) {
+             // Paper start - PlayerNaturallySpawnCreaturesEvent
+             for (ServerPlayer entityPlayer : this.level.players()) {
++                if (entityPlayer.spawnsOwnMobs) continue; // Slice
+                 int chunkRange = Math.min(level.spigotConfig.mobSpawnRange, entityPlayer.getBukkitEntity().getViewDistance());
+                 chunkRange = Math.min(chunkRange, 8);
+                 entityPlayer.playerNaturallySpawnedEvent = new com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent(entityPlayer.getBukkitEntity(), (byte) chunkRange);
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index e4041c58a23d3eaefd01402635f714404f3c82cf..6eb9155c3227ae2a69bb7a379af94d6a73cdc6c7 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -198,6 +198,8 @@ public abstract class Player extends LivingEntity {
+     public boolean affectsSpawning = true; // Paper - Affects Spawning API
+     public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET; // Paper - flying fall damage
+ 
++    public boolean spawnsOwnMobs = false; // Slice
++
+     // CraftBukkit start
+     public boolean fauxSleeping;
+     public int oldLevel = -1;
