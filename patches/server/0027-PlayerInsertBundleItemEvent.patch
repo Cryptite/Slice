@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Cryptite <cryptite@gmail.com>
 Date: Thu, 12 Dec 2024 15:20:17 -0600
-Subject: [PATCH] Player spawnsOwnMobs
+Subject: [PATCH] PlayerInsertBundleItemEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
@@ -29,3 +29,23 @@ index e4041c58a23d3eaefd01402635f714404f3c82cf..6eb9155c3227ae2a69bb7a379af94d6a
      // CraftBukkit start
      public boolean fauxSleeping;
      public int oldLevel = -1;
+diff --git a/src/main/java/net/minecraft/world/item/BundleItem.java b/src/main/java/net/minecraft/world/item/BundleItem.java
+index f1999d904ac66f5349346ad8157f5401fb395e11..56159a23d231028ba671f441fed0f601eedec7be 100644
+--- a/src/main/java/net/minecraft/world/item/BundleItem.java
++++ b/src/main/java/net/minecraft/world/item/BundleItem.java
+@@ -67,6 +67,7 @@ public class BundleItem extends Item {
+             ItemStack itemStack = slot.getItem();
+             BundleContents.Mutable mutable = new BundleContents.Mutable(bundleContents);
+             if (clickType == ClickAction.PRIMARY && !itemStack.isEmpty()) {
++                if (!new io.papermc.paper.event.player.PlayerInsertBundleItemEvent((org.bukkit.entity.Player) player.getBukkitEntity(), stack.getBukkitStack(), itemStack.getBukkitStack()).callEvent()) return false; // Slice
+                 if (mutable.tryTransfer(slot, player) > 0) {
+                     playInsertSound(player);
+                 } else {
+@@ -110,6 +111,7 @@ public class BundleItem extends Item {
+             } else {
+                 BundleContents.Mutable mutable = new BundleContents.Mutable(bundleContents);
+                 if (clickType == ClickAction.PRIMARY && !otherStack.isEmpty()) {
++                    if (!new io.papermc.paper.event.player.PlayerInsertBundleItemEvent((org.bukkit.entity.Player) player.getBukkitEntity(), stack.getBukkitStack(), otherStack.getBukkitStack()).callEvent()) return false; // Slice
+                     if (slot.allowModification(player) && mutable.tryInsert(otherStack) > 0) {
+                         playInsertSound(player);
+                     } else {
