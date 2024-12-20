@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Fri, 20 Dec 2024 07:17:20 -0600
+Subject: [PATCH] Mute bee logger warn
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
+index c8c2394558952d7ca57d29874485251b8f2b3400..4317275aeb5b3519b6b9a7195e3d997f386349ce 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityType.java
++++ b/src/main/java/net/minecraft/world/entity/EntityType.java
+@@ -660,7 +660,7 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+             if (generation) entity.generation = true; // Paper - Don't fire sync event during generation
+             entity.load(nbt);
+         }, () -> {
+-            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id"));
++//            EntityType.LOGGER.warn("Skipping Entity with id {}", nbt.getString("id")); // Slice - something about bees
+         });
+     }
+ 
