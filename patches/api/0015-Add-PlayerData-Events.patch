@@ -6,13 +6,14 @@ Subject: [PATCH] Add PlayerData Events
 
 diff --git a/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadDataEvent.java b/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadDataEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..ae0132d9c7ae17b478d1d504961e1fd6b479f6d0
+index 0000000000000000000000000000000000000000..2501922ea0fe84ed07e33503d84dd74a423e39e3
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/event/player/PlayerLoadDataEvent.java
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,64 @@
 +package com.destroystokyo.paper.event.player;
 +
 +import com.google.gson.JsonObject;
++import org.bukkit.Bukkit;
 +import org.bukkit.event.Event;
 +import org.bukkit.event.HandlerList;
 +import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ index 0000000000000000000000000000000000000000..ae0132d9c7ae17b478d1d504961e1fd6
 +    private JsonObject statistics;
 +
 +    public PlayerLoadDataEvent(@NotNull UUID playerId) {
-+        super();
++        super(!Bukkit.isPrimaryThread());
 +        this.playerId = playerId;
 +    }
 +

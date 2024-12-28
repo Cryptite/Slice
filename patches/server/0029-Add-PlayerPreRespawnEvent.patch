@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sat, 28 Dec 2024 07:59:54 -0600
+Subject: [PATCH] Add PlayerPreRespawnEvent
+
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 46f060f33fcbc6a4568a7fcfba29e83a4d192578..3f2f5673663b812cba05c058a7afd3598eb4685a 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -807,25 +807,37 @@ public abstract class PlayerList {
+         boolean isRespawn = false;
+         // Paper end - Add PlayerPostRespawnEvent
+ 
+-        // CraftBukkit start - fire PlayerRespawnEvent
+-        TeleportTransition teleporttransition;
+-        if (location == null) {
+-            teleporttransition = entityplayer.findRespawnPositionAndUseSpawnBlock(!flag, TeleportTransition.DO_NOTHING, reason);
+-
+-            if (!flag) entityplayer.reset(); // SPIGOT-4785
+-           // Paper start - Add PlayerPostRespawnEvent
+-           if (teleporttransition == null) return entityplayer; // Early exit, mirrors belows early return for disconnected players in respawn event
+-           isRespawn = true;
+-           location = CraftLocation.toBukkit(teleporttransition.position(), teleporttransition.newLevel().getWorld(), teleporttransition.yRot(), teleporttransition.xRot());
+-           // Paper end - Add PlayerPostRespawnEvent
+-        } else {
+-            teleporttransition = new TeleportTransition(((CraftWorld) location.getWorld()).getHandle(), CraftLocation.toVec3D(location), Vec3.ZERO, location.getYaw(), location.getPitch(), TeleportTransition.DO_NOTHING);
+-        }
+-        // Spigot Start
+-        if (teleporttransition == null) { // Paper - Add PlayerPostRespawnEvent - diff on change - spigot early returns if respawn pos is null, that is how they handle disconnected player in respawn event
+-            return entityplayer;
++        // Slice start
++        TeleportTransition teleporttransition = null;
++        io.papermc.paper.event.player.PlayerPreRespawnEvent preRespawnEvent = new io.papermc.paper.event.player.PlayerPreRespawnEvent(entityplayer.getBukkitEntity());
++        preRespawnEvent.callEvent();
++        Location respawnLocation = preRespawnEvent.getRespawnLocation();
++        if (respawnLocation != null) {
++            teleporttransition = new TeleportTransition(((CraftWorld) respawnLocation.getWorld()).getHandle(), CraftLocation.toVec3D(respawnLocation), Vec3.ZERO, respawnLocation.getYaw(), respawnLocation.getPitch(), TeleportTransition.DO_NOTHING);
++        }
++        // Slice end
++
++        if (teleporttransition == null) {
++            // CraftBukkit start - fire PlayerRespawnEvent
++            if (location == null) {
++                teleporttransition = entityplayer.findRespawnPositionAndUseSpawnBlock(!flag, TeleportTransition.DO_NOTHING, reason);
++
++                if (!flag) entityplayer.reset(); // SPIGOT-4785
++                // Paper start - Add PlayerPostRespawnEvent
++                if (teleporttransition == null) return entityplayer; // Early exit, mirrors belows early return for disconnected players in respawn event
++                isRespawn = true;
++                location = CraftLocation.toBukkit(teleporttransition.position(), teleporttransition.newLevel().getWorld(), teleporttransition.yRot(), teleporttransition.xRot());
++                // Paper end - Add PlayerPostRespawnEvent
++            } else {
++                teleporttransition = new TeleportTransition(((CraftWorld) location.getWorld()).getHandle(), CraftLocation.toVec3D(location), Vec3.ZERO, location.getYaw(), location.getPitch(), TeleportTransition.DO_NOTHING);
++            }
++
++            // Spigot Start
++            if (teleporttransition == null) { // Paper - Add PlayerPostRespawnEvent - diff on change - spigot early returns if respawn pos is null, that is how they handle disconnected player in respawn event
++                return entityplayer;
++            }
++            // Spigot End
+         }
+-        // Spigot End
+         ServerLevel worldserver = teleporttransition.newLevel();
+         entityplayer1.spawnIn(worldserver);
+         entityplayer1.unsetRemoved();
