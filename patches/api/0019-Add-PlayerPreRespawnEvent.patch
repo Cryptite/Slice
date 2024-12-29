@@ -6,29 +6,34 @@ Subject: [PATCH] Add PlayerPreRespawnEvent
 
 diff --git a/src/main/java/io/papermc/paper/event/player/PlayerPreRespawnEvent.java b/src/main/java/io/papermc/paper/event/player/PlayerPreRespawnEvent.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c98a1e76e565d4b95b5fe31f734f8ab496348ecb
+index 0000000000000000000000000000000000000000..53b830c7a349d58b1bb8b242b3edd144c6dcbdb0
 --- /dev/null
 +++ b/src/main/java/io/papermc/paper/event/player/PlayerPreRespawnEvent.java
-@@ -0,0 +1,54 @@
+@@ -0,0 +1,76 @@
 +package io.papermc.paper.event.player;
 +
 +import org.apache.commons.lang3.Validate;
 +import org.bukkit.Location;
 +import org.bukkit.entity.Player;
++import org.bukkit.event.Cancellable;
 +import org.bukkit.event.HandlerList;
 +import org.bukkit.event.player.PlayerEvent;
++import org.bukkit.event.player.PlayerRespawnEvent;
 +import org.jetbrains.annotations.NotNull;
 +import org.jetbrains.annotations.Nullable;
 +
 +/**
 + * Called before a player's respawn location is determined.
 + */
-+public class PlayerPreRespawnEvent extends PlayerEvent {
++public class PlayerPreRespawnEvent extends PlayerEvent implements Cancellable {
 +    private static final HandlerList handlers = new HandlerList();
++    private final PlayerRespawnEvent.RespawnReason respawnReason;
 +    private Location respawnLocation;
++    private boolean cancelled;
 +
-+    public PlayerPreRespawnEvent(@NotNull final Player respawnPlayer) {
++    public PlayerPreRespawnEvent(@NotNull final Player respawnPlayer, PlayerRespawnEvent.RespawnReason respawnReason) {
 +        super(respawnPlayer);
++        this.respawnReason = respawnReason;
 +    }
 +
 +    /**
@@ -53,6 +58,13 @@ index 0000000000000000000000000000000000000000..c98a1e76e565d4b95b5fe31f734f8ab4
 +        this.respawnLocation = respawnLocation;
 +    }
 +
++    /**
++     * @return Returns the reason the player was respawned.
++     */
++    public PlayerRespawnEvent.RespawnReason getRespawnReason() {
++        return respawnReason;
++    }
++
 +    @NotNull
 +    @Override
 +    public HandlerList getHandlers() {
@@ -62,5 +74,15 @@ index 0000000000000000000000000000000000000000..c98a1e76e565d4b95b5fe31f734f8ab4
 +    @NotNull
 +    public static HandlerList getHandlerList() {
 +        return handlers;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancelled;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancelled = cancel;
 +    }
 +}

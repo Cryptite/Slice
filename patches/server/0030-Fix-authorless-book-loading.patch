@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Sun, 29 Dec 2024 09:09:41 -0600
+Subject: [PATCH] Fix authorless book loading
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+index 507f908916cbeb592496f963b46e4c2121a7b5e3..429eea868c749c5aece3e1afb96da760c154cfe1 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+@@ -24,6 +24,7 @@ import net.minecraft.commands.Commands;
+ import net.minecraft.commands.arguments.item.ItemParser;
+ import net.minecraft.core.registries.BuiltInRegistries;
+ import net.minecraft.core.registries.Registries;
++import net.minecraft.nbt.CompoundTag;
+ import net.minecraft.nbt.NbtOps;
+ import net.minecraft.nbt.StringTag;
+ import net.minecraft.nbt.Tag;
+@@ -524,6 +525,15 @@ public final class CraftMagicNumbers implements UnsafeValues {
+         net.minecraft.nbt.CompoundTag compound = deserializeNbtFromBytes(data);
+         final int dataVersion = compound.getInt("DataVersion");
+         compound = ca.spottedleaf.dataconverter.minecraft.MCDataConverter.convertTag(ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry.ITEM_STACK, compound, dataVersion, this.getDataVersion()); // Paper - replace data conversion system
++
++        CompoundTag components = compound.getCompound("components");
++        if (!components.isEmpty()) {
++            CompoundTag bookContent = components.getCompound("minecraft:written_book_content");
++            if (!bookContent.isEmpty() && !bookContent.getAllKeys().contains("author")) {
++                bookContent.putString("author", "");
++            }
++        }
++
+         return CraftItemStack.asCraftMirror(net.minecraft.world.item.ItemStack.parse(MinecraftServer.getServer().registryAccess(), compound).orElseThrow());
+     }
+ 
