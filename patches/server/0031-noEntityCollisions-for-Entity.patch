@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cryptite <cryptite@gmail.com>
+Date: Tue, 31 Dec 2024 15:21:45 -0600
+Subject: [PATCH] noEntityCollisions for Entity
+
+
+diff --git a/src/main/java/ca/spottedleaf/moonrise/patches/collisions/CollisionUtil.java b/src/main/java/ca/spottedleaf/moonrise/patches/collisions/CollisionUtil.java
+index fb251665cdbafab90c6ff5e1bcb34fc17124d4d9..0fa6c37eae00d8921d885eae2b777e21bdb4cad2 100644
+--- a/src/main/java/ca/spottedleaf/moonrise/patches/collisions/CollisionUtil.java
++++ b/src/main/java/ca/spottedleaf/moonrise/patches/collisions/CollisionUtil.java
+@@ -2099,6 +2099,7 @@ public final class CollisionUtil {
+ 
+     public static boolean getEntityHardCollisions(final Level world, final Entity entity, AABB aabb,
+                                                   final List<AABB> into, final int collisionFlags, final Predicate<Entity> predicate) {
++        if (entity != null && entity.noEntityCollisions) return false; // Slice
+         final boolean checkOnly = (collisionFlags & COLLISION_FLAG_CHECK_ONLY) != 0;
+ 
+         boolean ret = false;
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index b878b2559d3957055702d8281846196732909ebd..5497e03bf49d87ce1d3418c4815f107c3d194800 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -438,6 +438,7 @@ public abstract class Entity implements SyncedDataHolder, Nameable, EntityAccess
+     private int sectionY = Integer.MIN_VALUE;
+     private int sectionZ = Integer.MIN_VALUE;
+     private boolean updatingSectionStatus;
++    public boolean noEntityCollisions; // Slice
+ 
+     @Override
+     public final boolean moonrise$isHardColliding() {
